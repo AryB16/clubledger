@@ -1,0 +1,19 @@
+False positive: MetaMask shows "Malicious - flagged as unsafe" when connecting to my site.
+
+Domains (same project and code):
+- clubledger-bpdc.vercel.app
+- clubledger-kappa.vercel.app
+
+What it is: ClubLedger, a student hackathon project (Hash It Out 2026), a public money record for a demo student club with sample data. It runs only on Base Sepolia testnet (chain 84532).
+
+Contract: 0x210312F9C553a02A9864CC9685854A72d49D4F7e
+Verified source: https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e#code
+Site and contract source: https://github.com/AryB16/clubledger
+
+Wallet behaviour:
+- No wallet requests on page load in a fresh session. A connection is requested only when the user clicks Connect; after that the site may ask to switch to Base Sepolia.
+- The app's only write calls are postEntry, correctEntry, authorizePoster and revokePoster on the contract above. None is payable.
+- It never requests token approvals, transfers, message signatures or seed phrases. The contract holds no funds and makes no external calls.
+- A labelled demo mode (/manage?demo=1) can deliberately send a call that the contract rejects, to show that its access rules are enforced on-chain. The user still confirms it in their wallet.
+
+Please review and remove the flag from both domains, or tell me which signal triggered it so I can fix it. The hackathon deadline is Tue 24 Nov 2026, 17:00 GST (UTC+4).

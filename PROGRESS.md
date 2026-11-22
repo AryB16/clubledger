@@ -215,3 +215,10 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 - Added https://clubledger-bpdc.vercel.app to the same Vercel project and redeployed HEAD from a clean export. Both URLs serve files identical to a clean local build; Playwright 23 passed, 5 skipped (local-only) on each.
 - Not yet tested in MetaMask. README, NOTE, QR receipts and submission pack deliberately still use the old URL until Aryesh has tested the new one.
 - Found: Vercel's GitHub integration has failed on every push seen (project root is `.`, the app is in `frontend/`, so `vite: command not found`). Only CLI deploys work, and a failed push build blocks adding domains. Not changed, pending Aryesh's decision. (The Phase 4 note "root `frontend/`" refers to the CLI deploy directory.)
+
+**MetaMask test of the second URL (22 Nov): also flagged** at connect ("Malicious—flagged as unsafe"). A domain change does not fix it; no further domains will be tried.
+- Checked: zero wallet requests on load on all four main pages (fresh session); Connect sends only `wallet_requestPermissions`, `eth_accounts`, `eth_chainId` when already on Base Sepolia.
+- Review route: https://report.blockaid.io/verifiedProject (Developer), text in `docs/blockaid-report.txt`, submitted by Aryesh (pending). MetaMask says reviews may take several business days, so don't rely on it before the deadline.
+- Fallback A: local preview on http://localhost:4173, same contract (23 browser tests passed; MetaMask's verdict on localhost not yet tested).
+- Fallback B: `node frontend/scripts/check-refusals.mjs` proves the rules against the deployed contract without MetaMask or transactions.
+- QR receipts and README stay on the kappa URL: switching gains nothing, and those pages need no wallet.
