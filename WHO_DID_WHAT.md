@@ -1,18 +1,22 @@
 # Who did what
 
-**Solo entry — Aryesh.** One builder, all roles:
+**Solo entry — Aryesh**, with Claude Code as an AI coding agent.
 
-| Area | Done by |
-|---|---|
-| Problem framing, spec and UX design (`SPEC.md`) | Aryesh |
-| Smart contract (`contracts/src/ClubLedger.sol`) | Aryesh (AI-drafted, human-reviewed) |
-| Tests — unit + invariant (`contracts/test/`) | Aryesh (AI-drafted, human-reviewed) |
-| Frontend (`frontend/`) | Aryesh (AI-drafted, human-reviewed) |
-| Deployment, seeding, on-chain proofs | Aryesh |
-| Pitch and demo | Aryesh |
+| Area | Aryesh | Claude Code |
+|---|---|---|
+| Problem framing, spec and design (`SPEC.md`) | Wrote the spec and rules | Implementation decisions, logged in `PROGRESS.md` |
+| Smart contract (`contracts/src/ClubLedger.sol`) | Specified | Drafted |
+| Tests — unit + invariant (`contracts/test/`) | Specified | Drafted and ran |
+| Frontend (`frontend/`) | Specified | Drafted and tested |
+| Deployment | Funded the wallets, supplied the accounts and API key | Ran deploy, seed, proof transactions and hosting |
+| Pitch and demo | Aryesh | — |
 
 ## AI disclosure
-Claude Code drafted code from my spec; I reviewed every contract line and every test.
+Claude Code drafted code from my spec and ran the build, tests and deployment.
+
+Human review of the code (to be confirmed by Aryesh before submission):
+- [ ] I reviewed every contract line.
+- [ ] I reviewed every test.
 
 ## Mentor log
 | Date | Mentor | Question | What changed |

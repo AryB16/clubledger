@@ -7,7 +7,8 @@ A public money record for a student club. Authorised treasurers record income an
 | | |
 |---|---|
 | Live site | **https://clubledger-kappa.vercel.app** |
-| Contract (Base Sepolia, verified) | [`__CONTRACT__`](https://sepolia.basescan.org/address/__CONTRACT__) |
+| Contract (Base Sepolia) | [`0x210312F9C553a02A9864CC9685854A72d49D4F7e`](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e) |
+| Verified source | [Sourcify: exact match](https://sourcify.dev/server/v2/contract/84532/0x210312F9C553a02A9864CC9685854A72d49D4F7e) (BaseScan verification pending) |
 | Try it | Check receipt [`EXP-0002`](https://clubledger-kappa.vercel.app/check/EXP-0002) (corrected) · [`EXP-0004`](https://clubledger-kappa.vercel.app/check/EXP-0004) (cancelled) · [`INC-0001`](https://clubledger-kappa.vercel.app/check/INC-0001) (genuine) |
 | All transactions | [DEPLOYMENT.md](DEPLOYMENT.md) |
 | One-page note | [NOTE.md](NOTE.md) · [WHO_DID_WHAT.md](WHO_DID_WHAT.md) |
@@ -34,7 +35,7 @@ Each rule has a real ✓ passed and ✗ refused transaction on BaseScan (linked 
 ```bash
 cd contracts && forge test -vv          # 28 unit tests + invariant suite (balance == income − expense; no negative state ever accepted)
 cd frontend && npm install && npm test  # money parsing + revert-reason mapping (Vitest)
-cd frontend && BASE_URL=https://clubledger-kappa.vercel.app npx playwright test site   # live site checks at 375 px
+cd frontend && BASE_URL=https://clubledger-kappa.vercel.app npx playwright test   # live site checks at 375 px (sends nothing; the local-only write suite is skipped)
 cd frontend && node scripts/check-refusals.mjs   # simulates the 4 refusals + a valid post against the deployed contract (sends nothing)
 ```
 

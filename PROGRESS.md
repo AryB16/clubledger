@@ -133,3 +133,17 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 - Playwright on production `/manage`: no-wallet copy, the three role banners, and refusal cards for rules 1–3 linking to their own proofs, using a read-only stand-in wallet that cannot sign or send.
 - No private key or API key in `frontend/dist` or in the JS bundle downloaded from production.
 - **Not tested:** real MetaMask. "Send it anyway" and successful writes were exercised on local anvil only (human checklist).
+
+---
+
+## Phase 6 — Polish, docs, printables — ✅ PASSED
+
+**Decisions**
+- SPEC §4.6 gives the AI-disclosure sentence "I reviewed every contract line and every test". That is Aryesh's own attestation, so WHO_DID_WHAT.md carries it as two unticked boxes for Aryesh to confirm, and says plainly what Claude Code ran.
+- README says "Sourcify: exact match (BaseScan verification pending)" instead of "verified on BaseScan".
+- NOTE.md adds a limit: the admin could authorise a second wallet of their own.
+
+**Gate 6 evidence**
+- Final redeploy, then full Playwright suite on production → 23 passed, 0 failed, 5 skipped (local-only).
+- RPC-down message on all 3 public pages; fallback RPC works; layout shift below 0.1 on all 3.
+- `docs/receipts.html` opens with 3 receipts and 3 loaded QR images. The PNGs were decoded with macOS CoreImage → exact production URLs.

@@ -1,7 +1,7 @@
 # ClubLedger — submission note
 
 **Hash It Out 2026 · Track 4: Financial Transparency · solo entry**
-Live: https://clubledger-kappa.vercel.app · Contract: see [DEPLOYMENT.md](DEPLOYMENT.md)
+Live: https://clubledger-kappa.vercel.app · Contract: [`0x210312F9C553a02A9864CC9685854A72d49D4F7e`](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e) · [all transactions](DEPLOYMENT.md)
 
 ## Who uses it
 - **Treasurer / Asst. Treasurer** — record money in and out from a browser wallet; fix mistakes with corrections.
@@ -30,5 +30,5 @@ Each rule has a real ✓ passed and ✗ refused transaction on BaseScan, linked 
 ## Limits (honest)
 - **A treasurer can still type a lie** — but they can never hide it or rewrite it afterwards. Every change is a visible, reasoned correction.
 - **Reconciliation with the bank stays off-chain.** The contract records what the treasurer declares; it doesn't see the bank.
-- **Single admin key.** If the Club Advisor's key is lost or stolen, treasurer management is lost with it (no admin transfer, by design for this scope).
+- **Single admin key.** If the Club Advisor's key is lost or stolen, treasurer management is lost with it (no admin transfer, by design for this scope). The admin's own wallet can't post, but the contract can't tell whether a wallet they authorise is secretly their own; that appointment is public.
 - **Synthetic data only.** Fictional club, vendors and sponsors; testnet only; AED amounts are records, not real money moving.
