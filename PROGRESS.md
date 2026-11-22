@@ -20,7 +20,7 @@
 
 ## Human checklist (H4)
 
-- [ ] Verify on BaseScan from a network that resolves `api.etherscan.io` (command in Phase 7 below), then change "pending" in README.md, DEPLOYMENT.md and this file.
+- [ ] Verify on BaseScan in the browser (steps at the end of Phase 7 below), then change "pending" in README.md, DEPLOYMENT.md and this file.
 - [ ] Review the contract and tests, then tick the two boxes in WHO_DID_WHAT.md.
 - [ ] Import Admin, Treasurer and Asst. Treasurer private keys from `contracts/.env` into MetaMask (named "Advisor (admin)", "Treasurer", "Asst. Treasurer"), Base Sepolia network.
 - [ ] Create a second Chrome profile; import Random member there only (this is the judge's "attacker" browser).
@@ -195,3 +195,12 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 ```bash
 cd ~/Documents/clubledger/clubledger/contracts && (set -a; . ./.env; set +a; ~/.foundry/bin/forge verify-contract 0x210312F9C553a02A9864CC9685854A72d49D4F7e src/ClubLedger.sol:ClubLedger --chain 84532 --verifier etherscan --watch --constructor-args 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001f4249545320447562616920526f626f7469637320436c7562202864656d6f2900)
 ```
+
+**22 Nov, Aryesh ran the command → same DNS error.** Only the API host fails on this network; `sepolia.basescan.org` resolves. Browser fallback (no API or key needed):
+
+1. Open https://sepolia.basescan.org/verifyContract?a=0x210312F9C553a02A9864CC9685854A72d49D4F7e
+2. Compiler type: Solidity (Standard-Json-Input) · version: `v0.8.24+commit.e11b9ed9` · licence: MIT
+3. Upload `contracts/verify/ClubLedger.standard-input.json`.
+4. Constructor arguments: paste `contracts/verify/constructor-args.txt` (skip if already filled), then submit.
+
+Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime bytecode and the deploy transaction's creation bytecode exactly (checked on two RPCs); the remainder of the transaction input equals `constructor-args.txt`. The browser submission itself has not been tested.
