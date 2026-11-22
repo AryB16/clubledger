@@ -75,3 +75,19 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 - ✓ all 17 revert strings byte-identical to §2.5; each one triggered by `vm.expectRevert(bytes("…"))` at least once
 - ✓ no `payable` / `receive` / `fallback`; no external calls; no imports
 - ✓ storage exactly §2.1 (no extra fields); Entry structs never modified after push
+
+---
+
+## Phase 4 — Read-only frontend — 🟡 built and deployed; gate waits on the live contract (Phase 3)
+
+- Production URL: **https://clubledger-kappa.vercel.app** (Vercel project `clubledger`, root `frontend/`, `VITE_RPC_URL` = publicnode set for production).
+- `curl` → 200 for `/`, `/ledger`, `/check/EXP-0002`, `/manage` (SPA rewrite works).
+- Rehearsed against local anvil (chain id 84532, Multicall3 copied in): 9/10 Playwright site checks passed (only failure: proof hashes still placeholders) and 5/5 local `/manage` write-flow checks passed (refusal card, Send it anyway → status 0, admin panel, treasurer post, correction).
+- `scripts/check-refusals.mjs` → all 12 assertions passed locally.
+
+**Decisions**
+- Frontend primary RPC publicnode (CORS `*`), fallback sepolia.base.org (CORS OK). Reads batched through Multicall3.
+- "Treasurers on the record" list in the admin panel is derived from entry posters (no event logs, no extra storage); any address can be typed in to see whether it is a current / former / non-treasurer.
+- Role banner is a plain top banner, not sticky (sticky overlapped content on a 375 px phone).
+- `refusals.ts` imports `../proofs.ts` with the extension so the Node check script can import it directly (Node type stripping).
+- Local-only Playwright suite `e2e/manage.local.spec.ts` uses a stand-in browser wallet over anvil; it is skipped unless `LOCAL_RPC` is set, so it never posts to production.
