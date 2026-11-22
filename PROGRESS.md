@@ -85,6 +85,20 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 
 ---
 
+## Phase 3 — Deploy, seed, proofs — ✅ PASSED (BaseScan verification logged for retry)
+
+- Contract: [`0x210312F9C553a02A9864CC9685854A72d49D4F7e`](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e)
+- Deploy tx `0x2582fd6b3a46e58f283b42cb7939d9038c39f09bf6c4ff1c529bf1c236b8f863`, block 61941981. Every seed and proof tx: DEPLOYMENT.md.
+
+**Gate 3 evidence**
+- `cast call summary()` on two RPCs → 458000 / 945000 / 487000, 12 entries.
+- `versionsOf("EXP-0002")` → [5, 11]; EXP-0004 → [7, 12]; EXP-0007 → [] (kept for the live demo).
+- 4 refusal receipts → status 0x0. Each replayed with `eth_call` at the previous block → exact expected revert string (28–34k gas used of 300k, so none is an out-of-gas failure).
+- **BaseScan verification FAILED, logged for retry:** `forge script --verify` and one `forge verify-contract` both failed resolving `api.etherscan.io`. The local router DNS (192.168.1.1) returns NXDOMAIN; 1.1.1.1 and 8.8.8.8 resolve it. The key and source were never tested by Etherscan.
+- Sourcify (submitted automatically by `forge --verify`) → creation and runtime **exact match**. Whether BaseScan displays that source was not checked: its bot check blocks automated viewing.
+
+---
+
 ## Phase 4 — Read-only frontend — 🟡 built and deployed; gate waits on the live contract (Phase 3)
 
 - Production URL: **https://clubledger-kappa.vercel.app** (Vercel project `clubledger`, root `frontend/`, `VITE_RPC_URL` = publicnode set for production).
