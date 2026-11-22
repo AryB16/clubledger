@@ -8,3 +8,5 @@ contracts/broadcast/*/31337
 frontend/test-results
 frontend/playwright-report
 .DS_Store
+contracts/proofs.json
+contracts/broadcast/**/*.recovery.lock
