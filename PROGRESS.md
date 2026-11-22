@@ -205,3 +205,13 @@ cd ~/Documents/clubledger/clubledger/contracts && (set -a; . ./.env; set +a; ~/.
 
 Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime bytecode and the deploy transaction's creation bytecode exactly (checked on two RPCs); the remainder of the transaction input equals `constructor-args.txt`. 
 **RESOLVED 22 Nov: verified on BaseScan by Aryesh.** Confirmed with a read-only Etherscan API `getsourcecode` query: `ClubLedger`, compiler v0.8.24+commit.e11b9ed9, EVM cancun, MIT, not a similar-match; source identical to `contracts/src/ClubLedger.sol`; constructor arguments identical to `contracts/verify/constructor-args.txt`.
+
+---
+
+## Post-hand-off: second production URL (22 Nov)
+
+- MetaMask showed "Malicious site" on clubledger-kappa.vercel.app (reported by Aryesh; cause unknown).
+- Compromise ruled out before any change: 39/39 deployed source files identical to git; live JS identical to a clean rebuild apart from chunk filenames; no unexpected hosts; no match in MetaMask's public phishing lists.
+- Added https://clubledger-bpdc.vercel.app to the same Vercel project and redeployed HEAD from a clean export. Both URLs serve files identical to a clean local build; Playwright 23 passed, 5 skipped (local-only) on each.
+- Not yet tested in MetaMask. README, NOTE, QR receipts and submission pack deliberately still use the old URL until Aryesh has tested the new one.
+- Found: Vercel's GitHub integration has failed on every push seen (project root is `.`, the app is in `frontend/`, so `vite: command not found`). Only CLI deploys work, and a failed push build blocks adding domains. Not changed, pending Aryesh's decision. (The Phase 4 note "root `frontend/`" refers to the CLI deploy directory.)
