@@ -16,13 +16,13 @@ export default function Ledger() {
   return (
     <>
       <PageHead title="All entries">
-        <p className="mt-4 max-w-xl leading-relaxed text-forest-100 sm:text-lg">
-          Newest first. A correction gets its own line, and the line it fixes stays.
+        <p className="mt-4 max-w-2xl leading-relaxed text-navy-100 sm:text-lg">
+          All the income and expenses treasurers have recorded, newest first. When one is fixed, the old line stays and is marked Corrected. The new line is marked Correction, or Cancelled if the amount is now zero.
         </p>
-        <p className="mt-1 h-6 text-forest-200 tabular-nums">{total !== undefined && `${total.toString()} in total`}</p>
+        <p className="mt-2 h-6 text-sm text-navy-200 tabular-nums">{total !== undefined && `${total.toString()} lines in total, including corrections`}</p>
       </PageHead>
       <div className="wrap space-y-5 py-7 sm:py-10">
-        <div role="tablist" aria-label="Filter entries" className="inline-flex gap-1 rounded-full bg-sand p-1">
+        <div role="tablist" aria-label="Filter entries" className="inline-flex gap-1 rounded-full bg-mist p-1">
           {(['All', 'Income', 'Expense'] as Filter[]).map((f) => (
             <button
               key={f}
@@ -30,7 +30,7 @@ export default function Ledger() {
               aria-selected={filter === f}
               onClick={() => setFilter(f)}
               className={`min-h-11 rounded-full px-5 text-sm font-semibold transition-colors ${
-                filter === f ? 'bg-forest-900 text-white' : 'text-ink hover:bg-paper'
+                filter === f ? 'bg-navy-900 text-white' : 'text-ink hover:bg-paper'
               }`}
             >
               {f}

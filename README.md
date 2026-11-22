@@ -22,7 +22,7 @@ Each rule has a real ✓ passed and ✗ refused transaction on BaseScan (linked 
 1. **Only authorised treasurers can record money.** Anyone else is refused — even the Club Advisor (admin).
 2. **The books can never go negative.** An expense larger than the recorded balance is refused.
 3. **A receipt can only be recorded once.** Duplicate receipt numbers are refused.
-4. **Corrections, never edits.** A correction is a new linked entry; the original stays forever; an already-corrected version can't be corrected again.
+4. **Entries can be corrected, but never edited.** A correction is a new linked entry; the original stays forever; an already-corrected version can't be corrected again.
 
 ## How it works
 

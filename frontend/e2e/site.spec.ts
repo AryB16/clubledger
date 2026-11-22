@@ -17,7 +17,7 @@ async function shot(page: Page, name: string) {
 
 test('home: balance, rules panel with 8 public-proof links, recent entries', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: /Every dirham, out in the open/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /See the Robotics Club's income and expenses/ })).toBeVisible()
   await expect(page.getByTestId('balance')).toHaveText(/AED\s?4,580\.00/)
   const rules = page.getByTestId('rules')
   await expect(rules.getByRole('listitem')).toHaveCount(4)

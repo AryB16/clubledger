@@ -8,7 +8,7 @@ import { PageHead } from './components/ui'
 
 const nav = ({ isActive }: { isActive: boolean }) =>
   `inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2 text-sm font-medium transition-colors min-[360px]:px-3 sm:px-4 ${
-    isActive ? 'bg-white/15 text-white' : 'text-forest-200 hover:text-white'
+    isActive ? 'bg-white/15 text-white' : 'text-navy-200 hover:text-white'
   }`
 
 function Brand() {
@@ -47,7 +47,7 @@ export default function App() {
   return (
     <div className="min-h-dvh">
       <ScrollToTop />
-      <header className="on-dark bg-forest-950">
+      <header className="on-dark bg-navy-950">
         <div className="wrap flex items-center justify-between gap-1 py-3">
           <Brand />
           <nav aria-label="Main" className="flex items-center sm:gap-1">
@@ -70,10 +70,10 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      <footer className="on-dark bg-forest-950">
+      <footer className="on-dark bg-navy-950">
         <div className="wrap flex flex-col gap-2 py-7 sm:flex-row sm:items-center sm:justify-between">
           <Brand />
-          <p className="text-sm text-forest-200">A student project for Hash It Out 2026. All names and amounts are fictional.</p>
+          <p className="text-sm text-navy-200">A student project for Hash It Out 2026. The names and amounts are made up, and no real money moves.</p>
         </div>
       </footer>
     </div>

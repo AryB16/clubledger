@@ -18,7 +18,7 @@ const CATEGORIES = ['Sponsorship', 'Membership', 'Grant', 'Events', 'Equipment',
 
 const inputCls = (bad?: boolean) =>
   `min-h-12 w-full min-w-0 rounded-xl border bg-white px-3.5 text-base text-ink placeholder:text-muted focus:outline-none focus:ring-3 ${
-    bad ? 'border-brick ring-2 ring-brick/30 focus:ring-brick/50' : 'border-field focus:border-forest-700 focus:ring-forest-700/45'
+    bad ? 'border-brick ring-2 ring-brick/30 focus:ring-brick/50' : 'border-field focus:border-navy-700 focus:ring-navy-700/45'
   }`
 
 function Field({ label, htmlFor, hint, error, children }: { label: string; htmlFor: string; hint?: string; error?: string; children: ReactNode }) {
@@ -62,11 +62,12 @@ function RefusalCard({ state, demo, onSendAnyway, onClose }: { state: Extract<Wr
       </span>
       <h3 className="mt-4 text-[2rem] leading-none font-extrabold tracking-tight sm:text-4xl">Blocked by the club's rulebook</h3>
       <p className="mt-4 text-lg leading-snug">{refusalCopy(state.reason)}</p>
-      <p className="mt-3 text-sm leading-relaxed text-[#f8d9d0]">{RULEBOOK_LINE}</p>
+      <p className="mt-2 font-semibold">Nothing was recorded.</p>
+      <p className="mt-3 text-sm leading-relaxed text-[#f2d4d4]">{RULEBOOK_LINE}</p>
       <div className="mt-6 flex flex-col gap-2.5">
         {proof && (
-          <a href={txUrl(proof.refusedTx)} target="_blank" rel="noreferrer" className="btn bg-white text-brick hover:bg-[#fbeae4]">
-            Show the refusal on the public record
+          <a href={txUrl(proof.refusedTx)} target="_blank" rel="noreferrer" className="btn bg-white text-brick hover:bg-[#f5e4e4]">
+            See a past refusal like this on BaseScan
           </a>
         )}
         {demo && !forced && (
@@ -74,10 +75,13 @@ function RefusalCard({ state, demo, onSendAnyway, onClose }: { state: Extract<Wr
             Send it anyway
           </button>
         )}
+        {demo && !forced && (
+          <p className="text-center text-sm text-[#f2d4d4]">Your attempt will show publicly as failed. It costs a tiny fee in free test currency.</p>
+        )}
         {forced?.status === 'sending' && <p className="text-sm font-medium">Sending it to the rulebook anyway. Confirm in your wallet.</p>}
         {forced?.status === 'done' && forced.hash && (
           <ExtLink href={txUrl(forced.hash)} className="justify-center text-lg">
-            View this refusal on the blockchain
+            View your refused attempt on BaseScan
           </ExtLink>
         )}
         {forced?.status === 'done' && forced.error && <p className="text-sm">{forced.error}</p>}
@@ -93,7 +97,7 @@ function FlowFeedback({ state, demo, flow }: { state: WriteState; demo: boolean;
   if (state.phase === 'refused') return <RefusalCard state={state} demo={demo} onSendAnyway={flow.sendAnyway} onClose={flow.reset} />
   if (state.phase === 'error')
     return (
-      <p role="alert" className="rounded-xl border border-field bg-sand p-3 text-sm font-medium text-ink">
+      <p role="alert" className="rounded-xl border border-field bg-mist p-3 text-sm font-medium text-ink">
         {state.message}
       </p>
     )
@@ -155,8 +159,9 @@ function RecordForm({ demo, onToast, allEntries }: { demo: boolean; onToast: (t:
   return (
     <Card className="p-5 sm:p-7">
       <h2 className="text-2xl font-bold">Record money</h2>
+      <p className="mt-1 text-sm text-muted">Add one entry per receipt. Saved entries are public and can't be deleted, so check the amount and receipt number first.</p>
       <form onSubmit={onSubmit} className="mt-4 space-y-4" data-testid="record-form">
-        <div role="radiogroup" aria-label="Type" className="grid grid-cols-2 gap-1 rounded-full bg-sand p-1">
+        <div role="radiogroup" aria-label="Type" className="grid grid-cols-2 gap-1 rounded-full bg-mist p-1">
           {(['Income', 'Expense'] as const).map((k, i) => (
             <button
               type="button"
@@ -164,7 +169,7 @@ function RecordForm({ demo, onToast, allEntries }: { demo: boolean; onToast: (t:
               role="radio"
               aria-checked={kind === i}
               onClick={() => setKind(i as 0 | 1)}
-              className={`min-h-11 rounded-full text-sm font-semibold transition-colors ${kind === i ? 'bg-forest-900 text-white' : 'text-ink'}`}
+              className={`min-h-11 rounded-full text-sm font-semibold transition-colors ${kind === i ? 'bg-navy-900 text-white' : 'text-ink'}`}
             >
               {k === 'Income' ? 'Money in' : 'Money out'}
             </button>
@@ -196,7 +201,7 @@ function RecordForm({ demo, onToast, allEntries }: { demo: boolean; onToast: (t:
             }}
             autoCapitalize="characters"
             spellCheck={false}
-            className={`${inputCls(badField(flow.state, 'refCode'))} font-mono uppercase`}
+            className={`${inputCls(badField(flow.state, 'refCode'))} code uppercase`}
           />
         </Field>
         <PrimaryButton type="submit" busy={busy}>
@@ -277,13 +282,13 @@ function CorrectForm({ demo, onToast }: { demo: boolean; onToast: (t: Toast | nu
     <Card className="p-5 sm:p-7">
       <h2 className="text-2xl font-bold">Correct an entry</h2>
       <p className="mt-1 text-sm text-muted">
-        Your fix is saved as a new version, and the original stays on the record. Enter 0 to cancel an entry.
+        To fix a mistake, load the receipt and enter the right details with a reason. The original stays visible. An amount of 0 cancels the entry.
       </p>
       <form onSubmit={load} className="mt-4 flex gap-2">
         <label htmlFor="fix-code" className="sr-only">
           Receipt number
         </label>
-        <input id="fix-code" placeholder="e.g. EXP-0002" value={code} onChange={(e) => setCode(e.target.value)} className={`${inputCls()} font-mono uppercase placeholder:normal-case`} />
+        <input id="fix-code" placeholder="e.g. EXP-0002" value={code} onChange={(e) => setCode(e.target.value)} className={`${inputCls()} code uppercase placeholder:normal-case`} />
         <button type="submit" disabled={loading} className="btn btn-quiet shrink-0">
           {loading ? '…' : 'Load'}
         </button>
@@ -291,8 +296,8 @@ function CorrectForm({ demo, onToast }: { demo: boolean; onToast: (t: Toast | nu
       {loadMsg && <p className="mt-2 text-sm text-ink">{loadMsg}</p>}
       {latest && (
         <form onSubmit={onSubmit} className="mt-4 space-y-4">
-          <p className="rounded-xl bg-sand p-3 text-sm text-ink">
-            Correcting the latest version of <span className="font-mono font-semibold">{latest.refCode}</span> ({latest.kind === 0 ? 'Income' : 'Expense'},{' '}
+          <p className="rounded-xl bg-mist p-3 text-sm text-ink">
+            Correcting the latest version of <span className="code font-semibold">{latest.refCode}</span> ({latest.kind === 0 ? 'Income' : 'Expense'},{' '}
             {formatAed(latest.amount)}).
           </p>
           <Field label="New amount (AED)" htmlFor="fix-amount" error={amountErr}>
@@ -348,9 +353,10 @@ function AdminPanel({ demo, onToast, allEntries }: { demo: boolean; onToast: (t:
   return (
     <Card className="p-5 sm:p-7">
       <h2 className="text-2xl font-bold">Authorise or revoke a treasurer</h2>
+      <p className="mt-1 text-sm text-muted">Authorising lets that wallet add entries and corrections. Revoking stops it, and its past entries stay.</p>
       <form onSubmit={act} className="mt-4 space-y-4">
         <Field label="Wallet address" htmlFor="adm-addr" error={addr && !valid ? 'That isn’t a valid address.' : undefined}>
-          <input id="adm-addr" placeholder="0x…" value={addr} onChange={(e) => setAddr(e.target.value)} spellCheck={false} className={`${inputCls(badField(flow.state, 'address'))} font-mono text-sm`} />
+          <input id="adm-addr" placeholder="0x…" value={addr} onChange={(e) => setAddr(e.target.value)} spellCheck={false} className={`${inputCls(badField(flow.state, 'address'))} code text-sm`} />
         </Field>
         {target && (
           <p className="text-sm text-ink" data-testid="addr-status">
@@ -375,7 +381,7 @@ function AdminPanel({ demo, onToast, allEntries }: { demo: boolean; onToast: (t:
           {known.map((a) => (
             <li key={a} className="flex items-center justify-between py-2">
               <Person label={labelOf(a)} address={a} />
-              <span className={`text-xs font-semibold ${roles[a] ? 'text-forest-700' : 'text-muted'}`}>{roles[a] === undefined ? '' : roles[a] ? 'Current' : 'Former'}</span>
+              <span className={`text-xs font-semibold ${roles[a] ? 'text-navy-700' : 'text-muted'}`}>{roles[a] === undefined ? '' : roles[a] ? 'Current' : 'Former'}</span>
             </li>
           ))}
         </ul>
@@ -398,7 +404,7 @@ function useKnownRoles(addrs: Address[]) {
 
 function ToastBar({ toast, onClose }: { toast: Toast | null; onClose: () => void }) {
   if (!toast) return null
-  const tone = toast.tone === 'ok' ? 'bg-forest-900' : toast.tone === 'bad' ? 'bg-brick' : 'bg-ink'
+  const tone = toast.tone === 'ok' ? 'bg-navy-900' : toast.tone === 'bad' ? 'bg-brick' : 'bg-ink'
   return (
     <div role="status" aria-live="polite" className="on-dark fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
       <div className={`flex w-full max-w-md items-center justify-between gap-3 rounded-2xl ${tone} py-2 pr-2 pl-5 font-medium text-white shadow-lg`}>
@@ -448,12 +454,13 @@ export default function Manage() {
     return (
       <>
         <PageHead title="For treasurers">
-          <p className="mt-4 max-w-xl leading-relaxed text-forest-100 sm:text-lg">Record income and spending, or fix a mistake with a correction.</p>
+          <p className="mt-4 max-w-xl leading-relaxed text-navy-100 sm:text-lg">Treasurers record income and expenses here, and the Club Advisor approves or removes treasurers. To only check a receipt, use the home page.</p>
         </PageHead>
         <div className="wrap grid items-start gap-9 py-8 md:grid-cols-2 md:gap-16 sm:py-14">
           <Card className="p-5 sm:p-8">
             <h2 className="text-2xl font-bold">Connect a wallet to add entries.</h2>
             <p className="mt-2 text-muted">You don't need one to check receipts.</p>
+            <p className="mt-2 text-muted">A wallet, such as MetaMask, is a browser app that proves who you are. The contract uses it to see whether you're a treasurer.</p>
             <button
               onClick={() => connect({ connector: connectors[0] })}
               disabled={connecting || status === 'reconnecting'}
@@ -465,11 +472,11 @@ export default function Manage() {
             {connectError && (connectError.name as string) !== 'ProviderNotFoundError' && <p className="mt-4 text-sm text-brick">Couldn't connect. Open your wallet and try again.</p>}
           </Card>
           <section>
-            <h2 className="text-2xl font-bold">Checked before anything is saved</h2>
+            <h2 className="text-2xl font-bold">The contract checks these rules before saving</h2>
             <ul className="mt-3 divide-y divide-line">
               {PROOFS.map((p) => (
                 <li key={p.rule} className="flex items-start gap-3 py-3">
-                  <Icon name="check" className="mt-1 h-4 w-4 text-forest-700" />
+                  <Icon name="check" className="mt-1 h-4 w-4 text-navy-700" />
                   {p.title}
                 </li>
               ))}
@@ -520,18 +527,19 @@ export default function Manage() {
   const isPoster = !!role.data?.isPoster
 
   const banner = isAdmin
-    ? { text: "You're the Club Advisor. You approve treasurers but can't add money.", band: 'band-cancelled' }
+    ? { text: "You're the Club Advisor. You approve treasurers but can't add money.", detail: 'Use the form below to approve a new treasurer or remove a current one.', band: 'band-cancelled' }
     : isPoster
-      ? { text: `You're the ${role.data!.label}. You can add and correct entries.`, band: 'band-forest' }
-      : { text: "You aren't a treasurer, so you can't add entries.", band: 'band-refused' }
+      ? { text: `You're the ${role.data!.label}. You can add and correct entries.`, detail: 'Everything you save appears on the public site and stays there.', band: 'band-navy' }
+      : { text: "You aren't a treasurer, so you can't add entries.", detail: 'You can still try the form below. The contract will refuse it, and you’ll see why.', band: 'band-refused' }
 
   return (
     <>
       <div data-testid="role-banner" className={`band on-dark ${banner.band}`}>
         <div className="wrap pt-7 pb-5 sm:pt-10 sm:pb-7">
           <p className="max-w-3xl font-display text-[1.75rem] leading-[1.08] font-bold text-balance sm:text-4xl">{banner.text}</p>
+          <p className="mt-3 max-w-2xl leading-snug">{banner.detail}</p>
           <div className="mt-2 flex items-center justify-between gap-3 text-sm">
-            <span className="font-mono">{shortAddr(address!)}</span>
+            <span className="code">{shortAddr(address!)}</span>
             <button onClick={() => disconnect()} className="min-h-11 underline underline-offset-4">
               Disconnect
             </button>
@@ -540,7 +548,7 @@ export default function Manage() {
       </div>
       <div className="wrap py-6 sm:py-10">
         <div className={isPoster ? '' : 'mx-auto max-w-2xl'}>
-          {demo && <p className="mb-5 rounded-2xl bg-amber-100 p-4 text-sm text-amber-950">Demo mode is on. You can send a refused entry anyway to put the refusal on the public record.</p>}
+          {demo && <p className="mb-5 rounded-2xl bg-amber-100 p-4 text-sm text-amber-950">Demo mode is on. When an entry is blocked, you can still send it to prove that the contract itself refuses it, not just this website.</p>}
           {isAdmin ? (
             <AdminPanel demo={demo} onToast={setToast} allEntries={allEntries} />
           ) : (

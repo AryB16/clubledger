@@ -11,12 +11,12 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
 }
 
 export function Skeleton({ className = '' }: { className?: string }) {
-  return <div aria-hidden className={`animate-pulse rounded-lg bg-sand ${className}`} />
+  return <div aria-hidden className={`animate-pulse rounded-lg bg-mist ${className}`} />
 }
 
 export function PageHead({ title, children }: { title: string; children?: ReactNode }) {
   return (
-    <section className="band band-forest on-dark">
+    <section className="band band-navy on-dark">
       <div className="wrap pt-9 pb-10 sm:pt-14 sm:pb-14">
         <h1 className="text-4xl leading-[1.02] font-extrabold tracking-tight sm:text-6xl">{title}</h1>
         {children}
@@ -43,7 +43,7 @@ export const RPC_DOWN = "Can't reach the public record right now. Try again."
 
 export function ErrorNotice({ onRetry }: { onRetry?: () => void }) {
   return (
-    <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-brick/25 bg-[#faeae4] p-5 text-brick">
+    <div role="alert" className="flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-brick/25 bg-brick-tint p-5 text-brick">
       <p className="font-medium">{RPC_DOWN}</p>
       {onRetry && (
         <button onClick={onRetry} className="btn btn-quiet">
@@ -59,7 +59,7 @@ export function Person({ label, address }: { label: string; address: Address }) 
   return (
     <span className="inline-flex flex-col leading-snug">
       <span className="font-medium text-ink">{label}</span>
-      <span className="font-mono text-xs text-muted">{shortAddr(address)}</span>
+      <span className="code text-xs text-muted">{shortAddr(address)}</span>
     </span>
   )
 }
@@ -68,17 +68,25 @@ const STATUS_STYLE: Record<Status, string> = {
   Latest: 'text-muted',
   Corrected: 'bg-amber-100 px-2 text-amber-900',
   Correction: 'bg-amber-100 px-2 text-amber-900',
-  Cancelled: 'bg-sand px-2 text-ink',
+  Cancelled: 'bg-mist px-2 text-ink',
+}
+
+// "Latest" on its own didn't say latest of what.
+const STATUS_TEXT: Record<Status, string> = {
+  Latest: 'No changes',
+  Corrected: 'Corrected',
+  Correction: 'Correction',
+  Cancelled: 'Cancelled',
 }
 
 export function StatusBadge({ status }: { status: Status }) {
-  return <span className={`rounded-md py-0.5 text-xs font-semibold ${STATUS_STYLE[status]}`}>{status}</span>
+  return <span className={`rounded-md py-0.5 text-xs font-semibold ${STATUS_STYLE[status]}`}>{STATUS_TEXT[status]}</span>
 }
 
 export function Amount({ fils, kind }: { fils: bigint; kind: number }) {
   const sign = fils === 0n ? '' : kind === 0 ? '+' : '−'
   return (
-    <span className={`font-semibold whitespace-nowrap tabular-nums sm:text-lg ${kind === 0 ? 'text-forest-700' : 'text-ink'}`}>
+    <span className={`font-semibold whitespace-nowrap tabular-nums sm:text-lg ${kind === 0 ? 'text-gain' : 'text-ink'}`}>
       {sign}
       {formatAed(fils)}
     </span>
@@ -95,12 +103,12 @@ export function EntryCard({ e, status, label }: { e: Entry; status: Status; labe
     <Link
       to={`/check/${encodeURIComponent(e.refCode)}`}
       data-testid="entry-card"
-      className="grid min-h-28 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-4 transition-colors hover:bg-forest-50 focus-visible:-outline-offset-4 sm:min-h-24 sm:px-7"
+      className="grid min-h-28 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-4 transition-colors hover:bg-navy-50 focus-visible:-outline-offset-4 sm:min-h-24 sm:px-7"
     >
       <span className="min-w-0">
         <span className="block font-semibold break-words text-ink">{e.counterparty || e.category}</span>
         <span className="mt-1 block text-xs text-muted sm:text-sm">
-          <span className="font-mono font-semibold text-ink">{e.refCode}</span> · {e.category}
+          <span className="code font-semibold text-ink">{e.refCode}</span> · {e.category}
         </span>
         <span className="mt-0.5 block text-xs text-muted sm:text-sm">
           {formatDate(e.timestamp)}, {label}

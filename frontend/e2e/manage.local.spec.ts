@@ -53,9 +53,9 @@ test('random member: refusal card, proof link, and Send it anyway lands a failed
   await expect(card).toContainText("Blocked by the club's rulebook")
   await expect(card).toContainText("This wallet isn't an authorised treasurer, so the club's rulebook refused it.")
   await expect(card).toContainText('Nobody can switch it off.')
-  await expect(card.getByRole('link', { name: 'Show the refusal on the public record' })).toHaveAttribute('href', /sepolia\.basescan\.org\/tx\/0x/)
+  await expect(card.getByRole('link', { name: 'See a past refusal like this on BaseScan' })).toHaveAttribute('href', /sepolia\.basescan\.org\/tx\/0x/)
   await card.getByRole('button', { name: 'Send it anyway' }).click()
-  const link = card.getByRole('link', { name: 'View this refusal on the blockchain' })
+  const link = card.getByRole('link', { name: 'View your refused attempt on BaseScan' })
   await expect(link).toBeVisible()
   const hash = (await link.getAttribute('href'))!.split('/tx/')[1]
   const receipt = await rpc('eth_getTransactionReceipt', [hash])

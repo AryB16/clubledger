@@ -236,7 +236,7 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 
 ---
 
-## Redesign: Forest & cream (22 Nov, branch `ui/forest-cream`, awaiting Aryesh's approval; not deployed)
+## Redesign: Forest & cream, then Graphite & steel (22 Nov, branch `ui/forest-cream`, awaiting Aryesh's approval; not deployed)
 
 - Aryesh chose the direction and a copy rewrite that keeps the key terms. SPEC §2.5 UI copy, §3.2–3.5 and the rule 4 title updated to match. Contract, reads and write logic unchanged.
 - Gates: TypeScript clean; Vitest 90; Playwright on live data 23 passed (5 local-only skipped); local write suite 5/5 twice on a fresh standalone chain replaying the public deployment; CLS ≤ 0.024.
@@ -245,3 +245,7 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 - The write suite hung on an anvil *fork* (the node stopped producing blocks); it passes on a standalone chain.
 - One long dash remains on screen: EXP-0004's correction reason, which is permanent on-chain data.
 - Not tested: real MetaMask on this build, real phones, Safari.
+
+**Round 2, from Aryesh's feedback (22 Nov):** one font everywhere (Bricolage Grotesque, checked for fixed-width digits), Graphite & steel palette, and copy that explains itself on every screen. SPEC §3.3 and §3.5 updated.
+- Gates re-run on the final build: TypeScript clean; Vitest 90; Playwright 23 passed (5 local-only skipped); local write suite 5/5; audit 0 problems (11 screens, 5 widths); CLS ≤ 0.015.
+- Still not tested: real MetaMask on this build, real phones, Safari.
