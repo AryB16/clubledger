@@ -24,7 +24,7 @@
 - [ ] Review the contract and tests, then tick the two boxes in WHO_DID_WHAT.md.
 - [ ] Import Admin, Treasurer and Asst. Treasurer private keys from `contracts/.env` into MetaMask (named "Advisor (admin)", "Treasurer", "Asst. Treasurer"), Base Sepolia network.
 - [ ] Create a second Chrome profile; import Random member there only (this is the judge's "attacker" browser).
-- [ ] On your phone (mobile data): open the three receipt QR codes; confirm Corrected / Cancelled / Genuine.
+- [x] (reported by Aryesh, 22 Nov) On your phone (mobile data): open the three receipt QR codes; confirm Corrected / Cancelled / Genuine.
 - [x] Live test as Random member on `/manage?demo=1`: blocked card appears; "Send it anyway" creates a failed tx on BaseScan.
 - [ ] Stranger test: hand your phone to someone, say only "Check receipt EXP-0002".
 - [ ] Ask 3 mentors (log in WHO_DID_WHAT.md): correction model; UX confusion; pitch dry-run.

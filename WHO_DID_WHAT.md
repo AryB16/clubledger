@@ -9,7 +9,7 @@
 | Tests — unit + invariant (`contracts/test/`) | Specified | Drafted and ran |
 | Frontend (`frontend/`) | Specified | Drafted and tested |
 | Deployment | Funded the wallets, supplied the accounts and API key, submitted the BaseScan verification | Ran deploy, seed, proof transactions and hosting |
-| Pitch and demo | Aryesh | — |
+| Pitch and demo | Presents and records | Drafted the video script, judge Q&A and a plain-English code walkthrough |
 
 ## AI disclosure
 Claude Code drafted code from my spec and ran the build, tests and deployment.
