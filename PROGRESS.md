@@ -227,3 +227,7 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 - Ledger unchanged on two RPCs (458000, 12 entries); EXP-0007 unused.
 - No Treasurer transaction has been sent through MetaMask, so that profile still needs a connect + refusal rehearsal.
 - Localhost is now the live-demo route; the Blockaid review is for the public /manage page.
+
+**Treasurer rehearsal (22 Nov): PASSED.** Aryesh got the duplicate-receipt blocked card; Treasurer nonce still 12, 12 entries, nothing sent.
+
+**Video vs live demo (proposed, awaiting Aryesh):** SPEC §4.5 needs a successful post on camera, but EXP-0007 is reserved for judging. Proposal: post INC-0005 (Money in, AED 100) in the video. It simulates OK and leaves the Money out prefill at EXP-0007. It permanently makes the balance 4,680.00 and 13 entries, so the two Playwright expectations (4,580 / 12) would need updating to the new real state, and the screenshots would be older than the ledger.
