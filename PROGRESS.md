@@ -1,7 +1,37 @@
 # ClubLedger — PROGRESS
 
 ## Submission pack
-_(filled in Phase 7)_
+
+- **Repo:** https://github.com/AryB16/clubledger
+- **Live URL:** https://clubledger-kappa.vercel.app
+- **Contract (Base Sepolia):** `0x210312F9C553a02A9864CC9685854A72d49D4F7e`
+  - BaseScan: https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e (verification pending)
+  - Verified source, Sourcify exact match: https://sourcify.dev/server/v2/contract/84532/0x210312F9C553a02A9864CC9685854A72d49D4F7e
+- **Successful transactions**
+  - Treasurer authorisation: https://sepolia.basescan.org/tx/0x95043c0bd4a1f27d559d2cac015da03dc18e0feea24e8ac336fe6e721c9d8556
+  - INC-0001 post: https://sepolia.basescan.org/tx/0xec9f42c3aee54860222a41fbdc8ee11d7fe9b0eaf7d12e4306751dc0fff9773d
+- **Refused transactions (status 0)**
+  - Rule 1, not an authorised treasurer: https://sepolia.basescan.org/tx/0xd257bd631b24a9cc76984cabc3e6a0a90cc63a8818d7441089be5df9fb6ce540
+  - Rule 2, books never negative: https://sepolia.basescan.org/tx/0x09a7394a12ace66719cd6039ab7888a9f550612ea62e7b6259c3f2395fa166dd
+  - Rule 3, receipt recorded once: https://sepolia.basescan.org/tx/0xfc4b3fec2641bcde6acdbbebf34bc67dc20de5c8f1e21034e63397ba556bd8ba
+  - Rule 4, no edits, only corrections: https://sepolia.basescan.org/tx/0x292a91339f29dc1b3cdabc6b1ade0bfbfed476085e559f2016f555e4b305a96d
+- **Note:** https://github.com/AryB16/clubledger/blob/main/NOTE.md
+- **Who did what:** https://github.com/AryB16/clubledger/blob/main/WHO_DID_WHAT.md
+
+## Human checklist (H4)
+
+- [ ] Verify on BaseScan from a network that resolves `api.etherscan.io` (command in Phase 7 below), then change "pending" in README.md, DEPLOYMENT.md and this file.
+- [ ] Review the contract and tests, then tick the two boxes in WHO_DID_WHAT.md.
+- [ ] Import Admin, Treasurer and Asst. Treasurer private keys from `contracts/.env` into MetaMask (named "Advisor (admin)", "Treasurer", "Asst. Treasurer"), Base Sepolia network.
+- [ ] Create a second Chrome profile; import Random member there only (this is the judge's "attacker" browser).
+- [ ] On your phone (mobile data): open the three receipt QR codes; confirm Corrected / Cancelled / Genuine.
+- [ ] Live test as Random member on `/manage?demo=1`: blocked card appears; "Send it anyway" creates a failed tx on BaseScan.
+- [ ] Stranger test: hand your phone to someone, say only "Check receipt EXP-0002".
+- [ ] Ask 3 mentors (log in WHO_DID_WHAT.md): correction model; UX confusion; pitch dry-run.
+- [ ] Record the ≤ 3-min video (SPEC §4 item 5).
+- [ ] Print `docs/receipts.html`.
+- [ ] Submit all 6 items by **Mon night**; hard stop Tue 13:00.
+- [ ] Do NOT post EXP-0007 before judging — it's the live demo entry.
 
 ---
 
@@ -147,3 +177,21 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 - Final redeploy, then full Playwright suite on production → 23 passed, 0 failed, 5 skipped (local-only).
 - RPC-down message on all 3 public pages; fallback RPC works; layout shift below 0.1 on all 3.
 - `docs/receipts.html` opens with 3 receipts and 3 loaded QR images. The PNGs were decoded with macOS CoreImage → exact production URLs.
+
+---
+
+## Phase 7 — Final verification and hand-off — ✅ DONE (one open failure: BaseScan verification)
+
+**All gates re-run**
+- G0: RPC → 84532; tools and repo OK.
+- G1: 4 wallets non-zero; `.env` ignored.
+- G2: fresh GitHub clone → 29 Foundry tests passed; anvil deploy + seed → 458000.
+- G3: 458000 and 12 entries; EXP-0002 has 2 versions; EXP-0007 unused; 4 refusals status 0x0 with exact reasons.
+- G4–G6: Playwright on production → 23 passed, 5 skipped (local-only); Vitest 90; check-refusals all passed; the local write-flow suite re-run on a fresh chain → 5 passed.
+- Secrets: 0 key values in full git history, build or live bundle.
+
+**BaseScan verification retried → failed again** (local DNS returns NXDOMAIN for `api.etherscan.io`). From another network (e.g. a phone hotspot):
+
+```bash
+cd ~/Documents/clubledger/clubledger/contracts && (set -a; . ./.env; set +a; ~/.foundry/bin/forge verify-contract 0x210312F9C553a02A9864CC9685854A72d49D4F7e src/ClubLedger.sol:ClubLedger --chain 84532 --verifier etherscan --watch --constructor-args 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001f4249545320447562616920526f626f7469637320436c7562202864656d6f2900)
+```
