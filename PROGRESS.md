@@ -25,7 +25,7 @@
 - [ ] Import Admin, Treasurer and Asst. Treasurer private keys from `contracts/.env` into MetaMask (named "Advisor (admin)", "Treasurer", "Asst. Treasurer"), Base Sepolia network.
 - [ ] Create a second Chrome profile; import Random member there only (this is the judge's "attacker" browser).
 - [ ] On your phone (mobile data): open the three receipt QR codes; confirm Corrected / Cancelled / Genuine.
-- [ ] Live test as Random member on `/manage?demo=1`: blocked card appears; "Send it anyway" creates a failed tx on BaseScan.
+- [x] Live test as Random member on `/manage?demo=1`: blocked card appears; "Send it anyway" creates a failed tx on BaseScan.
 - [ ] Stranger test: hand your phone to someone, say only "Check receipt EXP-0002".
 - [ ] Ask 3 mentors (log in WHO_DID_WHAT.md): correction model; UX confusion; pitch dry-run.
 - [ ] Record the ≤ 3-min video (SPEC §4 item 5).
@@ -222,3 +222,8 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 - Fallback A: local preview on http://localhost:4173, same contract (23 browser tests passed; MetaMask's verdict on localhost not yet tested).
 - Fallback B: `node frontend/scripts/check-refusals.mjs` proves the rules against the deployed contract without MetaMask or transactions.
 - QR receipts and README stay on the kappa URL: switching gains nothing, and those pages need no wallet.
+
+**Real MetaMask test on localhost:4173 (22 Nov 09:36 UTC): PASSED.** Aryesh reported no warnings or errors connecting or sending. On-chain: Random member → `postEntry` EXP-9100 → status reverted, "Not an authorised poster": https://sepolia.basescan.org/tx/0xdaf048b895b386468d0a4da9c5274914deb9cf8ab896086820eda077bfd368da
+- Ledger unchanged on two RPCs (458000, 12 entries); EXP-0007 unused.
+- No Treasurer transaction has been sent through MetaMask, so that profile still needs a connect + refusal rehearsal.
+- Localhost is now the live-demo route; the Blockaid review is for the public /manage page.
