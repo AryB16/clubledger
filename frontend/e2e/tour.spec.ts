@@ -106,12 +106,16 @@ test('tour: taking it is remembered too', async ({ page }) => {
 test('tour: Pause freezes the bar, the clock and the pending action', async ({ page }) => {
   await page.goto('/')
   await replay(page)
-  await next(page)
+  const bar = () => card(page).locator('[data-state="current"] > span').evaluate((el) => parseFloat(el.style.transform.match(/[\d.]+/)?.[0] ?? '0'))
+  await expect.poll(bar).toBeGreaterThan(0) // the clock is running
   await card(page).getByRole('button', { name: 'Pause' }).click()
-  const bar = () => card(page).locator('[data-state="current"] > span').getAttribute('style')
   const frozen = await bar()
-  await page.waitForTimeout(9000) // longer than the step
+  await page.waitForTimeout(1500)
   expect(await bar()).toBe(frozen)
+  // Already paused on arrival, so this can't race step 2's action, which is due after 700 ms.
+  await next(page)
+  await page.waitForTimeout(9000) // longer than the step
+  expect(await bar()).toBe(0)
   await expect(card(page)).toHaveAttribute('data-step', '2')
   const field = page.locator('[data-tour-page] #receipt')
   await expect(field).toHaveValue('')

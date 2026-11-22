@@ -258,10 +258,14 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 
 ---
 
-## Live look kept, ledger and guided tour (branch `ui/keep-theme`) — built, waiting for approval to go live
+## Live look kept, ledger and guided tour (branch `ui/keep-theme`) — ✅ LIVE
 
 - Redesign v3 (`ui/ledger-receipt`) was rejected for its look and is not used. The live Graphite & steel theme stays.
 - Kept from it: running-balance ledger, copyable contract address, quiet search field, "Demo data" marker, long-value layout fixes.
 - Guided tour (SPEC §3.7): 8 steps, about 62 s, played through at 1440x900 and 375x812 in Chromium and WebKit with every target hit, none covered and a clean console.
 - Tests: Vitest 98, Foundry 29, Playwright 55 on public data, tour suite 27 in WebKit, local write suite 5/5, audit 0 problems (11 screens, 5 widths).
-- Not deployed, not merged, not pushed. Untested: real phone, real Safari, real MetaMask on this build.
+- **LIVE 22 Nov, approved by Aryesh.** Merged to main and deployed as `dpl_3JcAqeh4TrL3X4MdXFP5LLex7JpL`. Both domains byte-identical to the tested build (6/6 files).
+- On production: Playwright 55 passed on each domain with no retries; tour played in real time at both sizes in Chromium and WebKit; audit 0 problems; WebKit 24 checks; three QR targets 200.
+- First run on bpdc had 3 tests pass only on retry. One was a timing race in the Pause test (fixed, 24/24 under load). The other two did not recur in repeated runs under load.
+- Rollback: `cd frontend && vercel rollback dpl_9xi9FTHiTmg4Drfw3RGnto6fqwDp`.
+- Not pushed to GitHub. Untested: real phone, real Safari, real MetaMask on this build.
