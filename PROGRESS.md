@@ -33,7 +33,7 @@ Repo: https://github.com/AryB16/clubledger
 
 ---
 
-## Phase 1 — Wallets and funding — ⏳ Admin funded; waiting on Aryesh to fund the other 3 wallets / H2 (Etherscan key)
+## Phase 1 — Wallets and funding — ✅ PASSED
 
 Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 
@@ -47,8 +47,12 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 - `git check-ignore contracts/.env` → `contracts/.env` ✓
 - Pre-push guard: `scripts/check-secrets.sh` (checks .env is ignored and greps tracked files + `frontend/dist` for every PK_/API-key value).
 - **H3 done:** Admin holds 0.02 Base Sepolia ETH (nonce 0), confirmed on two RPCs.
-- **HUMAN STEP (change to step 4):** Aryesh funds Treasurer, Asst. Treasurer and Random member (0.004 ETH each, from Admin or a faucet). Claude Code does not send ETH, testnet included. Gate 1 stays closed until all 4 balances are non-zero.
-- **H2 waiting:** fill `ETHERSCAN_API_KEY` in `contracts/.env` (still empty).
+- **Change to step 4, done by Aryesh:** sent 0.004 ETH from Admin to each of the other three wallets. Claude Code does not send ETH, testnet included.
+- **H2 done:** `ETHERSCAN_API_KEY` is set in `contracts/.env` (value never printed).
+
+**Gate 1 evidence**
+- `cast balance` on sepolia.base.org and publicnode: Admin 0.0079996 (nonce 3), Treasurer 0.004, Asst. Treasurer 0.004, Random member 0.004.
+- `git check-ignore contracts/.env` → `contracts/.env`; `scripts/check-secrets.sh` → OK.
 - **Project move done:** now at `~/Documents/clubledger/clubledger`. `contracts/.env`, `.git` and `.gitmodules` were skipped by the app and restored (`.env` copy byte-identical, git-ignored, all 4 keys match their addresses). Run `npm ci` in `frontend/` before the next build.
 
 ---
