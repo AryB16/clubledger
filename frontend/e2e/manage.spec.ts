@@ -41,7 +41,7 @@ async function nothingSent(page: Page) {
 
 test('random member on ?demo=1: blocked card links to the rule 1 proof', async ({ page }) => {
   await connectAs(page, WHO.random, '/manage?demo=1')
-  await expect(page.getByTestId('role-banner')).toContainText("You're not a treasurer — anything you submit will be blocked.")
+  await expect(page.getByTestId('role-banner')).toContainText("You aren't a treasurer, so you can't add entries.")
   await page.getByLabel('Amount (AED)').fill('500')
   await page.getByRole('button', { name: 'Record it' }).click()
   const card = page.getByTestId('refusal-card')
@@ -66,7 +66,7 @@ test('without ?demo=1 there is no Send it anyway', async ({ page }) => {
 
 test('treasurer: overspend and duplicate are blocked with their own proofs', async ({ page }) => {
   await connectAs(page, WHO.treasurer)
-  await expect(page.getByTestId('role-banner')).toContainText("You're the Treasurer — you can add entries.")
+  await expect(page.getByTestId('role-banner')).toContainText("You're the Treasurer. You can add and correct entries.")
   await expect(page.locator('#ref')).toHaveValue('EXP-0007')
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375)
   await shot(page, 'manage-treasurer')
@@ -85,7 +85,7 @@ test('treasurer: overspend and duplicate are blocked with their own proofs', asy
 
 test('admin: advisor banner, authorise panel, no money form', async ({ page }) => {
   await connectAs(page, WHO.admin)
-  await expect(page.getByTestId('role-banner')).toContainText("You're the Club Advisor — you approve treasurers but can't add money.")
+  await expect(page.getByTestId('role-banner')).toContainText("You're the Club Advisor. You approve treasurers but can't add money.")
   await page.getByLabel('Wallet address').fill(WHO.treasurer)
   await expect(page.getByTestId('addr-status')).toContainText('Currently an authorised treasurer: Treasurer')
   await expect(page.getByTestId('record-form')).toHaveCount(0)

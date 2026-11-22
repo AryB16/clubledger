@@ -45,7 +45,7 @@ const SPEC_COPY: Record<string, string> = {
   'Invalid category': 'Check the highlighted field.',
   'Text too long': 'Check the highlighted field.',
   'Reason required': 'Check the highlighted field.',
-  'Admin cannot be a poster': "The Club Advisor approves treasurers but can't record money — separation of duties.",
+  'Admin cannot be a poster': "The Club Advisor approves treasurers but can't record money. Those jobs are kept separate.",
   'Entry does not exist': 'No entry with that number.',
 }
 
@@ -122,7 +122,7 @@ describe('classifyError', () => {
   it('classifies RPC outages with the plain message', () => {
     const c = classifyError(new HttpRequestError({ url: 'https://x', details: 'Failed to fetch' }))
     expect(c.kind).toBe('network')
-    expect(c.message).toBe("Can't reach the public record right now — try again")
+    expect(c.message).toBe("Can't reach the public record right now. Try again.")
   })
   it('never exposes raw error text', () => {
     const c = classifyError(new Error('TypeError: cannot read properties of undefined at 0x1234'))

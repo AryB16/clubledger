@@ -5,9 +5,10 @@ import { PROOFS } from '../proofs'
 import { correctedSet, statusOf, useLabels, useRecent, useSummary } from '../lib/ledger'
 import { formatAed } from '../lib/money'
 import { normaliseCode, shortAddr } from '../lib/format'
-import { Card, EntryCard, EntryCardSkeleton, ErrorNotice, ExtLink, Skeleton } from '../components/ui'
+import { Icon } from '../components/icons'
+import { EntryCard, EntryCardSkeleton, ErrorNotice, ExtLink, Skeleton, Statement } from '../components/ui'
 
-export function ReceiptSearch({ initial = '', autoFocus = true }: { initial?: string; autoFocus?: boolean }) {
+export function ReceiptSearch({ initial = '', autoFocus = true, onDark = false }: { initial?: string; autoFocus?: boolean; onDark?: boolean }) {
   const [code, setCode] = useState(initial)
   const navigate = useNavigate()
   const submit = (ev: FormEvent) => {
@@ -16,11 +17,15 @@ export function ReceiptSearch({ initial = '', autoFocus = true }: { initial?: st
     if (c) navigate(`/check/${encodeURIComponent(c)}`)
   }
   return (
-    <form onSubmit={submit} role="search" className="w-full">
-      <label htmlFor="receipt" className="mb-1.5 block text-sm font-semibold text-slate-700">
+    <form onSubmit={submit} role="search" className="w-full max-w-lg">
+      <label htmlFor="receipt" className={`mb-2 block text-sm font-semibold ${onDark ? 'text-forest-100' : 'text-ink'}`}>
         Receipt number
       </label>
-      <div className="flex gap-2">
+      <div
+        className={`flex items-center gap-2 rounded-full border bg-paper p-1.5 pl-5 focus-within:outline-3 focus-within:outline-offset-3 ${
+          onDark ? 'border-transparent focus-within:outline-zest' : 'border-field focus-within:outline-forest-700'
+        }`}
+      >
         <input
           id="receipt"
           name="receipt"
@@ -31,12 +36,9 @@ export function ReceiptSearch({ initial = '', autoFocus = true }: { initial?: st
           autoComplete="off"
           autoCapitalize="characters"
           spellCheck={false}
-          className="min-h-14 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-4 font-mono text-lg uppercase text-slate-900 placeholder:normal-case placeholder:text-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/30"
+          className="min-h-14 w-full min-w-0 bg-transparent font-mono text-lg text-ink uppercase placeholder:text-muted placeholder:normal-case focus:outline-none focus-visible:outline-none"
         />
-        <button
-          type="submit"
-          className="min-h-14 shrink-0 rounded-2xl bg-emerald-700 px-6 text-lg font-semibold text-white hover:bg-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700"
-        >
+        <button type="submit" className="btn btn-zest min-h-14 shrink-0 text-lg">
           Check
         </button>
       </div>
@@ -44,83 +46,93 @@ export function ReceiptSearch({ initial = '', autoFocus = true }: { initial?: st
   )
 }
 
-function Totals() {
+function BalanceSlip() {
   const s = useSummary()
   if (s.isError && !s.data) return <ErrorNotice onRetry={() => s.refetch()} />
   const d = s.data
   return (
-    <Card className="p-5">
-      <p className="text-sm font-medium text-slate-500">Balance</p>
-      {d ? (
-        <p data-testid="balance" className="mt-1 text-4xl font-bold tracking-tight text-slate-900 tabular-nums">
-          {formatAed(d.balance)}
-        </p>
-      ) : (
-        <Skeleton className="mt-1 h-10 w-56" />
-      )}
-      <div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4">
-        <div>
-          <p className="text-xs font-medium text-slate-500">Money in</p>
-          {d ? (
-            <p className="mt-0.5 font-semibold text-emerald-700 tabular-nums">{formatAed(d.totalIncome)}</p>
-          ) : (
-            <Skeleton className="mt-1 h-5 w-28" />
-          )}
-        </div>
-        <div>
-          <p className="text-xs font-medium text-slate-500">Money out</p>
-          {d ? (
-            <p className="mt-0.5 font-semibold text-slate-900 tabular-nums">{formatAed(d.totalExpense)}</p>
-          ) : (
-            <Skeleton className="mt-1 h-5 w-28" />
-          )}
-        </div>
+    <div className="slip-shadow">
+      <div className="slip px-6 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10">
+        <p className="font-medium text-muted">Club balance</p>
+        {d ? (
+          <p data-testid="balance" className="mt-1 text-[2.5rem] leading-12 font-bold tracking-tight whitespace-nowrap tabular-nums sm:text-5xl sm:leading-14">
+            {formatAed(d.balance)}
+          </p>
+        ) : (
+          <Skeleton className="mt-1 h-12 w-56 sm:h-14" />
+        )}
+        <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-dashed border-field/60 pt-5">
+          <div>
+            <dt className="text-sm text-muted">Money in</dt>
+            <dd className="mt-1 h-6 font-semibold whitespace-nowrap text-forest-700 tabular-nums">
+              {d ? formatAed(d.totalIncome) : <Skeleton className="h-6 w-28" />}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-sm text-muted">Money out</dt>
+            <dd className="mt-1 h-6 font-semibold whitespace-nowrap tabular-nums">
+              {d ? formatAed(d.totalExpense) : <Skeleton className="h-6 w-28" />}
+            </dd>
+          </div>
+        </dl>
       </div>
-    </Card>
+    </div>
+  )
+}
+
+function Hero() {
+  return (
+    <section className="relative">
+      {/* On phones the green stops behind the slip, so the slip sits across the edge. */}
+      <div aria-hidden className="band band-forest absolute inset-x-0 top-0 bottom-28 lg:bottom-0" style={{ position: 'absolute' }} />
+      <div className="wrap relative grid gap-9 pt-9 pb-2 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-20 lg:py-24">
+        <div className="on-dark text-white">
+          <h1 className="max-w-xl text-[2.85rem] leading-[0.98] font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
+            Every dirham, <span className="text-zest">out in the open.</span>
+          </h1>
+          <p className="mt-4 mb-7 max-w-md text-lg leading-relaxed text-forest-100">
+            See what the Robotics Club gets and spends, or look up any receipt.
+          </p>
+          <ReceiptSearch onDark />
+        </div>
+        <BalanceSlip />
+      </div>
+    </section>
   )
 }
 
 function Rules() {
   return (
-    <section aria-labelledby="rules-h" data-testid="rules">
-      <h2 id="rules-h" className="text-lg font-semibold text-slate-900">
-        Rules this contract enforces
-      </h2>
-      <p className="mt-1 text-sm text-slate-600">
-        Each rule has a real example of it letting something through and refusing something, on the public record.
-      </p>
-      <ol className="mt-3 space-y-3">
+    <section aria-labelledby="rules-h" data-testid="rules" className="wrap grid gap-7 pt-14 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-16 lg:pt-24">
+      <div>
+        <h2 id="rules-h" className="text-4xl leading-none font-bold tracking-tight sm:text-5xl">
+          The club's rulebook
+        </h2>
+        <p className="mt-3 max-w-sm leading-relaxed text-muted">
+          A smart contract enforces these four rules. Open a real example of what it allowed, or what it refused.
+        </p>
+      </div>
+      <ol className="sheet grid overflow-hidden sm:grid-cols-2">
         {PROOFS.map((p) => (
-          <li key={p.rule}>
-            <Card className="p-4">
-              <div className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
-                  {p.rule}
-                </span>
-                <div className="min-w-0">
-                  <p className="font-semibold text-slate-900">{p.title}</p>
-                  <p className="mt-0.5 text-sm text-slate-600">{p.description}</p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    <a
-                      href={txUrl(p.passedTx)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex min-h-11 items-center rounded-xl bg-green-50 px-3 text-sm font-semibold text-green-800 ring-1 ring-green-200 hover:bg-green-100"
-                    >
-                      ✓ Passed ↗
-                    </a>
-                    <a
-                      href={txUrl(p.refusedTx)}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex min-h-11 items-center rounded-xl bg-red-50 px-3 text-sm font-semibold text-red-800 ring-1 ring-red-200 hover:bg-red-100"
-                    >
-                      ✗ Refused ↗
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </Card>
+          <li
+            key={p.rule}
+            className="flex flex-col border-line p-5 not-first:border-t sm:p-7 sm:even:border-l sm:[&:nth-child(2)]:border-t-0"
+          >
+            <span aria-hidden className="font-display text-4xl font-extrabold text-forest-700/55">
+              {p.rule}
+            </span>
+            <h3 className="mt-2 text-xl leading-tight font-bold">{p.title}</h3>
+            <p className="mt-2 mb-4 text-muted">{p.description}</p>
+            <div className="mt-auto flex flex-wrap gap-2">
+              <a href={txUrl(p.passedTx)} target="_blank" rel="noreferrer" className="btn min-h-11 bg-forest-50 px-4 text-sm text-forest-800 hover:bg-forest-100">
+                <Icon name="check" />
+                Passed
+              </a>
+              <a href={txUrl(p.refusedTx)} target="_blank" rel="noreferrer" className="btn min-h-11 bg-[#f9e5de] px-4 text-sm text-brick hover:bg-[#f3d5cb]">
+                <Icon name="cross" />
+                Refused
+              </a>
+            </div>
           </li>
         ))}
       </ol>
@@ -133,25 +145,62 @@ function Recent() {
   const label = useLabels((r.data ?? []).map((e) => e.poster))
   const corrected = correctedSet(r.data ?? [])
   return (
-    <section aria-labelledby="recent-h">
-      <div className="flex items-baseline justify-between">
-        <h2 id="recent-h" className="text-lg font-semibold text-slate-900">
+    <section aria-labelledby="recent-h" className="wrap grid gap-6 py-14 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-16 lg:py-24">
+      <div>
+        <h2 id="recent-h" className="text-4xl leading-none font-bold tracking-tight sm:text-5xl">
           Latest entries
         </h2>
-        <Link to="/ledger" className="inline-flex min-h-11 items-center text-sm font-semibold text-emerald-700 underline underline-offset-2">
+        <Link to="/ledger" className="mt-2 inline-flex min-h-11 items-center font-semibold text-forest-700 underline underline-offset-4">
           See all entries
         </Link>
       </div>
-      <div className="mt-2 space-y-2">
-        {r.isError && !r.data ? (
-          <ErrorNotice onRetry={() => r.refetch()} />
-        ) : r.isPending ? (
-          Array.from({ length: 5 }, (_, i) => <EntryCardSkeleton key={i} />)
-        ) : r.data && r.data.length === 0 ? (
-          <Card className="p-4 text-sm text-slate-600">Nothing has been recorded yet.</Card>
-        ) : (
-          r.data!.map((e) => <EntryCard key={e.id.toString()} e={e} status={statusOf(e, corrected)} label={label(e.poster)} />)
-        )}
+      {r.isError && !r.data ? (
+        <ErrorNotice onRetry={() => r.refetch()} />
+      ) : (
+        <Statement>
+          {r.isPending ? (
+            Array.from({ length: 5 }, (_, i) => <EntryCardSkeleton key={i} />)
+          ) : r.data && r.data.length === 0 ? (
+            <p className="p-6 text-muted">Nothing has been recorded yet.</p>
+          ) : (
+            r.data!.map((e) => <EntryCard key={e.id.toString()} e={e} status={statusOf(e, corrected)} label={label(e.poster)} />)
+          )}
+        </Statement>
+      )}
+    </section>
+  )
+}
+
+function HowItWorks() {
+  return (
+    <section aria-labelledby="how-h" className="band band-plain band-forest on-dark">
+      <div className="wrap py-14 lg:py-20">
+        <h2 id="how-h" className="text-4xl leading-none font-bold tracking-tight sm:text-5xl">
+          How this works
+        </h2>
+        <div className="mt-8 grid gap-7 md:grid-cols-2 md:gap-14">
+          <div>
+            <h3 className="text-xl font-bold text-zest">What's public</h3>
+            <p className="mt-2 leading-relaxed text-forest-100">
+              Every entry, amount and receipt number. Who recorded it and when. Each correction with its reason, the list
+              of treasurers, and the balance.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-zest">What isn't</h3>
+            <p className="mt-2 leading-relaxed text-forest-100">
+              The paper receipts and invoices, and the club's bank account. This website's design isn't part of the record
+              either. The site reads the record and has no power to change past entries.
+            </p>
+          </div>
+        </div>
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-white/15 pt-5 text-forest-100">
+          <span>
+            Contract <span className="font-mono text-sm">{shortAddr(CONTRACT_ADDRESS)}</span>
+          </span>
+          <ExtLink href={contractUrl}>View contract</ExtLink>
+          <ExtLink href={REPO_URL}>Source code</ExtLink>
+        </div>
       </div>
     </section>
   )
@@ -159,39 +208,11 @@ function Recent() {
 
 export default function Home() {
   return (
-    <div className="space-y-8">
-      <section>
-        <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl">
-          Robotics Club Money — every dirham, on the record.
-        </h1>
-        <p className="mt-2 text-base text-slate-600">
-          Anyone can check it. Only the treasurer can add to it. Nobody can quietly change it.
-        </p>
-        <div className="mt-5">
-          <ReceiptSearch />
-        </div>
-      </section>
-      <Totals />
+    <>
+      <Hero />
       <Rules />
       <Recent />
-      <footer className="space-y-3 border-t border-slate-200 pt-6 text-sm text-slate-600">
-        <h2 className="text-base font-semibold text-slate-900">How this works</h2>
-        <p>
-          <span className="font-medium text-slate-800">On the public record:</span> every entry, amount, receipt
-          number, who recorded it and when, every correction and its reason, who is allowed to record money, and the
-          balance.
-        </p>
-        <p>
-          <span className="font-medium text-slate-800">Not on the public record:</span> the paper receipts and
-          invoices themselves, the club's bank account, and how this website looks. The website only reads the record;
-          it can't change it.
-        </p>
-        <p>
-          The rulebook lives at <span className="font-mono text-xs text-slate-500">{shortAddr(CONTRACT_ADDRESS)}</span>{' '}
-          · <ExtLink href={contractUrl}>View contract ↗</ExtLink> · <ExtLink href={REPO_URL}>Source code ↗</ExtLink>
-        </p>
-        <p className="text-xs text-slate-400">Demo for Hash It Out 2026. All names and amounts are fictional.</p>
-      </footer>
-    </div>
+      <HowItWorks />
+    </>
   )
 }

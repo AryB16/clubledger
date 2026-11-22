@@ -23,11 +23,11 @@ export const REFUSAL_COPY: Record<string, string> = {
   'Invalid category': FIELD,
   'Text too long': FIELD,
   'Reason required': FIELD,
-  'Admin cannot be a poster': "The Club Advisor approves treasurers but can't record money — separation of duties.",
+  'Admin cannot be a poster': "The Club Advisor approves treasurers but can't record money. Those jobs are kept separate.",
   'Already a poster': 'This address is already an authorised treasurer.',
   'Not a poster': 'This address is not a current treasurer.',
   'Invalid address': 'Enter a valid address.',
-  'Invalid label': 'Give the treasurer a label of 1–32 characters.',
+  'Invalid label': 'Give the treasurer a label of 1 to 32 characters.',
   'Entry does not exist': 'No entry with that number.',
 }
 
@@ -109,7 +109,7 @@ export function classifyError(err: unknown): { kind: FailureKind; reason: string
     return { kind: 'rejected', reason: null, message: 'You cancelled the request in your wallet. Nothing was sent.' }
   }
   if (/fetch|network|timeout|timed out|http request failed|failed to fetch/.test(text)) {
-    return { kind: 'network', reason: null, message: "Can't reach the public record right now — try again" }
+    return { kind: 'network', reason: null, message: "Can't reach the public record right now. Try again." }
   }
   if (text.includes('insufficient funds')) {
     return {
@@ -118,5 +118,5 @@ export function classifyError(err: unknown): { kind: FailureKind; reason: string
       message: 'This wallet has no test funds to pay the network fee. Top it up and try again.',
     }
   }
-  return { kind: 'unknown', reason: null, message: 'Something went wrong. Nothing was recorded — try again.' }
+  return { kind: 'unknown', reason: null, message: 'Something went wrong. Nothing was recorded. Try again.' }
 }

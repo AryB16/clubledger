@@ -233,3 +233,15 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 **Video vs live demo (proposed, awaiting Aryesh):** SPEC §4.5 needs a successful post on camera, but EXP-0007 is reserved for judging. Proposal: post INC-0005 (Money in, AED 100) in the video. It simulates OK and leaves the Money out prefill at EXP-0007. It permanently makes the balance 4,680.00 and 13 entries, so the two Playwright expectations (4,580 / 12) would need updating to the new real state, and the screenshots would be older than the ledger.
 
 - **Blockaid review request:** Aryesh reported sending it on 22 Nov. Outcome pending. Submitted domain: clubledger-kappa.vercel.app (the one in the QR codes, README and submission). The report text also names the bpdc domain, which is not used in the submission.
+
+---
+
+## Redesign: Forest & cream (22 Nov, branch `ui/forest-cream`, awaiting Aryesh's approval; not deployed)
+
+- Aryesh chose the direction and a copy rewrite that keeps the key terms. SPEC §2.5 UI copy, §3.2–3.5 and the rule 4 title updated to match. Contract, reads and write logic unchanged.
+- Gates: TypeScript clean; Vitest 90; Playwright on live data 23 passed (5 local-only skipped); local write suite 5/5 twice on a fresh standalone chain replaying the public deployment; CLS ≤ 0.024.
+- Audit on 11 screens at 320/375/768/1024/1440 px: 0 overflow, clipped text, small tap target, contrast failure or page error.
+- Tests changed only where approved wording changed; every assertion kept.
+- The write suite hung on an anvil *fork* (the node stopped producing blocks); it passes on a standalone chain.
+- One long dash remains on screen: EXP-0004's correction reason, which is permanent on-chain data.
+- Not tested: real MetaMask on this build, real phones, Safari.

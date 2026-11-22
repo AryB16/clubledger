@@ -17,7 +17,7 @@ async function shot(page: Page, name: string) {
 
 test('home: balance, rules panel with 8 public-proof links, recent entries', async ({ page }) => {
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: /every dirham, on the record/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Every dirham, out in the open/ })).toBeVisible()
   await expect(page.getByTestId('balance')).toHaveText(/AED\s?4,580\.00/)
   const rules = page.getByTestId('rules')
   await expect(rules.getByRole('listitem')).toHaveCount(4)
@@ -38,19 +38,19 @@ test('search box navigates to the verdict page (trim + uppercase)', async ({ pag
   await page.getByLabel('Receipt number').fill('  inc-0001 ')
   await page.getByRole('button', { name: 'Check' }).click()
   await expect(page).toHaveURL(/\/check\/INC-0001$/)
-  await expect(page.getByTestId('verdict')).toContainText('✓ Genuine record')
+  await expect(page.getByTestId('verdict')).toContainText('Genuine record')
 })
 
 for (const code of ['EXP-0002', 'exp-0002']) {
   test(`/check/${code} shows Corrected with both versions and the reason`, async ({ page }) => {
     await page.goto(`/check/${code}`)
     const v = page.getByTestId('verdict')
-    await expect(v).toContainText('Corrected — see what changed')
+    await expect(v).toContainText('Corrected')
     await expect(v).toContainText('1 correction')
     await expect(page.getByText(/420\.00/).first()).toBeVisible()
     await expect(page.getByText(/380\.00/).first()).toBeVisible()
     await expect(page.getByText('Vendor refunded AED 40 for undelivered items')).toBeVisible()
-    await expect(page.getByText('Original — kept forever')).toBeVisible()
+    await expect(page.getByText('Original entry')).toBeVisible()
     await expect(page.getByTestId('version')).toHaveCount(2)
     await noHorizontalScroll(page)
     if (code === 'EXP-0002') await shot(page, 'check-EXP-0002-corrected')
@@ -67,7 +67,7 @@ test('/check/EXP-0004 shows Cancelled', async ({ page }) => {
 
 test('/check/INC-0001 shows Genuine', async ({ page }) => {
   await page.goto('/check/INC-0001')
-  await expect(page.getByTestId('verdict')).toContainText('✓ Genuine record')
+  await expect(page.getByTestId('verdict')).toContainText('Genuine record')
   await expect(page.getByTestId('verdict')).toContainText('Recorded by Treasurer')
   await noHorizontalScroll(page)
   await shot(page, 'check-INC-0001-genuine')
@@ -75,7 +75,7 @@ test('/check/INC-0001 shows Genuine', async ({ page }) => {
 
 test('/check/XYZ-1 shows No such record', async ({ page }) => {
   await page.goto('/check/XYZ-1')
-  await expect(page.getByTestId('verdict')).toContainText('✗ No such record')
+  await expect(page.getByTestId('verdict')).toContainText('No such record')
   await expect(page.getByText("No entry with this receipt number was ever recorded by this club's contract.")).toBeVisible()
   await noHorizontalScroll(page)
   await shot(page, 'check-XYZ-1-not-found')
@@ -97,7 +97,8 @@ test('/ledger lists all 12 entries with filters', async ({ page }) => {
 
 test('/manage without a wallet asks to connect', async ({ page }) => {
   await page.goto('/manage')
-  await expect(page.getByText('Connect a wallet to add entries (not needed to check).')).toBeVisible()
+  await expect(page.getByText('Connect a wallet to add entries.')).toBeVisible()
+  await expect(page.getByText("You don't need one to check receipts.")).toBeVisible()
   await expect(page.getByRole('button', { name: 'Connect wallet' })).toBeVisible()
   await noHorizontalScroll(page)
   await shot(page, 'manage-no-wallet')

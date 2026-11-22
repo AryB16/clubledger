@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 const RPC = /base-sepolia-rpc\.publicnode\.com|sepolia\.base\.org/
-const DOWN = "Can't reach the public record right now — try again"
+const DOWN = "Can't reach the public record right now. Try again."
 
 for (const path of ['/', '/ledger', '/check/EXP-0002']) {
   test(`${path}: plain message when both RPCs are down`, async ({ page }) => {
@@ -15,14 +15,14 @@ for (const path of ['/', '/ledger', '/check/EXP-0002']) {
 test('falls back to the second RPC when the first is down', async ({ page }) => {
   await page.route(/base-sepolia-rpc\.publicnode\.com/, (r) => r.abort())
   await page.goto('/check/INC-0001')
-  await expect(page.getByTestId('verdict')).toContainText('✓ Genuine record')
+  await expect(page.getByTestId('verdict')).toContainText('Genuine record')
 })
 
 test('a percent sign in the receipt number does not crash the page', async ({ page }) => {
   await page.goto('/')
   await page.getByLabel('Receipt number').fill('100%')
   await page.getByRole('button', { name: 'Check' }).click()
-  await expect(page.getByTestId('verdict')).toContainText('✗ No such record')
+  await expect(page.getByTestId('verdict')).toContainText('No such record')
 })
 
 test('treasurer is not called a non-treasurer when the role lookup fails', async ({ page }) => {

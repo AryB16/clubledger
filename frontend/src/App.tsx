@@ -1,24 +1,56 @@
-import { NavLink, Route, Routes, Link } from 'react-router-dom'
+import { useLayoutEffect } from 'react'
+import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Check from './pages/Check'
 import Ledger from './pages/Ledger'
 import Manage from './pages/Manage'
+import { PageHead } from './components/ui'
 
 const nav = ({ isActive }: { isActive: boolean }) =>
-  `inline-flex min-h-11 items-center rounded-xl px-3 text-sm font-medium ${
-    isActive ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900'
+  `inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-2 text-sm font-medium transition-colors min-[360px]:px-3 sm:px-4 ${
+    isActive ? 'bg-white/15 text-white' : 'text-forest-200 hover:text-white'
   }`
+
+function Brand() {
+  return (
+    <Link to="/" className="inline-flex min-h-11 items-center gap-2 font-display text-lg font-bold text-white sm:text-xl">
+      <img src="/favicon.svg" alt="" width="30" height="30" className="h-7.5 w-7.5" />
+      <span className="max-[339px]:sr-only">ClubLedger</span>
+    </Link>
+  )
+}
+
+/** The router keeps the scroll position by default, which hid the verdict after tapping an entry. */
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  // Braces matter: newer Chrome returns a Promise from scrollTo, which React would call as a cleanup.
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
+
+function NotFound() {
+  return (
+    <>
+      <PageHead title="Page not found" />
+      <div className="wrap py-10">
+        <Link to="/" className="btn btn-dark">
+          Go to the home page
+        </Link>
+      </div>
+    </>
+  )
+}
 
 export default function App() {
   return (
-    <div className="min-h-dvh bg-white">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-2xl items-center justify-between gap-2 px-4 py-2">
-          <Link to="/" className="inline-flex min-h-11 items-center gap-2 font-semibold text-slate-900">
-            <img src="/favicon.svg" alt="" className="h-6 w-6" />
-            ClubLedger
-          </Link>
-          <nav className="flex items-center gap-1">
+    <div className="min-h-dvh">
+      <ScrollToTop />
+      <header className="on-dark bg-forest-950">
+        <div className="wrap flex items-center justify-between gap-1 py-3">
+          <Brand />
+          <nav aria-label="Main" className="flex items-center sm:gap-1">
             <NavLink to="/ledger" className={nav}>
               All entries
             </NavLink>
@@ -28,22 +60,22 @@ export default function App() {
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-2xl px-4 pb-16 pt-6">
+      {/* A full screen tall, so the footer never jumps while the record loads. */}
+      <main className="page min-h-dvh">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/check/:code" element={<Check />} />
           <Route path="/ledger" element={<Ledger />} />
           <Route path="/manage" element={<Manage />} />
-          <Route
-            path="*"
-            element={
-              <p className="text-slate-600">
-                Page not found. <Link to="/" className="font-medium text-emerald-700 underline">Go home</Link>
-              </p>
-            }
-          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+      <footer className="on-dark bg-forest-950">
+        <div className="wrap flex flex-col gap-2 py-7 sm:flex-row sm:items-center sm:justify-between">
+          <Brand />
+          <p className="text-sm text-forest-200">A student project for Hash It Out 2026. All names and amounts are fictional.</p>
+        </div>
+      </footer>
     </div>
   )
 }

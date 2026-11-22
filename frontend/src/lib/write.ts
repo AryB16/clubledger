@@ -65,7 +65,7 @@ export function useWriteFlow(onToast: (t: Toast | null) => void) {
       const { hash, ok } = await send(call)
       if (ok) {
         setState({ phase: 'done', hash })
-        onToast({ text: 'Recorded ✓ View public proof ↗', href: hash, tone: 'ok' })
+        onToast({ text: 'Recorded. View public proof', href: hash, tone: 'ok' })
         return true
       }
       setState({ phase: 'error', message: 'The rulebook refused this when it arrived. Nothing was recorded.' })

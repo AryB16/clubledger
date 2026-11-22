@@ -29,7 +29,7 @@ receipts, and edits.
 1. **Only authorised treasurers can record money.** Anyone else is refused.
 2. **The books can never go negative.** An expense larger than the recorded balance is refused.
 3. **A receipt can only be recorded once.** Duplicate receipt numbers are refused.
-4. **No edits — only corrections.** A correction is a new entry; the original stays forever; an already-corrected version cannot be corrected again.
+4. **Corrections, never edits.** A correction is a new entry; the original stays forever; an already-corrected version cannot be corrected again.
 
 All other checks are silent input validation.
 
@@ -164,7 +164,7 @@ event EntryCorrected(uint256 indexed previousId, uint256 indexed newId, address 
 | `Amount must be greater than zero` | Enter an amount above zero. |
 | `Invalid reference code` | Receipt numbers use capital letters, digits and dashes only (e.g. EXP-0007), up to 16 characters. |
 | `Invalid category` / `Text too long` / `Reason required` | Check the highlighted field. |
-| `Admin cannot be a poster` | The Club Advisor approves treasurers but can't record money — separation of duties. |
+| `Admin cannot be a poster` | The Club Advisor approves treasurers but can't record money. Those jobs are kept separate. |
 | `Already a poster` / `Not a poster` / `Invalid address` / `Invalid label` | (admin panel form errors) |
 | `Entry does not exist` | No entry with that number. |
 
@@ -222,7 +222,7 @@ Force-send failing calls with `cast send … --gas-limit 300000` (setting a gas 
 | 1 Only authorised treasurers | INC-0001 post tx | `PK_RANDOM` posts `EXP-9001` AED 500 → `Not an authorised poster` |
 | 2 Books never negative | EXP-0001 post tx | Treasurer posts `EXP-9002` AED 50,000 → `Expense exceeds club balance` |
 | 3 Receipt recorded once | INC-0001 post tx | Treasurer re-posts `INC-0001` → `Reference code already used` |
-| 4 No edits, only corrections | C1 correction tx | Treasurer corrects the ORIGINAL EXP-0002 id again → `Entry already corrected - correct the latest version` |
+| 4 Corrections, never edits | C1 correction tx | Treasurer corrects the ORIGINAL EXP-0002 id again → `Entry already corrected - correct the latest version` |
 
 ---
 
@@ -251,7 +251,7 @@ Money: amounts are `bigint` fils. Parse input strings like `"1,250.50"` into fil
 | refCode | Receipt number |
 | poster | Treasurer / authorised treasurer |
 | voided | Cancelled |
-| revert, simulate, tx hash, chain ID, Base Sepolia (in main flow) | "View public proof ↗" (links to BaseScan) |
+| revert, simulate, tx hash, chain ID, Base Sepolia (in main flow) | "View public proof" (links to BaseScan) |
 | raw address as the main label | Role label first ("Treasurer"), short address `0x12ab…89ef` in small grey below |
 | wallet (outside `/manage`) | — |
 
@@ -260,12 +260,12 @@ Receipt-number inputs: trim + uppercase before lookup.
 ### 3.3 Routes
 
 **`/` Home — top to bottom:**
-1. Headline: **"Robotics Club Money — every dirham, on the record."** Subhead: "Anyone can check it. Only the treasurer can add to it. Nobody can quietly change it."
+1. Headline: **"Every dirham, out in the open."** Subhead: "See what the Robotics Club gets and spends, or look up any receipt."
 2. Big search: label "Receipt number", placeholder "e.g. EXP-0002", button **Check** (≥56 px tall, autofocus) → navigates to `/check/:code`.
 3. One row: **Balance** (large, tabular numerals) · Money in · Money out — from `summary()`.
-4. Panel **"Rules this contract enforces"** — the 4 headline rules, each with `✓ Passed ↗` and `✗ Refused ↗` links from `proofs.ts`.
+4. Panel **"The club's rulebook"** — the 4 headline rules, each with "Passed" and "Refused" links (SVG icons) from `proofs.ts`.
 5. 5 most recent entries as cards → link "See all entries" (`/ledger`).
-6. Short "How this works" footer: what's on the public record vs not; contract address with "View contract ↗"; repo link.
+6. Short "How this works" footer: what's on the public record vs not; contract address with "View contract"; repo link.
 
 **`/check/:code` — the verdict page** (also reachable directly from printed QR codes):
 - Logic: `versionsOf(code)` → `[]` NOT FOUND · length 1 GENUINE · length > 1 and latest amount 0 → CANCELLED · else CORRECTED.
@@ -273,24 +273,24 @@ Receipt-number inputs: trim + uppercase before lookup.
 
 | Verdict | Colour | Headline |
 |---|---|---|
-| GENUINE | green | ✓ Genuine record |
-| CORRECTED | amber | Corrected — see what changed |
+| GENUINE | green | Genuine record |
+| CORRECTED | amber | Corrected |
 | CANCELLED | grey | Cancelled |
-| NOT FOUND | red | ✗ No such record |
+| NOT FOUND | red | No such record |
 
-- Under the headline (one line): "Recorded by {label} · {date, time} · cannot be edited · {n} correction(s)" + "View public proof ↗" (contract page on BaseScan).
+- Under the headline (one line): "Recorded by {label} on {date, time}. It can't be edited. No corrections." (or "{n} correction(s), shown below.") + "View public proof" (contract page on BaseScan).
 - Details card for the latest version: kind, amount, category, counterparty, description.
-- Version timeline (vertical, newest first): amount, reason (for corrections), who, when. The original is labelled "Original — kept forever".
+- Version timeline (vertical, newest first): amount, reason (for corrections), who, when. The original is labelled "Original entry".
 - NOT FOUND body: "No entry with this receipt number was ever recorded by this club's contract."
 
 **`/ledger`** — all entries as cards (paged via `getEntries`, 50 at a time), filter All / Income / Expense, each card: receipt number, date, Income/Expense badge, AED, category, counterparty, status badge (Latest / Corrected / Correction / Cancelled), treasurer label; tapping a card goes to `/check/:code`.
 
 **`/manage`** — one role-aware page:
-- Not connected: "Connect a wallet to add entries (not needed to check)." + Connect button. Auto-switch to Base Sepolia.
+- Not connected: "Connect a wallet to add entries." + "You don't need one to check receipts." + Connect button. Auto-switch to Base Sepolia.
 - Role banner (permanent at top):
-  - Admin: "You're the Club Advisor — you approve treasurers but can't add money." → shows **Authorise / Revoke** panel (address + label; list of current & former treasurers).
-  - Poster: "You're the {label} — you can add entries." → shows **Record money** form (Income/Expense toggle, amount, category select, counterparty, description, receipt number pre-filled with the next free `INC-`/`EXP-` number) and **Correct an entry** form (receipt number → loads latest version → new amount, fields, required reason).
-  - No role: "You're not a treasurer — anything you submit will be blocked." → **still shows the Record money form** (this is the judge-participation refusal demo).
+  - Admin: "You're the Club Advisor. You approve treasurers but can't add money." → shows **Authorise / Revoke** panel (address + label; list of current & former treasurers).
+  - Poster: "You're the {label}. You can add and correct entries." → shows **Record money** form (Income/Expense toggle, amount, category select, counterparty, description, receipt number pre-filled with the next free `INC-`/`EXP-` number) and **Correct an entry** form (receipt number → loads latest version → new amount, fields, required reason).
+  - No role: "You aren't a treasurer, so you can't add entries." → **still shows the Record money form** (this is the judge-participation refusal demo).
 
 ### 3.4 Write flow and the refusal card (the 25-mark screen)
 
@@ -299,13 +299,15 @@ Receipt-number inputs: trim + uppercase before lookup.
    - Title: **"Blocked by the club's rulebook"**
    - Body: mapped copy + "The rulebook is a smart contract on a public blockchain, not this website. Nobody can switch it off."
    - Button: **"Show the refusal on the public record"** → BaseScan link of the matching ✗ proof from `proofs.ts`.
-   - Only when URL has `?demo=1`: secondary button **"Send it anyway"** → `writeContract` with `gas: 300000n`, wait for receipt, then show "Refused on-chain — view it ↗" with the new tx link.
-3. If simulation passes: `writeContract` → toast "Recording…" → `waitForTransactionReceipt` → toast "Recorded ✓ View public proof ↗" → invalidate reads.
+   - Only when URL has `?demo=1`: secondary button **"Send it anyway"** → `writeContract` with `gas: 300000n`, wait for receipt, then show "View this refusal on the blockchain" with the new tx link.
+3. If simulation passes: `writeContract` → toast "Recording…" → `waitForTransactionReceipt` → toast "Recorded. View public proof" → invalidate reads.
 4. Unknown errors (user rejected, RPC down): plain message, never a raw stack.
 
 ### 3.5 Visual direction
 
-Bank statement, not crypto app. White background, slate text, one emerald accent; verdict colours green/amber/grey/red. Inter font, large tabular numerals for AED, `rounded-2xl` cards, no gradients, no neon, no crypto imagery. Mobile-first single column; test at 375 px wide; no horizontal scroll; tap targets ≥ 44 px.
+_Revised 22 Nov 2026 at Aryesh's request, with the copy in §2.5 and §3.2–3.4. Replaces "white background, no gradients"._
+
+Forest & cream: a public statement with the polish of a good consumer money app, in its own identity (never another brand's look). Deep forest gradient bands with fine banknote linework, warm cream pages, lime primary action on green. Verdict colours green/amber/grey/red. Bricolage Grotesque headings, IBM Plex Sans body with tabular numerals, IBM Plex Mono receipt numbers. Entries are lines on a statement; the balance is a torn-edge slip. No neon, no coin or crypto imagery, no emoji, no long dashes in on-screen copy. Mobile-first; test at 375 px wide and at laptop widths; no horizontal scroll; tap targets ≥ 44 px; WCAG AA contrast.
 
 ### 3.6 Deploy
 
