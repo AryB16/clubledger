@@ -49,7 +49,7 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 - **H3 done:** Admin holds 0.02 Base Sepolia ETH (nonce 0), confirmed on two RPCs.
 - **HUMAN STEP (change to step 4):** Aryesh funds Treasurer, Asst. Treasurer and Random member (0.004 ETH each, from Admin or a faucet). Claude Code does not send ETH, testnet included. Gate 1 stays closed until all 4 balances are non-zero.
 - **H2 waiting:** fill `ETHERSCAN_API_KEY` in `contracts/.env` (still empty).
-- **Project move:** to `~/Documents/clubledger` requested and approved; copy of `contracts/.env` not yet confirmed.
+- **Project move done:** now at `~/Documents/clubledger/clubledger`. `contracts/.env`, `.git` and `.gitmodules` were skipped by the app and restored (`.env` copy byte-identical, git-ignored, all 4 keys match their addresses). Run `npm ci` in `frontend/` before the next build.
 
 ---
 
