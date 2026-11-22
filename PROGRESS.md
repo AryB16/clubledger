@@ -232,4 +232,4 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 
 **Video vs live demo (proposed, awaiting Aryesh):** SPEC §4.5 needs a successful post on camera, but EXP-0007 is reserved for judging. Proposal: post INC-0005 (Money in, AED 100) in the video. It simulates OK and leaves the Money out prefill at EXP-0007. It permanently makes the balance 4,680.00 and 13 entries, so the two Playwright expectations (4,580 / 12) would need updating to the new real state, and the screenshots would be older than the ledger.
 
-- **Blockaid review request:** Aryesh reported sending it on 22 Nov. Outcome pending; not confirmed whether both domains were submitted.
+- **Blockaid review request:** Aryesh reported sending it on 22 Nov. Outcome pending. Submitted domain: clubledger-kappa.vercel.app (the one in the QR codes, README and submission). The report text also names the bpdc domain, which is not used in the submission.
