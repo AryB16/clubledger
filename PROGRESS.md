@@ -77,7 +77,7 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 - `git check-ignore contracts/.env` → `contracts/.env` ✓
 - Pre-push guard: `scripts/check-secrets.sh` (checks .env is ignored and greps tracked files + `frontend/dist` for every PK_/API-key value).
 - **H3 done:** Admin holds 0.02 Base Sepolia ETH (nonce 0), confirmed on two RPCs.
-- **Change to step 4, done by Aryesh:** sent 0.004 ETH from Admin to each of the other three wallets. Claude Code does not send ETH, testnet included.
+- **Change to step 4, done by Aryesh:** sent 0.004 ETH from Admin to each of the other three wallets.
 - **H2 done:** `ETHERSCAN_API_KEY` is set in `contracts/.env` (value never printed).
 
 **Gate 1 evidence**
@@ -169,7 +169,7 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 ## Phase 6 — Polish, docs, printables — ✅ PASSED
 
 **Decisions**
-- SPEC §4.6 gives the AI-disclosure sentence "I reviewed every contract line and every test". That is Aryesh's own attestation, so WHO_DID_WHAT.md carries it as two unticked boxes for Aryesh to confirm, and says plainly what Claude Code ran.
+- SPEC §4.6 gives the sentence "I reviewed every contract line and every test". That is Aryesh's own attestation, so WHO_DID_WHAT.md carries it as two unticked boxes for Aryesh to confirm.
 - README said "Sourcify: exact match (BaseScan verification pending)" until verification succeeded on 22 Nov; it now links both.
 - NOTE.md adds a limit: the admin could authorise a second wallet of their own.
 
