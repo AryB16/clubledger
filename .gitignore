@@ -10,3 +10,4 @@ frontend/playwright-report
 .DS_Store
 contracts/proofs.json
 contracts/broadcast/**/*.recovery.lock
+contracts/broadcast/**/dry-run/
