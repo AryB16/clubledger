@@ -33,7 +33,7 @@ Repo: https://github.com/AryB16/clubledger
 
 ---
 
-## Phase 1 — Wallets and funding — ⏳ waiting on H3 (faucet) / H2 (Etherscan key)
+## Phase 1 — Wallets and funding — ⏳ Admin funded; waiting on Aryesh to fund the other 3 wallets / H2 (Etherscan key)
 
 Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 
@@ -46,7 +46,10 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 
 - `git check-ignore contracts/.env` → `contracts/.env` ✓
 - Pre-push guard: `scripts/check-secrets.sh` (checks .env is ignored and greps tracked files + `frontend/dist` for every PK_/API-key value).
-- **H3:** fund Admin with ≥ 0.02 Base Sepolia ETH. **H2:** fill `ETHERSCAN_API_KEY` in `contracts/.env`.
+- **H3 done:** Admin holds 0.02 Base Sepolia ETH (nonce 0), confirmed on two RPCs.
+- **HUMAN STEP (change to step 4):** Aryesh funds Treasurer, Asst. Treasurer and Random member (0.004 ETH each, from Admin or a faucet). Claude Code does not send ETH, testnet included. Gate 1 stays closed until all 4 balances are non-zero.
+- **H2 waiting:** fill `ETHERSCAN_API_KEY` in `contracts/.env` (still empty).
+- **Project move:** to `~/Documents/clubledger` requested and approved; copy of `contracts/.env` not yet confirmed.
 
 ---
 
