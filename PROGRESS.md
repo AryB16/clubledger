@@ -5,7 +5,7 @@
 - **Repo:** https://github.com/AryB16/clubledger
 - **Live URL:** https://clubledger-kappa.vercel.app
 - **Contract (Base Sepolia):** `0x210312F9C553a02A9864CC9685854A72d49D4F7e`
-  - BaseScan: https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e (verification pending)
+  - BaseScan, verified source: https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e#code
   - Verified source, Sourcify exact match: https://sourcify.dev/server/v2/contract/84532/0x210312F9C553a02A9864CC9685854A72d49D4F7e
 - **Successful transactions**
   - Treasurer authorisation: https://sepolia.basescan.org/tx/0x95043c0bd4a1f27d559d2cac015da03dc18e0feea24e8ac336fe6e721c9d8556
@@ -20,7 +20,7 @@
 
 ## Human checklist (H4)
 
-- [ ] Verify on BaseScan in the browser (steps at the end of Phase 7 below), then change "pending" in README.md, DEPLOYMENT.md and this file.
+- [x] Verify on BaseScan (done 22 Nov; evidence at the end of Phase 7).
 - [ ] Review the contract and tests, then tick the two boxes in WHO_DID_WHAT.md.
 - [ ] Import Admin, Treasurer and Asst. Treasurer private keys from `contracts/.env` into MetaMask (named "Advisor (admin)", "Treasurer", "Asst. Treasurer"), Base Sepolia network.
 - [ ] Create a second Chrome profile; import Random member there only (this is the judge's "attacker" browser).
@@ -115,7 +115,7 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 
 ---
 
-## Phase 3 — Deploy, seed, proofs — ✅ PASSED (BaseScan verification logged for retry)
+## Phase 3 — Deploy, seed, proofs — ✅ PASSED (BaseScan verification first failed; resolved in Phase 7)
 
 - Contract: [`0x210312F9C553a02A9864CC9685854A72d49D4F7e`](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e)
 - Deploy tx `0x2582fd6b3a46e58f283b42cb7939d9038c39f09bf6c4ff1c529bf1c236b8f863`, block 61941981. Every seed and proof tx: DEPLOYMENT.md.
@@ -170,7 +170,7 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 
 **Decisions**
 - SPEC §4.6 gives the AI-disclosure sentence "I reviewed every contract line and every test". That is Aryesh's own attestation, so WHO_DID_WHAT.md carries it as two unticked boxes for Aryesh to confirm, and says plainly what Claude Code ran.
-- README says "Sourcify: exact match (BaseScan verification pending)" instead of "verified on BaseScan".
+- README said "Sourcify: exact match (BaseScan verification pending)" until verification succeeded on 22 Nov; it now links both.
 - NOTE.md adds a limit: the admin could authorise a second wallet of their own.
 
 **Gate 6 evidence**
@@ -180,7 +180,7 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 
 ---
 
-## Phase 7 — Final verification and hand-off — ✅ DONE (one open failure: BaseScan verification)
+## Phase 7 — Final verification and hand-off — ✅ DONE (BaseScan verified 22 Nov)
 
 **All gates re-run**
 - G0: RPC → 84532; tools and repo OK.
@@ -203,4 +203,5 @@ cd ~/Documents/clubledger/clubledger/contracts && (set -a; . ./.env; set +a; ~/.
 3. Upload `contracts/verify/ClubLedger.standard-input.json`.
 4. Constructor arguments: paste `contracts/verify/constructor-args.txt` (skip if already filled), then submit.
 
-Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime bytecode and the deploy transaction's creation bytecode exactly (checked on two RPCs); the remainder of the transaction input equals `constructor-args.txt`. The browser submission itself has not been tested.
+Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime bytecode and the deploy transaction's creation bytecode exactly (checked on two RPCs); the remainder of the transaction input equals `constructor-args.txt`. 
+**RESOLVED 22 Nov: verified on BaseScan by Aryesh.** Confirmed with a read-only Etherscan API `getsourcecode` query: `ClubLedger`, compiler v0.8.24+commit.e11b9ed9, EVM cancun, MIT, not a similar-match; source identical to `contracts/src/ClubLedger.sol`; constructor arguments identical to `contracts/verify/constructor-args.txt`.

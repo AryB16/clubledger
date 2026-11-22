@@ -8,7 +8,7 @@ A public money record for a student club. Authorised treasurers record income an
 |---|---|
 | Live site | **https://clubledger-kappa.vercel.app** |
 | Contract (Base Sepolia) | [`0x210312F9C553a02A9864CC9685854A72d49D4F7e`](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e) |
-| Verified source | [Sourcify: exact match](https://sourcify.dev/server/v2/contract/84532/0x210312F9C553a02A9864CC9685854A72d49D4F7e) (BaseScan verification pending) |
+| Verified source | [BaseScan: verified](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e#code) · [Sourcify: exact match](https://sourcify.dev/server/v2/contract/84532/0x210312F9C553a02A9864CC9685854A72d49D4F7e) |
 | Try it | Check receipt [`EXP-0002`](https://clubledger-kappa.vercel.app/check/EXP-0002) (corrected) · [`EXP-0004`](https://clubledger-kappa.vercel.app/check/EXP-0004) (cancelled) · [`INC-0001`](https://clubledger-kappa.vercel.app/check/INC-0001) (genuine) |
 | All transactions | [DEPLOYMENT.md](DEPLOYMENT.md) |
 | One-page note | [NOTE.md](NOTE.md) · [WHO_DID_WHAT.md](WHO_DID_WHAT.md) |

@@ -6,7 +6,7 @@
 | Deploy tx | [`0x2582fd6b…`](https://sepolia.basescan.org/tx/0x2582fd6b3a46e58f283b42cb7939d9038c39f09bf6c4ff1c529bf1c236b8f863) |
 | Deploy block | 61941981 |
 | Admin (Club Advisor) | `0x76b76ed71c729333550e0a38b0d43d4a85facf15` |
-| Source verification | [Sourcify: exact match](https://sourcify.dev/server/v2/contract/84532/0x210312F9C553a02A9864CC9685854A72d49D4F7e). BaseScan: not yet verified by us (see PROGRESS.md) |
+| Source verification | [BaseScan: verified](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e#code) · [Sourcify: exact match](https://sourcify.dev/server/v2/contract/84532/0x210312F9C553a02A9864CC9685854A72d49D4F7e) |
 | Live site | https://clubledger-kappa.vercel.app |
 
 ## Headline proofs (SPEC §2.9)

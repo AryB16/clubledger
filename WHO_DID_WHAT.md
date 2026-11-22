@@ -8,7 +8,7 @@
 | Smart contract (`contracts/src/ClubLedger.sol`) | Specified | Drafted |
 | Tests — unit + invariant (`contracts/test/`) | Specified | Drafted and ran |
 | Frontend (`frontend/`) | Specified | Drafted and tested |
-| Deployment | Funded the wallets, supplied the accounts and API key | Ran deploy, seed, proof transactions and hosting |
+| Deployment | Funded the wallets, supplied the accounts and API key, submitted the BaseScan verification | Ran deploy, seed, proof transactions and hosting |
 | Pitch and demo | Aryesh | — |
 
 ## AI disclosure
