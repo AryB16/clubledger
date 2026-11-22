@@ -255,3 +255,13 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 - Rollback: `cd frontend && vercel rollback dpl_9tCFepn5h43tfZmp7RmjneZJKvcZ` (code: local tag `pre-redesign`).
 - Real MetaMask on this build: PASSED on localhost:4173 (22 Nov 12:03 UTC, reported by Aryesh, confirmed on-chain). Random member's EXP-9100 reverted "Not an authorised poster": https://sepolia.basescan.org/tx/0x831a9c7c6dc4db0b67874f5756633d17045bdd2ef767e30b77fe9ae4a6553a42 . Ledger still 458000 and 12 entries; EXP-0007 unused.
 - Not tested: real phones, real Safari. MetaMask's flag is unaffected as far as we know.
+
+---
+
+## Live look kept, ledger and guided tour (branch `ui/keep-theme`) — built, waiting for approval to go live
+
+- Redesign v3 (`ui/ledger-receipt`) was rejected for its look and is not used. The live Graphite & steel theme stays.
+- Kept from it: running-balance ledger, copyable contract address, quiet search field, "Demo data" marker, long-value layout fixes.
+- Guided tour (SPEC §3.7): 8 steps, about 62 s, played through at 1440x900 and 375x812 in Chromium and WebKit with every target hit, none covered and a clean console.
+- Tests: Vitest 98, Foundry 29, Playwright 55 on public data, tour suite 27 in WebKit, local write suite 5/5, audit 0 problems (11 screens, 5 widths).
+- Not deployed, not merged, not pushed. Untested: real phone, real Safari, real MetaMask on this build.

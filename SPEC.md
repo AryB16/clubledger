@@ -307,11 +307,21 @@ Receipt-number inputs: trim + uppercase before lookup.
 
 _Revised 22 Nov 2026 at Aryesh's request, with the copy in §2.5 and §3.2–3.4. Replaces "white background, no gradients"._
 
-Graphite & steel: a public statement with the polish of a good consumer money app and a slightly technical feel, in its own identity (never another brand's look). Graphite navy gradient bands with engraved, measured linework; cool steel pages with a faint drafting grid; one ice-blue accent. Verdict colours green/amber/grey/red. Bricolage Grotesque for everything, with tabular numerals and wider spacing on receipt numbers and addresses. Entries are lines on a statement; the balance is a torn-edge slip; generously rounded corners. Trailing "(fictional)" is hidden in displayed names (the contract keeps it); one small "Demo data" marker labels each section that lists them. No middle dots in meta lines. No neon, glows, purple, coin or crypto imagery, emoji, or long dashes in on-screen copy. Every screen must make sense to someone who lands on it cold: no slogans, say what it is. Mobile-first; test at 375 px wide and at laptop widths; no horizontal scroll; tap targets ≥ 44 px; WCAG AA contrast.
+Graphite & steel: a public statement with the polish of a good consumer money app and a slightly technical feel, in its own identity (never another brand's look). Graphite navy gradient bands with engraved, measured linework; cool steel pages with a faint drafting grid; one ice-blue accent. Verdict colours green/amber/grey/red. Bricolage Grotesque for everything except the guided tour (§3.7), with tabular numerals and wider spacing on receipt numbers and addresses. Entries are lines on a statement; the balance is a torn-edge slip; generously rounded corners. Trailing "(fictional)" is hidden in displayed names (the contract keeps it); one small "Demo data" marker labels each section that lists them. No middle dots in meta lines. No neon, glows, purple, coin or crypto imagery, emoji, or long dashes in on-screen copy. Every screen must make sense to someone who lands on it cold: no slogans, say what it is. Mobile-first; test at 375 px wide and at laptop widths; no horizontal scroll; tap targets ≥ 44 px; WCAG AA contrast.
 
 ### 3.6 Deploy
 
 Vercel project root = `frontend/`; `vercel.json`: `{"rewrites":[{"source":"/(.*)","destination":"/"}]}` so `/check/EXP-0002` survives refresh. Env: `VITE_RPC_URL`. Redeploy at every checkpoint.
+
+### 3.7 Guided tour
+
+_Added 22 Nov 2026 at Aryesh's request._
+
+- First visit: "Take a tour" / "Skip", remembered in localStorage. A "Tour" button with a play icon in the header replays it.
+- Eight steps (`src/tour/steps.ts`), about 60 s: balance, receipt checker, receipt result, rules, account book, contract address, all entries, treasurers' area. Auto-advances, with Pause/Play, Next, ✕ and Esc.
+- It plays on its own copy of each page. The visitor's page stays mounted and hidden, so URL, scroll, fields and filters come back unchanged.
+- It only reads. It never submits, sends, connects or asks a wallet to switch network.
+- Look: dark glass card in the system font (SF Pro, then Inter), teal `#5fd3c6` ring and progress. Reduced motion respected.
 
 ---
 

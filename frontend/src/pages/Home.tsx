@@ -6,19 +6,31 @@ import { useBook } from '../lib/ledger'
 import { formatAed } from '../lib/money'
 import { formatDateTime, normaliseCode } from '../lib/format'
 import { Icon } from '../components/icons'
+import { useTourEvent } from '../tour/events'
+import { EXAMPLE_CODE } from '../tour/steps'
 import { LedgerTable } from '../components/LedgerTable'
 import { DemoMark, ErrorNotice, ExtLink, Skeleton } from '../components/ui'
 
 export function ReceiptSearch({ initial = '', onDark = false }: { initial?: string; onDark?: boolean }) {
   const [code, setCode] = useState(initial)
   const navigate = useNavigate()
+  useTourEvent('type-example', () => {
+    let n = 0
+    setCode('')
+    const timer = setInterval(() => {
+      n += 1
+      setCode(EXAMPLE_CODE.slice(0, n))
+      if (n >= EXAMPLE_CODE.length) clearInterval(timer)
+    }, 130)
+    return () => clearInterval(timer)
+  })
   const submit = (ev: FormEvent) => {
     ev.preventDefault()
     const c = normaliseCode(code)
     if (c) navigate(`/check/${encodeURIComponent(c)}`)
   }
   return (
-    <form onSubmit={submit} role="search" className="w-full max-w-lg">
+    <form onSubmit={submit} role="search" data-tour="search" className="w-full max-w-lg">
       <label htmlFor="receipt" className={`mb-2 block text-sm font-semibold ${onDark ? 'text-navy-100' : 'text-ink'}`}>
         Receipt number
       </label>
@@ -58,8 +70,9 @@ function BalanceSlip() {
   if (s.isError && !s.data) return <ErrorNotice onRetry={() => s.refetch()} />
   const d = s.data?.summary
   return (
-    <div className="slip-shadow">
+    <div data-tour="balance" className="slip-shadow rounded-3xl">
       <div className="slip px-6 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10">
+        <div data-tour-part="balance">
         <p className="font-medium text-muted">Recorded club balance</p>
         {d ? (
           <p data-testid="balance" className={`mt-1 ${totalSize(formatAed(d.balance))} leading-12! font-bold tracking-tight whitespace-nowrap tabular-nums sm:leading-14!`}>
@@ -68,6 +81,7 @@ function BalanceSlip() {
         ) : (
           <Skeleton className="mt-1 h-12 w-56 sm:h-14" />
         )}
+        </div>
         <dl className="mt-5 grid grid-cols-[repeat(auto-fit,minmax(7.25rem,1fr))] gap-3 border-t border-dashed border-field/60 pt-5">
           <div>
             <dt className="text-sm text-muted">Money in</dt>
@@ -122,10 +136,11 @@ function Rules() {
           A smart contract is a program on a public blockchain. This one is the club's rulebook: it checks each entry and refuses any that break these four rules. The buttons open real examples on BaseScan, an independent website for reading the blockchain.
         </p>
       </div>
-      <ol className="sheet grid overflow-hidden sm:grid-cols-2">
+      <ol data-tour="rules" className="sheet grid overflow-hidden sm:grid-cols-2">
         {PROOFS.map((p) => (
           <li
             key={p.rule}
+            data-tour-part={p.rule === 1 ? 'rules' : undefined}
             className="flex flex-col border-line p-5 not-first:border-t sm:p-6 sm:even:border-l sm:[&:nth-child(2)]:border-t-0"
           >
             <span aria-hidden className="font-display text-4xl font-extrabold text-navy-700/55">
@@ -133,7 +148,7 @@ function Rules() {
             </span>
             <h3 className="mt-2 text-xl leading-tight font-bold">{p.title}</h3>
             <p className="mt-2 mb-4 text-muted">{p.description}</p>
-            <div className="mt-auto flex flex-wrap gap-2">
+            <div data-tour-part={p.rule === 1 ? 'rules' : undefined} className="mt-auto flex flex-wrap gap-2">
               <a href={txUrl(p.passedTx)} target="_blank" rel="noreferrer" className="btn min-h-11 gap-1.5 bg-gain-tint px-3 text-sm text-gain hover:bg-[#cde4da]">
                 <Icon name="check" />
                 See one allowed
@@ -173,7 +188,7 @@ function LatestEntries() {
       {q.isError && !q.data ? (
         <ErrorNotice onRetry={() => q.refetch()} />
       ) : (
-        <div className="sheet overflow-hidden">
+        <div data-tour="latest" className="sheet overflow-hidden">
           <LedgerTable lines={q.data?.lines} corrected={q.data?.corrected} show={5} />
         </div>
       )}
@@ -203,6 +218,8 @@ const FAQ = [
 function ContractAddress() {
   const q = useBook()
   const [copied, setCopied] = useState<'yes' | 'no'>()
+  const [marked, setMarked] = useState(false)
+  useTourEvent('mark-address', () => setMarked(true))
   const latest = q.data?.lines.at(-1)?.entry
   const copy = async () => {
     try {
@@ -213,13 +230,13 @@ function ContractAddress() {
     }
   }
   return (
-    <div className="mt-10 grid gap-x-12 border-t border-white/15 pt-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-      <div>
+    <div data-tour="contract" className="mt-10 grid gap-x-12 border-t border-white/15 pt-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+      <div data-tour-part="contract">
         <p className="text-navy-200">Contract address</p>
         {/* Two fixed halves, so it only ever breaks in the middle and still copies as one value. */}
         <p data-testid="contract-address" className="mt-2 text-[1.4rem] leading-tight font-extrabold tracking-[0.02em] text-signal select-all max-[359px]:text-[1.15rem] sm:text-4xl lg:text-[2.9rem]">
-          <span className="inline-block">{CONTRACT_ADDRESS.slice(0, 21)}</span>
-          <span className="inline-block">{CONTRACT_ADDRESS.slice(21)}</span>
+          <span className={`inline-block ${marked ? 'bg-signal text-navy-950' : ''}`}>{CONTRACT_ADDRESS.slice(0, 21)}</span>
+          <span className={`inline-block ${marked ? 'bg-signal text-navy-950' : ''}`}>{CONTRACT_ADDRESS.slice(21)}</span>
         </p>
       </div>
       <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 text-navy-100 lg:flex-col lg:items-start">

@@ -1,0 +1,128 @@
+/* The tour sits above the site and has its own look: dark glass, one teal highlight. */
+.tour {
+  --tour-teal: #5fd3c6;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter Variable", "Inter", system-ui, sans-serif;
+  font-variation-settings: normal;
+  color: #fff;
+}
+.tour [hidden] { display: none; }
+.tour :focus-visible { outline: 3px solid var(--tour-teal); outline-offset: 3px; }
+
+.tour-dim, .tour-ring {
+  position: fixed;
+  z-index: 90;
+  pointer-events: none;
+}
+.tour-dim { inset: 0; background: rgb(4 10 16 / 0.38); }
+.tour-ring {
+  box-sizing: border-box;
+  border: 3px solid var(--tour-teal);
+  box-shadow: 0 0 22px 3px rgb(95 211 198 / 0.55), 0 0 0 200vmax rgb(4 10 16 / 0.38);
+}
+
+.tour-card {
+  position: fixed;
+  z-index: 100;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  width: 420px;
+  padding: 1.125rem 1.25rem 0.875rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 24px;
+  background: rgba(20, 20, 22, 0.86);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 18px 48px rgb(0 0 0 / 0.28);
+  font-size: 17px;
+  line-height: 1.4;
+  animation: tour-up 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+/* Below the treasurer page's "Recorded" message, which must stay readable. */
+.tour-offer { z-index: 40; }
+@media (max-width: 47.999rem) {
+  .tour-card {
+    right: 0.5rem;
+    left: 0.5rem;
+    bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    width: auto;
+    padding: 1rem 1rem 0.625rem;
+  }
+  /* Smaller, so it hides less of the first screen. */
+  .tour-offer { padding-top: 0.75rem; }
+  .tour-offer .tour-controls { margin-top: 0.375rem; }
+}
+
+.tour-bars { display: flex; gap: 4px; margin-bottom: 0.875rem; }
+.tour-bar {
+  height: 3px;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.22);
+}
+.tour-bar > span { display: block; height: 100%; transform: scaleX(0); transform-origin: left; }
+.tour-bar[data-state="done"] > span { background: #fff; transform: none !important; }
+.tour-bar[data-state="current"] > span { background: var(--tour-teal); }
+.tour-bar[data-state="todo"] > span { transform: scaleX(0) !important; }
+
+.tour-captions { display: grid; }
+.tour-captions > p { grid-area: 1 / 1; opacity: 0; transition: opacity 0.3s ease; }
+.tour-captions > p[data-active="true"] { opacity: 1; }
+
+.tour-controls { display: flex; align-items: center; gap: 0.25rem; margin-top: 0.75rem; }
+.tour-count {
+  margin-right: auto;
+  color: rgb(255 255 255 / 0.75);
+  font-size: 15px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.tour-text, .tour-pill, .tour-close {
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.tour-text { padding-inline: 0.75rem; border-radius: 10px; color: #fff; }
+.tour-text:hover, .tour-close:hover { background: rgb(255 255 255 / 0.1); }
+.tour-pill { padding-inline: 1.375rem; border-radius: 999px; background: #fff; color: #141416; white-space: nowrap; }
+.tour-pill:hover { background: #e7e7e9; }
+.tour-close { display: grid; place-items: center; border-radius: 50%; }
+
+.tour-end {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgb(5 8 12 / 0.6);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.tour-end-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.25rem 1.75rem 1.75rem;
+  border-radius: 32px;
+  background: #000;
+  text-align: center;
+  animation: tour-up 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.tour-end-card h2 { font-family: inherit; font-size: 30px; line-height: 1.15; font-weight: 700; }
+.tour-end-card p { margin-top: 0.75rem; color: rgb(255 255 255 / 0.8); font-size: 17px; line-height: 1.4; }
+.tour-end-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
+
+/* Room to scroll the last things on a page clear of the card. */
+html.tour-open body, html.tour-offered body { background: var(--color-navy-950); }
+html.tour-open body { padding-bottom: 20rem; }
+html.tour-offered body { padding-bottom: 11rem; }
+
+@keyframes tour-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tour-card, .tour-end-card { animation: none; }
+  .tour-captions > p { transition: none; }
+}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useEffectEvent, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useConnect, useConnection, useDisconnect, useSwitchChain } from 'wagmi'
 import { isAddress, type Address } from 'viem'
@@ -8,6 +8,7 @@ import { filsToInput, formatAed, parseAedToFils } from '../lib/money'
 import { normaliseCode, shortAddr } from '../lib/format'
 import { proofForReason, REASON_FIELD, refusalCopy, RULEBOOK_LINE } from '../lib/refusals'
 import { useWriteFlow, type Toast, type WriteState } from '../lib/write'
+import { useTour } from '../tour/context'
 import { Icon } from '../components/icons'
 import { PROOFS } from '../proofs'
 import { Card, ErrorNotice, ExtLink, PageHead, Person, RPC_DOWN, Skeleton } from '../components/ui'
@@ -438,9 +439,14 @@ export default function Manage() {
   const [toast, setToast] = useState<Toast | null>(null)
 
   const wrongChain = isConnected && chainId !== CHAIN.id
+  const { running: touring } = useTour()
+  // The tour must never make a wallet ask for anything.
+  const autoSwitch = useEffectEvent(() => {
+    if (!touring) switchChain({ chainId: CHAIN.id })
+  })
   useEffect(() => {
-    if (wrongChain) switchChain({ chainId: CHAIN.id })
-  }, [wrongChain, switchChain])
+    if (wrongChain) autoSwitch()
+  }, [wrongChain])
 
   useEffect(() => {
     if (toast?.tone === 'ok') {
@@ -457,8 +463,9 @@ export default function Manage() {
           <p className="mt-4 max-w-xl leading-relaxed text-navy-100 sm:text-lg">Treasurers record income and expenses here, and the Club Advisor approves or removes treasurers. To only check a receipt, use the home page.</p>
         </PageHead>
         <div className="wrap grid items-start gap-9 py-8 md:grid-cols-2 md:gap-16 sm:py-14">
+          <div data-tour="manage" className="rounded-3xl">
           <Card className="p-5 sm:p-8">
-            <h2 className="text-2xl font-bold">Connect a wallet to add entries.</h2>
+            <h2 data-tour-part="manage" className="text-2xl font-bold">Connect a wallet to add entries.</h2>
             <p className="mt-2 text-muted">You don't need one to check receipts.</p>
             <p className="mt-2 text-muted">A wallet, such as MetaMask, is a browser app that proves who you are. The contract uses it to see whether you're a treasurer.</p>
             <button
@@ -471,6 +478,7 @@ export default function Manage() {
             {noWallet && <p className="mt-4 text-sm text-muted">No browser wallet found. Install MetaMask if you need to add entries.</p>}
             {connectError && (connectError.name as string) !== 'ProviderNotFoundError' && <p className="mt-4 text-sm text-brick">Couldn't connect. Open your wallet and try again.</p>}
           </Card>
+          </div>
           <section>
             <h2 className="text-2xl font-bold">The contract checks these rules before saving</h2>
             <ul className="mt-3 divide-y divide-line">
@@ -492,6 +500,7 @@ export default function Manage() {
       <>
         <PageHead title="For treasurers" />
         <div className="wrap max-w-2xl py-8 sm:py-14">
+          <div data-tour="manage" className="rounded-3xl">
           <Card className="p-5 sm:p-8">
             <h2 className="text-2xl font-bold">Switch your wallet to the club's network</h2>
             <p className="mt-2 text-muted">The club's record lives on the Base Sepolia test network.</p>
@@ -500,6 +509,7 @@ export default function Manage() {
             </button>
             {switchError && <p className="mt-3 text-sm text-brick">Your wallet didn't switch. Approve the request in your wallet, or add the network manually.</p>}
           </Card>
+          </div>
         </div>
       </>
     )
@@ -536,6 +546,7 @@ export default function Manage() {
     <>
       <div data-testid="role-banner" className={`band on-dark ${banner.band}`}>
         <div className="wrap pt-7 pb-5 sm:pt-10 sm:pb-7">
+         <div data-tour="manage">
           <p className="max-w-3xl font-display text-[1.75rem] leading-[1.08] font-bold text-balance sm:text-4xl">{banner.text}</p>
           <p className="mt-3 max-w-2xl leading-snug">{banner.detail}</p>
           <div className="mt-2 flex items-center justify-between gap-3 text-sm">
@@ -544,6 +555,7 @@ export default function Manage() {
               Disconnect
             </button>
           </div>
+         </div>
         </div>
       </div>
       <div className="wrap py-6 sm:py-10">

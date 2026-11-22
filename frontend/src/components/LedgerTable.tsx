@@ -1,9 +1,10 @@
-import type { MouseEvent } from 'react'
+import { useState, type MouseEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { BookLine } from '../lib/book'
 import { statusOf } from '../lib/ledger'
 import { formatDate, shownName } from '../lib/format'
 import { formatAed, formatFigure } from '../lib/money'
+import { useTourEvent } from '../tour/events'
 import { Skeleton, StatusBadge } from './ui'
 
 const COLUMNS = ['Date', 'Receipt', 'Paid to / from', 'Category', 'In', 'Out', 'Balance', 'Status']
@@ -22,7 +23,7 @@ function Figure({ name, value }: { name: 'In' | 'Out'; value: bigint | undefined
   )
 }
 
-function Row({ line, corrected }: { line: BookLine; corrected: Set<bigint> }) {
+function Row({ line, corrected, last, pointed }: { line: BookLine; corrected: Set<bigint>; last: boolean; pointed: boolean }) {
   const navigate = useNavigate()
   const { entry: e, was } = line
   const to = `/check/${encodeURIComponent(e.refCode)}`
@@ -33,7 +34,7 @@ function Row({ line, corrected }: { line: BookLine; corrected: Set<bigint> }) {
     else navigate(to)
   }
   return (
-    <tr role="row" data-testid="entry-card" className="book-row" onClick={open}>
+    <tr role="row" data-testid="entry-card" data-tour-part={last ? 'latest' : undefined} className={`book-row ${pointed ? 'book-pointed' : ''}`} onClick={open}>
       <td role="cell" className="c-date">{formatDate(e.timestamp)}</td>
       <td role="cell" className="c-receipt">
         <Link to={to} className="code font-semibold text-navy-700 underline decoration-navy-700/30 underline-offset-4">
@@ -64,6 +65,8 @@ function Row({ line, corrected }: { line: BookLine; corrected: Set<bigint> }) {
 
 /** The last `show` lines in the order they were recorded, so the table reads down to the recorded balance. */
 export function LedgerTable({ lines, corrected, show }: { lines: BookLine[] | undefined; corrected: Set<bigint> | undefined; show: number }) {
+  const [pointing, setPointing] = useState(false)
+  useTourEvent('point-at-total', () => setPointing(true))
   const rows = lines?.slice(-show)
   const before = lines && lines.length > show ? lines[lines.length - show - 1].balance : 0n
   return (
@@ -84,7 +87,7 @@ export function LedgerTable({ lines, corrected, show }: { lines: BookLine[] | un
           <td role="cell" />
         </tr>
         {rows && corrected
-          ? rows.map((line) => <Row key={line.entry.id.toString()} line={line} corrected={corrected} />)
+          ? rows.map((line, i) => <Row key={line.entry.id.toString()} line={line} corrected={corrected} last={i === rows.length - 1} pointed={pointing && i === rows.length - 1} />)
           : Array.from({ length: show }, (_, i) => (
               <tr key={i} role="row" className="book-row">
                 <td role="cell" colSpan={8} className="col-span-2">

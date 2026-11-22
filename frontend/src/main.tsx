@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider } from 'wagmi'
 import { wagmiConfig } from './wagmi'
 import App from './App'
+import { TourProvider } from './tour/TourProvider'
 import './index.css'
 
 const queryClient = new QueryClient({
@@ -23,7 +24,9 @@ createRoot(document.getElementById('root')!).render(
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <App />
+          <TourProvider>
+            <App />
+          </TourProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </WagmiProvider>

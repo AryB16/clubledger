@@ -140,7 +140,8 @@ export default function Check() {
     <>
       <section data-testid="verdict" data-verdict={verdict} className={`band ${v.band}`}>
         <div className="wrap pt-9 pb-16 sm:pt-14 sm:pb-20">
-          <div className="flex items-start justify-between gap-4">
+         <div data-tour="verdict">
+          <div data-tour-part="verdict" className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="code font-semibold break-all">Receipt {code}</p>
               <h1 className="mt-2 text-[2.75rem] leading-none font-extrabold tracking-tight sm:text-7xl">{v.headline}</h1>
@@ -164,6 +165,7 @@ export default function Check() {
           <ExtLink href={contractUrl} className="mt-2">
             View public proof on BaseScan
           </ExtLink>
+         </div>
         </div>
       </section>
 

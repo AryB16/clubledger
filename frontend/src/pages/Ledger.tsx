@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { correctedSet, statusOf, useAllEntries, useLabels } from '../lib/ledger'
+import { useTourEvent } from '../tour/events'
 import { DemoMark, EntryCard, EntryCardSkeleton, ErrorNotice, PageHead, Statement } from '../components/ui'
 
 type Filter = 'All' | 'Income' | 'Expense'
 
 export default function Ledger() {
   const [filter, setFilter] = useState<Filter>('All')
+  useTourEvent('show-expenses', () => setFilter('Expense'))
   const q = useAllEntries()
   const all = q.data?.pages.flat() ?? []
   const label = useLabels(all.map((e) => e.poster))
@@ -22,7 +24,7 @@ export default function Ledger() {
         <p className="mt-2 h-6 text-sm text-navy-200 tabular-nums">{total !== undefined && `${total.toString()} lines in total, including corrections`}</p>
       </PageHead>
       <div className="wrap space-y-5 py-7 sm:py-10">
-        <div role="tablist" aria-label="Filter entries" className="inline-flex gap-1 rounded-full bg-mist p-1">
+        <div role="tablist" data-tour="filters" aria-label="Filter entries" className="inline-flex gap-1 rounded-full bg-mist p-1">
           {(['All', 'Income', 'Expense'] as Filter[]).map((f) => (
             <button
               key={f}

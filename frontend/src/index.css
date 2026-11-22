@@ -198,6 +198,7 @@
     cursor: pointer;
   }
   .book-row:hover { background: var(--color-navy-50); }
+  .book-row.book-pointed { background: var(--color-navy-100); }
   .book-row:has(:focus-visible) { outline: 3px solid var(--color-navy-700); outline-offset: -4px; }
   .book-row:has(:focus-visible) :focus-visible { outline: none; }
   .book-row > .c-date { grid-area: date; color: var(--color-muted); font-size: 0.875rem; }

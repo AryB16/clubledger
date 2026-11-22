@@ -65,7 +65,7 @@ test('home: the receipt field rests quietly and shows one ring on keyboard focus
   const field = page.getByLabel('Receipt number')
   await expect(field).not.toBeFocused()
   await expect(field.locator('..')).toHaveCSS('outline-style', 'none')
-  for (let i = 0; i < 4; i++) await page.keyboard.press('Tab') // brand, two nav links, field
+  for (let i = 0; i < 5; i++) await page.keyboard.press('Tab') // brand, two nav links, Tour, field
   await expect(field).toBeFocused()
   await expect(field.locator('..')).toHaveCSS('outline-style', 'solid')
   await expect(field.locator('..')).toHaveCSS('outline-width', '3px')
