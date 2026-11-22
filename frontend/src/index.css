@@ -159,6 +159,106 @@
   .btn-dark:hover:not(:disabled) { background: var(--color-navy-800); }
   .btn-quiet { border: 1px solid var(--color-field); background: var(--color-paper); color: var(--color-ink); }
   .btn-quiet:hover:not(:disabled) { background: var(--color-mist); }
+
+  /*
+   * The ledger table. Below 64rem each row folds into three ruled lines. Changing display drops
+   * table meaning in some screen readers, so the markup repeats it with ARIA roles.
+   */
+  .book { width: 100%; border-collapse: collapse; }
+  .book, .book > thead, .book > tbody, .book > tfoot { display: block; }
+  .book > thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+    .book th { font-weight: inherit; text-align: left; }
+  .book-total {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .book-total > :empty { display: none; }
+  .book > tfoot > .book-total { border-bottom: 0; background: var(--color-navy-900); color: #fff; font-weight: 700; }
+  .book-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "payee amount" "ids balance" "date status";
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    min-height: 7.25rem;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--color-line);
+    cursor: pointer;
+  }
+  .book-row:hover { background: var(--color-navy-50); }
+  .book-row:has(:focus-visible) { outline: 3px solid var(--color-navy-700); outline-offset: -4px; }
+  .book-row:has(:focus-visible) :focus-visible { outline: none; }
+  .book-row > .c-date { grid-area: date; color: var(--color-muted); font-size: 0.875rem; }
+  .book-row > .c-receipt { grid-area: ids; justify-self: start; min-width: 0; overflow-wrap: anywhere; }
+  .book-row > .c-category { grid-area: date; justify-self: start; min-width: 0; overflow-wrap: anywhere; hyphens: auto; padding-left: 6.5rem; color: var(--color-muted); font-size: 0.875rem; }
+  .book-row > .c-receipt a { display: inline-flex; max-width: 100%; min-height: 2.75rem; margin-block: -0.6rem; align-items: center; }
+  .book-row > .c-payee { grid-area: payee; min-width: 0; font-weight: 650; overflow-wrap: anywhere; }
+  .book-row > .c-in, .book-row > .c-out { grid-area: amount; }
+  .book-row > .c-balance { grid-area: balance; }
+  .book-row > .c-status { grid-area: status; justify-self: end; }
+  .book-row > .c-none {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .book .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .book .lbl { color: var(--color-muted); font-size: 0.75rem; font-weight: 500; }
+
+  @media not all and (min-width: 64rem) {
+    .book > thead tr, .book > thead th { display: block; max-width: 100%; white-space: normal; }
+  }
+
+  @media (max-width: 22.4375rem) {
+    .book-row { grid-template-areas: "payee amount" "ids balance" "category status" "date status"; }
+    .book-row > .c-category { grid-area: category; padding-left: 0; }
+    .book-row { min-height: 8.5rem; }
+  }
+
+  @media (min-width: 64rem) {
+    .book { display: table; }
+    .book > thead {
+      display: table-header-group;
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
+    }
+    .book > tbody { display: table-row-group; }
+    .book > tfoot { display: table-footer-group; }
+    .book tr, .book-total, .book-row { display: table-row; }
+    .book th, .book td { padding: 0.9rem 0.65rem; vertical-align: baseline; }
+    .book th:first-child, .book td:first-child { padding-left: 1.5rem; }
+    .book th:last-child, .book td:last-child { padding-right: 1.5rem; }
+    .book-row { padding: 0; }
+    .book-total { padding: 0; }
+    .book > thead th { border-bottom: 1px solid var(--color-line); background: var(--color-navy-50); color: var(--color-navy-800); font-size: 0.875rem; font-weight: 700; }
+    .book > thead th.num { text-align: right; }
+    .book-total > :empty { display: table-cell; }
+    .book-row > .c-none { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+    .book-row > .c-date { white-space: nowrap; }
+    .book-row > .c-receipt { white-space: nowrap; }
+    .book-row > .c-category { padding-left: 0.65rem; }
+    .book-row > .c-status { text-align: right; }
+    .book > thead th:last-child { text-align: right; }
+    .book .c-balance { font-weight: 700; }
+    .book .lbl { display: none; }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

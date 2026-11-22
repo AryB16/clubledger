@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom'
 import { contractUrl } from '../config'
 import { useLabels, useVersions, verdictOf, type Entry, type Verdict } from '../lib/ledger'
 import { formatAed } from '../lib/money'
-import { formatDateTime, normaliseCode } from '../lib/format'
+import { formatDateTime, normaliseCode, shownName } from '../lib/format'
 import { Icon } from '../components/icons'
-import { Card, ErrorNotice, ExtLink, Person, Skeleton } from '../components/ui'
+import { Card, DemoMark, ErrorNotice, ExtLink, Person, Skeleton } from '../components/ui'
 import { ReceiptSearch } from './Home'
 
 const VERDICT: Record<Verdict, { headline: string; band: string; icon: 'check' | 'pencil' | 'minus' | 'cross' }> = {
@@ -33,7 +33,7 @@ function Row({ k, v }: { k: string; v: ReactNode }) {
   return (
     <div className="flex items-baseline justify-between gap-4 py-3">
       <dt className="shrink-0 text-muted">{k}</dt>
-      <dd className="min-w-0 text-right font-medium break-words">{v || 'Not given'}</dd>
+      <dd className="min-w-0 text-right font-medium [overflow-wrap:anywhere]">{v || 'Not given'}</dd>
     </div>
   )
 }
@@ -102,7 +102,7 @@ export default function Check() {
     return (
       <div className="wrap space-y-6 py-10">
         <ErrorNotice onRetry={() => q.refetch()} />
-        <ReceiptSearch initial={code} autoFocus={false} />
+        <ReceiptSearch initial={code} />
       </div>
     )
   }
@@ -170,12 +170,15 @@ export default function Check() {
       {latest && (
         <div className="wrap relative z-10 -mt-7 grid items-start gap-5 md:grid-cols-2">
           <Card className="p-5 sm:p-7">
-            <h2 className="text-2xl font-bold">{verdict === 'GENUINE' ? 'What was recorded' : 'Current version'}</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-2xl font-bold">{verdict === 'GENUINE' ? 'What was recorded' : 'Current version'}</h2>
+              <DemoMark />
+            </div>
             <dl className="mt-3 divide-y divide-dashed divide-line">
               <Row k="Amount" v={<span className="text-2xl font-bold whitespace-nowrap tabular-nums">{formatAed(latest.amount)}</span>} />
               <Row k="Type" v={latest.kind === 0 ? 'Income' : 'Expense'} />
               <Row k="Category" v={latest.category} />
-              <Row k={latest.kind === 0 ? 'From' : 'Paid to'} v={latest.counterparty} />
+              <Row k={latest.kind === 0 ? 'From' : 'Paid to'} v={shownName(latest.counterparty)} />
               <Row k="Description" v={latest.description} />
             </dl>
           </Card>
@@ -189,7 +192,7 @@ export default function Check() {
 
       <div className="wrap py-12 sm:py-16">
         <h2 className="mb-4 text-2xl font-bold">Check another receipt</h2>
-        <ReceiptSearch autoFocus={false} />
+        <ReceiptSearch />
         <p className="mt-4 flex flex-wrap items-center gap-x-4 text-sm text-muted">
           This page reads the public record directly, not a copy kept by this website.
           <ExtLink href={contractUrl} className="text-navy-700">

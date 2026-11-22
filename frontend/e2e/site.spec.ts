@@ -33,6 +33,65 @@ test('home: balance, rules panel with 8 public-proof links, recent entries', asy
   await shot(page, 'home')
 })
 
+test('home: the ledger adds up and ends at the balance the receipt shows', async ({ page }) => {
+  await page.goto('/')
+  const rows = page.getByTestId('entry-card')
+  await expect(rows).toHaveCount(5)
+  const num = (s: string) => Number(s.replace(/[^\d]/g, '')) * (s.includes('−') ? -1 : 1) // fils, as whole numbers
+  const header = page.locator('.book-total').first().locator('.num')
+  let running = num(await header.innerText())
+  for (const row of await rows.all()) {
+    running += num(await row.locator('.c-in').innerText()) - num(await row.locator('.c-out').innerText())
+    expect(num(await row.getByTestId('running-balance').innerText())).toBe(running)
+  }
+  expect(num(await page.getByTestId('balance').innerText())).toBe(running)
+  await expect(page.getByTestId('closing-balance')).toHaveText(await page.getByTestId('balance').innerText())
+})
+
+test('home: a ledger row opens by keyboard and by a click anywhere on it', async ({ page }) => {
+  await page.goto('/')
+  const row = page.getByTestId('entry-card').filter({ hasText: 'INC-0004' })
+  await row.getByRole('link').focus()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(/\/check\/INC-0004$/)
+  await page.goBack()
+  await row.getByTestId('running-balance').click()
+  await expect(page).toHaveURL(/\/check\/INC-0004$/)
+})
+
+test('home: the receipt field rests quietly and shows one ring on keyboard focus', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.getByTestId('entry-card').first()).toBeVisible()
+  const field = page.getByLabel('Receipt number')
+  await expect(field).not.toBeFocused()
+  await expect(field.locator('..')).toHaveCSS('outline-style', 'none')
+  for (let i = 0; i < 4; i++) await page.keyboard.press('Tab') // brand, two nav links, field
+  await expect(field).toBeFocused()
+  await expect(field.locator('..')).toHaveCSS('outline-style', 'solid')
+  await expect(field.locator('..')).toHaveCSS('outline-width', '3px')
+  await expect(field).toHaveCSS('outline-style', 'none')
+})
+
+test('home: the contract address copies whole', async ({ page }) => {
+  await page.goto('/')
+  await page.evaluate(() => {
+    const w = window as unknown as { copied?: string }
+    navigator.clipboard.writeText = async (s: string) => void (w.copied = s)
+  })
+  await page.getByRole('button', { name: 'Copy address' }).click()
+  await expect(page.getByText('Address copied.')).toBeVisible()
+  expect(await page.evaluate(() => (window as unknown as { copied?: string }).copied)).toBe('0x210312F9C553a02A9864CC9685854A72d49D4F7e')
+})
+
+test('demo data is marked once per section, not after every name', async ({ page }) => {
+  for (const path of ['/', '/ledger', '/check/EXP-0002']) {
+    await page.goto(path)
+    await expect(page.getByTestId('demo-mark')).toHaveCount(1)
+    await expect(page.getByTestId(path.startsWith('/check') ? 'version' : 'entry-card').first()).toBeVisible()
+    await expect(page.locator('body')).not.toContainText('(fictional)')
+  }
+})
+
 test('search box navigates to the verdict page (trim + uppercase)', async ({ page }) => {
   await page.goto('/')
   await page.getByLabel('Receipt number').fill('  inc-0001 ')

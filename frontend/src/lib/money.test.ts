@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filsToInput, formatAed, parseAedToFils } from './money'
+import { filsToInput, formatAed, formatFigure, parseAedToFils } from './money'
 
 describe('parseAedToFils', () => {
   it.each([
@@ -36,6 +36,17 @@ describe('formatAed', () => {
   })
   it('formats zero', () => {
     expect(formatAed(0n)).toContain('0.00')
+  })
+})
+
+describe('formatFigure', () => {
+  it.each([
+    [0n, '0.00'],
+    [-4000n, '−40.00'],
+    [110000n, '1,100.00'],
+    [99999999999999999999n, '999,999,999,999,999,999.99'],
+  ])('%s → %s', (fils, s) => {
+    expect(formatFigure(fils)).toBe(s)
   })
 })
 

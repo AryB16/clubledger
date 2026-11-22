@@ -18,7 +18,7 @@ const CATEGORIES = ['Sponsorship', 'Membership', 'Grant', 'Events', 'Equipment',
 
 const inputCls = (bad?: boolean) =>
   `min-h-12 w-full min-w-0 rounded-xl border bg-white px-3.5 text-base text-ink placeholder:text-muted focus:outline-none focus:ring-3 ${
-    bad ? 'border-brick ring-2 ring-brick/30 focus:ring-brick/50' : 'border-field focus:border-navy-700 focus:ring-navy-700/45'
+    bad ? 'border-brick ring-2 ring-brick/30 focus:ring-brick/80' : 'border-field focus:border-navy-700 focus:ring-navy-700/75'
   }`
 
 function Field({ label, htmlFor, hint, error, children }: { label: string; htmlFor: string; hint?: string; error?: string; children: ReactNode }) {

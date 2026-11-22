@@ -2,13 +2,14 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CONTRACT_ADDRESS, REPO_URL, contractUrl, txUrl } from '../config'
 import { PROOFS } from '../proofs'
-import { correctedSet, statusOf, useLabels, useRecent, useSummary } from '../lib/ledger'
+import { useBook } from '../lib/ledger'
 import { formatAed } from '../lib/money'
-import { normaliseCode, shortAddr } from '../lib/format'
+import { formatDateTime, normaliseCode } from '../lib/format'
 import { Icon } from '../components/icons'
-import { EntryCard, EntryCardSkeleton, ErrorNotice, ExtLink, Skeleton, Statement } from '../components/ui'
+import { LedgerTable } from '../components/LedgerTable'
+import { DemoMark, ErrorNotice, ExtLink, Skeleton } from '../components/ui'
 
-export function ReceiptSearch({ initial = '', autoFocus = true, onDark = false }: { initial?: string; autoFocus?: boolean; onDark?: boolean }) {
+export function ReceiptSearch({ initial = '', onDark = false }: { initial?: string; onDark?: boolean }) {
   const [code, setCode] = useState(initial)
   const navigate = useNavigate()
   const submit = (ev: FormEvent) => {
@@ -22,8 +23,8 @@ export function ReceiptSearch({ initial = '', autoFocus = true, onDark = false }
         Receipt number
       </label>
       <div
-        className={`flex items-center gap-2 rounded-full border bg-paper p-1.5 pl-5 focus-within:outline-3 focus-within:outline-offset-3 ${
-          onDark ? 'border-transparent focus-within:outline-signal' : 'border-field focus-within:outline-navy-700'
+        className={`flex items-center gap-2 rounded-full border bg-paper p-1.5 pl-5 has-[input:focus-visible]:outline-3 has-[input:focus-visible]:outline-offset-0 ${
+          onDark ? 'border-transparent outline-signal' : 'border-field outline-navy-700'
         }`}
       >
         <input
@@ -32,13 +33,12 @@ export function ReceiptSearch({ initial = '', autoFocus = true, onDark = false }
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="e.g. EXP-0002"
-          autoFocus={autoFocus}
           autoComplete="off"
           autoCapitalize="characters"
           spellCheck={false}
           className="min-h-14 w-full min-w-0 bg-transparent code text-lg text-ink uppercase placeholder:text-muted placeholder:normal-case focus:outline-none focus-visible:outline-none"
         />
-        <button type="submit" className="btn btn-signal min-h-14 shrink-0 text-lg">
+        <button type="submit" className="btn btn-signal min-h-14 shrink-0 text-lg focus-visible:outline-navy-700!">
           Check
         </button>
       </div>
@@ -49,22 +49,26 @@ export function ReceiptSearch({ initial = '', autoFocus = true, onDark = false }
   )
 }
 
+/** The slip is a fixed width, so a longer total prints smaller. */
+const totalSize = (text: string) =>
+  text.length > 18 ? 'text-xl' : text.length > 14 ? 'text-[1.6rem] sm:text-3xl' : 'text-[2.5rem] max-[359px]:text-4xl sm:text-5xl'
+
 function BalanceSlip() {
-  const s = useSummary()
+  const s = useBook()
   if (s.isError && !s.data) return <ErrorNotice onRetry={() => s.refetch()} />
-  const d = s.data
+  const d = s.data?.summary
   return (
     <div className="slip-shadow">
       <div className="slip px-6 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10">
         <p className="font-medium text-muted">Recorded club balance</p>
         {d ? (
-          <p data-testid="balance" className="mt-1 text-[2.5rem] leading-12 font-bold tracking-tight whitespace-nowrap tabular-nums sm:text-5xl sm:leading-14">
+          <p data-testid="balance" className={`mt-1 ${totalSize(formatAed(d.balance))} leading-12! font-bold tracking-tight whitespace-nowrap tabular-nums sm:leading-14!`}>
             {formatAed(d.balance)}
           </p>
         ) : (
           <Skeleton className="mt-1 h-12 w-56 sm:h-14" />
         )}
-        <dl className="mt-5 grid grid-cols-2 gap-3 border-t border-dashed border-field/60 pt-5">
+        <dl className="mt-5 grid grid-cols-[repeat(auto-fit,minmax(7.25rem,1fr))] gap-3 border-t border-dashed border-field/60 pt-5">
           <div>
             <dt className="text-sm text-muted">Money in</dt>
             <dd className="mt-1 h-6 font-semibold whitespace-nowrap text-gain tabular-nums">
@@ -91,7 +95,7 @@ function Hero() {
     <section className="relative">
       {/* On phones the green stops behind the slip, so the slip sits across the edge. */}
       <div aria-hidden className="band band-navy absolute inset-x-0 top-0 bottom-28 lg:bottom-0" style={{ position: 'absolute' }} />
-      <div className="wrap relative grid gap-9 pt-9 pb-2 lg:grid-cols-[1.35fr_0.85fr] lg:items-center lg:gap-16 lg:py-14">
+      <div className="wrap relative grid grid-cols-[minmax(0,1fr)] gap-9 pt-9 pb-2 lg:grid-cols-[1.35fr_0.85fr] lg:items-center lg:gap-16 lg:py-14">
         <div className="on-dark text-white">
           <h1 className="max-w-2xl text-[2.6rem] leading-none font-extrabold tracking-tight sm:text-6xl">
             See the Robotics Club's <span className="text-signal">income and expenses.</span>
@@ -146,35 +150,32 @@ function Rules() {
   )
 }
 
-function Recent() {
-  const r = useRecent(5)
-  const label = useLabels((r.data ?? []).map((e) => e.poster))
-  const corrected = correctedSet(r.data ?? [])
+function LatestEntries() {
+  const q = useBook()
   return (
-    <section aria-labelledby="recent-h" className="wrap grid gap-6 py-14 lg:grid-cols-[15.5rem_minmax(0,1fr)] lg:gap-10 lg:py-24">
-      <div>
-        <h2 id="recent-h" className="text-4xl leading-none font-bold tracking-tight sm:text-5xl">
-          Latest entries
-        </h2>
-        <p className="mt-3 max-w-sm leading-relaxed text-muted">
-          The five most recent additions, including corrections. Select any line to see that receipt's full history.
-        </p>
-        <Link to="/ledger" className="mt-2 inline-flex min-h-11 items-center font-semibold text-navy-700 underline underline-offset-4">
+    <section aria-labelledby="recent-h" className="wrap py-14 lg:py-24">
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-2 pb-6">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 id="recent-h" className="text-4xl leading-none font-bold tracking-tight sm:text-5xl">
+              Latest entries
+            </h2>
+            <DemoMark />
+          </div>
+          <p className="mt-3 max-w-2xl leading-relaxed text-muted">
+            The five most recent additions in AED, oldest first. A correction shows only the difference it made. Select any line to see that receipt's full history.
+          </p>
+        </div>
+        <Link to="/ledger" className="inline-flex min-h-11 items-center font-semibold text-navy-700 underline underline-offset-4">
           See all entries
         </Link>
       </div>
-      {r.isError && !r.data ? (
-        <ErrorNotice onRetry={() => r.refetch()} />
+      {q.isError && !q.data ? (
+        <ErrorNotice onRetry={() => q.refetch()} />
       ) : (
-        <Statement>
-          {r.isPending ? (
-            Array.from({ length: 5 }, (_, i) => <EntryCardSkeleton key={i} />)
-          ) : r.data && r.data.length === 0 ? (
-            <p className="p-6 text-muted">Nothing has been recorded yet.</p>
-          ) : (
-            r.data!.map((e) => <EntryCard key={e.id.toString()} e={e} status={statusOf(e, corrected)} label={label(e.poster)} />)
-          )}
-        </Statement>
+        <div className="sheet overflow-hidden">
+          <LedgerTable lines={q.data?.lines} corrected={q.data?.corrected} show={5} />
+        </div>
       )}
     </section>
   )
@@ -199,6 +200,46 @@ const FAQ = [
   ],
 ]
 
+function ContractAddress() {
+  const q = useBook()
+  const [copied, setCopied] = useState<'yes' | 'no'>()
+  const latest = q.data?.lines.at(-1)?.entry
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTRACT_ADDRESS)
+      setCopied('yes')
+    } catch {
+      setCopied('no')
+    }
+  }
+  return (
+    <div className="mt-10 grid gap-x-12 border-t border-white/15 pt-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+      <div>
+        <p className="text-navy-200">Contract address</p>
+        {/* Two fixed halves, so it only ever breaks in the middle and still copies as one value. */}
+        <p data-testid="contract-address" className="mt-2 text-[1.4rem] leading-tight font-extrabold tracking-[0.02em] text-signal select-all max-[359px]:text-[1.15rem] sm:text-4xl lg:text-[2.9rem]">
+          <span className="inline-block">{CONTRACT_ADDRESS.slice(0, 21)}</span>
+          <span className="inline-block">{CONTRACT_ADDRESS.slice(21)}</span>
+        </p>
+      </div>
+      <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 text-navy-100 lg:flex-col lg:items-start">
+        <button type="button" onClick={copy} className="btn btn-signal min-h-11">
+          Copy address
+        </button>
+        <ExtLink href={contractUrl}>Read the contract on BaseScan</ExtLink>
+        <ExtLink href={REPO_URL}>Source code</ExtLink>
+      </div>
+      <p role="status" className={copied ? 'mt-3 text-sm lg:col-span-2' : 'sr-only'}>
+        {copied === 'yes' && 'Address copied.'}
+        {copied === 'no' && "Couldn't copy. Select the address above instead."}
+      </p>
+      <p className="mt-3 min-h-10 text-sm leading-5 text-navy-200 sm:min-h-5 lg:col-span-2">
+        {q.data && latest && `${q.data.summary.entryCount} entries saved, including corrections. The latest was saved on ${formatDateTime(latest.timestamp)}.`}
+      </p>
+    </div>
+  )
+}
+
 function HowItWorks() {
   return (
     <section aria-labelledby="how-h" className="band band-plain band-navy on-dark">
@@ -214,13 +255,7 @@ function HowItWorks() {
             </div>
           ))}
         </dl>
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-white/15 pt-5 text-navy-100">
-          <span>
-            Contract <span className="code text-sm">{shortAddr(CONTRACT_ADDRESS)}</span>
-          </span>
-          <ExtLink href={contractUrl}>Read the contract on BaseScan</ExtLink>
-          <ExtLink href={REPO_URL}>Source code</ExtLink>
-        </div>
+        <ContractAddress />
       </div>
     </section>
   )
@@ -231,7 +266,7 @@ export default function Home() {
     <>
       <Hero />
       <Rules />
-      <Recent />
+      <LatestEntries />
       <HowItWorks />
     </>
   )

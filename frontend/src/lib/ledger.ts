@@ -4,6 +4,7 @@ import type { Address } from 'viem'
 import { CLUBLEDGER_ABI } from '../abi/abi'
 import { CONTRACT_ADDRESS } from '../config'
 import { publicClient } from './client'
+import { buildBook } from './book'
 
 export interface Entry {
   id: bigint
@@ -69,24 +70,28 @@ export const useVersions = (code: string) =>
 export const useRole = (addr: Address | undefined) =>
   useQuery({ queryKey: ['role', addr], queryFn: () => readRole(addr!), enabled: !!addr })
 
-/** The n most recent entries, newest first. */
-export function useRecent(n: number) {
-  const s = useSummary()
-  const count = s.data?.entryCount
-  const q = useQuery({
-    queryKey: ['recent', n, count?.toString()],
-    enabled: count !== undefined,
-    placeholderData: keepPreviousData, // keep the list on screen while a new entry loads
+export const PAGE = 50n
+
+/**
+ * The summary and every entry up to its count, read as one snapshot. Entries are never modified,
+ * so the last running balance always equals this summary's balance.
+ */
+export function useBook() {
+  return useQuery({
+    queryKey: ['book'],
     queryFn: async () => {
-      if (!count) return []
-      const start = count > BigInt(n) ? count - BigInt(n) + 1n : 1n
-      return (await readEntries(start, BigInt(n))).reverse()
+      const summary = await readSummary()
+      const entries: Entry[] = []
+      for (let start = 1n; start <= summary.entryCount; start += PAGE) {
+        const left = summary.entryCount - start + 1n
+        entries.push(...(await readEntries(start, left < PAGE ? left : PAGE)))
+      }
+      // A lagging RPC can return fewer entries than the summary counted. Retry, never show a wrong total.
+      if (BigInt(entries.length) !== summary.entryCount) throw new Error('Incomplete read')
+      return { summary, lines: buildBook(entries), corrected: correctedSet(entries) }
     },
   })
-  return { ...q, isPending: s.isPending || q.isPending, isError: s.isError || q.isError, refetch: () => s.refetch() }
 }
-
-export const PAGE = 50n
 
 /** All entries, newest first, fetched 50 at a time with getEntries. */
 export function useAllEntries() {

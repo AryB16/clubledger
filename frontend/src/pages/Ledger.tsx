@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { correctedSet, statusOf, useAllEntries, useLabels } from '../lib/ledger'
-import { EntryCard, EntryCardSkeleton, ErrorNotice, PageHead, Statement } from '../components/ui'
+import { DemoMark, EntryCard, EntryCardSkeleton, ErrorNotice, PageHead, Statement } from '../components/ui'
 
 type Filter = 'All' | 'Income' | 'Expense'
 
@@ -15,7 +15,7 @@ export default function Ledger() {
 
   return (
     <>
-      <PageHead title="All entries">
+      <PageHead title="All entries" mark={<DemoMark onDark />}>
         <p className="mt-4 max-w-2xl leading-relaxed text-navy-100 sm:text-lg">
           All the income and expenses treasurers have recorded, newest first. When one is fixed, the old line stays and is marked Corrected. The new line is marked Correction, or Cancelled if the amount is now zero.
         </p>

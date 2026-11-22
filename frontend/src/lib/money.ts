@@ -19,6 +19,12 @@ export function formatAed(fils: bigint): string {
   return fmt.format(Number(fils) / 100)
 }
 
+/** A figure for a column already headed AED: "1,100.00", "−40.00" (string maths, no floats). */
+export function formatFigure(fils: bigint): string {
+  const [whole, frac] = filsToInput(fils < 0n ? -fils : fils).split('.')
+  return `${fils < 0n ? '−' : ''}${whole.replace(/\B(?=(\d{3})+$)/g, ',')}.${frac}`
+}
+
 /** Plain editable amount, e.g. 38000n → "380.00" (string maths, no floats). */
 export function filsToInput(fils: bigint): string {
   const neg = fils < 0n

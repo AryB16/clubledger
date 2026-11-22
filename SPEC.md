@@ -261,11 +261,11 @@ Receipt-number inputs: trim + uppercase before lookup.
 
 **`/` Home — top to bottom:**
 1. Headline: **"See the Robotics Club's income and expenses."** Subhead: "The club's treasurers record each one on a public blockchain, where it can't be edited or deleted. Anyone can read the records for free, without an account."
-2. Big search: label "Receipt number", placeholder "e.g. EXP-0002", button **Check** (≥56 px tall, autofocus) → navigates to `/check/:code`.
+2. Big search: label "Receipt number", placeholder "e.g. EXP-0002", button **Check** (≥56 px tall, no autofocus, so the field is quiet until used) → navigates to `/check/:code`.
 3. One slip: **Recorded club balance** (large, tabular numerals) · Money in · Money out, from `summary()`, with one line saying it is not a bank balance.
 4. Panel **"The rules every entry must pass"**: what a smart contract is, then the 4 headline rules, each with "See one allowed" and "See one refused" links (SVG icons) from `proofs.ts`.
-5. 5 most recent entries as cards → link "See all entries" (`/ledger`).
-6. "How ClubLedger works": four plain questions covering what it is, who can change it, trusting the website, and what it can't prove (public record vs not); contract address with "Read the contract on BaseScan"; repo link.
+5. "Latest entries": a ledger table of the 5 most recent, oldest first. Columns Date, Receipt, Paid to / from, Category, In, Out, Balance, Status. A correction shows only its difference. The balance is the one the contract held after that line, and the last equals the slip's. Link "See all entries" (`/ledger`).
+6. "How ClubLedger works": four plain questions covering what it is, who can change it, trusting the website, and what it can't prove (public record vs not); the full contract address, large and copyable, with "Read the contract on BaseScan"; repo link; entries saved and time of the latest.
 
 **`/check/:code` — the verdict page** (also reachable directly from printed QR codes):
 - Logic: `versionsOf(code)` → `[]` NOT FOUND · length 1 GENUINE · length > 1 and latest amount 0 → CANCELLED · else CORRECTED.
@@ -307,7 +307,7 @@ Receipt-number inputs: trim + uppercase before lookup.
 
 _Revised 22 Nov 2026 at Aryesh's request, with the copy in §2.5 and §3.2–3.4. Replaces "white background, no gradients"._
 
-Graphite & steel: a public statement with the polish of a good consumer money app and a slightly technical feel, in its own identity (never another brand's look). Graphite navy gradient bands with engraved, measured linework; cool steel pages with a faint drafting grid; one ice-blue accent. Verdict colours green/amber/grey/red. Bricolage Grotesque for everything, with tabular numerals and wider spacing on receipt numbers and addresses. Entries are lines on a statement; the balance is a torn-edge slip; generously rounded corners. No neon, glows, purple, coin or crypto imagery, emoji, or long dashes in on-screen copy. Every screen must make sense to someone who lands on it cold: no slogans, say what it is. Mobile-first; test at 375 px wide and at laptop widths; no horizontal scroll; tap targets ≥ 44 px; WCAG AA contrast.
+Graphite & steel: a public statement with the polish of a good consumer money app and a slightly technical feel, in its own identity (never another brand's look). Graphite navy gradient bands with engraved, measured linework; cool steel pages with a faint drafting grid; one ice-blue accent. Verdict colours green/amber/grey/red. Bricolage Grotesque for everything, with tabular numerals and wider spacing on receipt numbers and addresses. Entries are lines on a statement; the balance is a torn-edge slip; generously rounded corners. Trailing "(fictional)" is hidden in displayed names (the contract keeps it); one small "Demo data" marker labels each section that lists them. No middle dots in meta lines. No neon, glows, purple, coin or crypto imagery, emoji, or long dashes in on-screen copy. Every screen must make sense to someone who lands on it cold: no slogans, say what it is. Mobile-first; test at 375 px wide and at laptop widths; no horizontal scroll; tap targets ≥ 44 px; WCAG AA contrast.
 
 ### 3.6 Deploy
 

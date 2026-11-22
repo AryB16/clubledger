@@ -3,22 +3,32 @@ import { Link } from 'react-router-dom'
 import type { Address } from 'viem'
 import type { Entry, Status } from '../lib/ledger'
 import { formatAed } from '../lib/money'
-import { formatDate, shortAddr } from '../lib/format'
+import { formatDate, shortAddr, shownName } from '../lib/format'
 import { Icon } from './icons'
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
   return <div className={`sheet ${className}`}>{children}</div>
 }
 
+/** One marker per section, in place of "(fictional)" after every name. */
+export function DemoMark({ onDark = false }: { onDark?: boolean }) {
+  return (
+    <span data-testid="demo-mark" className={`inline-block rounded-md px-2 py-0.5 align-middle text-xs leading-4 font-semibold whitespace-nowrap ${onDark ? 'bg-white/15 text-white' : 'bg-navy-100 text-navy-900'}`}>
+      Demo data
+    </span>
+  )
+}
+
 export function Skeleton({ className = '' }: { className?: string }) {
   return <div aria-hidden className={`animate-pulse rounded-lg bg-mist ${className}`} />
 }
 
-export function PageHead({ title, children }: { title: string; children?: ReactNode }) {
+export function PageHead({ title, mark, children }: { title: string; mark?: ReactNode; children?: ReactNode }) {
   return (
     <section className="band band-navy on-dark">
       <div className="wrap pt-9 pb-10 sm:pt-14 sm:pb-14">
         <h1 className="text-4xl leading-[1.02] font-extrabold tracking-tight sm:text-6xl">{title}</h1>
+        {mark && <p className="mt-3">{mark}</p>}
         {children}
       </div>
     </section>
@@ -106,9 +116,10 @@ export function EntryCard({ e, status, label }: { e: Entry; status: Status; labe
       className="grid min-h-28 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-4 transition-colors hover:bg-navy-50 focus-visible:-outline-offset-4 sm:min-h-24 sm:px-7"
     >
       <span className="min-w-0">
-        <span className="block font-semibold break-words text-ink">{e.counterparty || e.category}</span>
-        <span className="mt-1 block text-xs text-muted sm:text-sm">
-          <span className="code font-semibold text-ink">{e.refCode}</span> · {e.category}
+        <span className="block font-semibold [overflow-wrap:anywhere] text-ink">{shownName(e.counterparty) || e.category}</span>
+        <span className="mt-1 flex flex-wrap gap-x-3 text-xs text-muted sm:text-sm">
+          <span className="code font-semibold text-ink">{e.refCode}</span>
+          <span>{e.category}</span>
         </span>
         <span className="mt-0.5 block text-xs text-muted sm:text-sm">
           {formatDate(e.timestamp)}, {label}
