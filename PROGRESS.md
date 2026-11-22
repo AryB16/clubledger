@@ -253,4 +253,5 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 **LIVE 22 Nov, approved by Aryesh.** Merged to main and deployed as `dpl_9xi9FTHiTmg4Drfw3RGnto6fqwDp`.
 - Both domains byte-identical to the local build; Playwright 23 passed on each; WebKit (Safari engine, cached older build) 0 failures of 24 checks on iPhone and desktop profiles; production audit 0 problems; 3 QR targets return 200; Foundry 29; check-refusals all passed.
 - Rollback: `cd frontend && vercel rollback dpl_9tCFepn5h43tfZmp7RmjneZJKvcZ` (code: local tag `pre-redesign`).
-- Not tested: real MetaMask on this build, real phones, real Safari. MetaMask's flag is unaffected as far as we know.
+- Real MetaMask on this build: PASSED on localhost:4173 (22 Nov 12:03 UTC, reported by Aryesh, confirmed on-chain). Random member's EXP-9100 reverted "Not an authorised poster": https://sepolia.basescan.org/tx/0x831a9c7c6dc4db0b67874f5756633d17045bdd2ef767e30b77fe9ae4a6553a42 . Ledger still 458000 and 12 entries; EXP-0007 unused.
+- Not tested: real phones, real Safari. MetaMask's flag is unaffected as far as we know.
