@@ -99,7 +99,7 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 
 ---
 
-## Phase 4 — Read-only frontend — 🟡 built and deployed; gate waits on the live contract (Phase 3)
+## Phase 4 — Read-only frontend — ✅ PASSED
 
 - Production URL: **https://clubledger-kappa.vercel.app** (Vercel project `clubledger`, root `frontend/`, `VITE_RPC_URL` = publicnode set for production).
 - `curl` → 200 for `/`, `/ledger`, `/check/EXP-0002`, `/manage` (SPA rewrite works).
@@ -112,3 +112,24 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 - Role banner is a plain top banner, not sticky (sticky overlapped content on a 375 px phone).
 - `refusals.ts` imports `../proofs.ts` with the extension so the Node check script can import it directly (Node type stripping).
 - Local-only Playwright suite `e2e/manage.local.spec.ts` uses a stand-in browser wallet over anvil; it is skipped unless `LOCAL_RPC` is set, so it never posts to production.
+
+**Gate 4 evidence (production)**
+- `curl` → 200 for `/`, `/ledger`, `/check/EXP-0002`, `/manage`.
+- `BASE_URL=https://clubledger-kappa.vercel.app npx playwright test` at 375×812 → **23 passed, 0 failed, 5 skipped** (the skips are the local-only suite that posts transactions). Covers all five verdict cases, AED 4,580.00, 8 proof links, and `scrollWidth <= 375` on the pages listed in the gate.
+- Screenshots in `docs/screenshots/` are now all from production.
+
+---
+
+## Phase 5 — Manage page and refusal card — ✅ PASSED
+
+**Fixed before the production deploy**
+- `/check/:code` URL-decoded twice and crashed on input such as `100%`.
+- A failed role lookup was shown as "You're not a treasurer"; it now shows the RPC-down message.
+- Lists no longer blank out while a newly recorded entry loads.
+
+**Gate 5 evidence**
+- Vitest → 90 passed. `tsc -b --force` → 0 errors.
+- `node scripts/check-refusals.mjs` against the deployed contract → all 12 assertions passed; nothing sent.
+- Playwright on production `/manage`: no-wallet copy, the three role banners, and refusal cards for rules 1–3 linking to their own proofs, using a read-only stand-in wallet that cannot sign or send.
+- No private key or API key in `frontend/dist` or in the JS bundle downloaded from production.
+- **Not tested:** real MetaMask. "Send it anyway" and successful writes were exercised on local anvil only (human checklist).

@@ -54,7 +54,6 @@ test('random member: refusal card, proof link, and Send it anyway lands a failed
   await expect(card).toContainText("This wallet isn't an authorised treasurer, so the club's rulebook refused it.")
   await expect(card).toContainText('Nobody can switch it off.')
   await expect(card.getByRole('link', { name: 'Show the refusal on the public record' })).toHaveAttribute('href', /sepolia\.basescan\.org\/tx\/0x/)
-  await page.screenshot({ path: '../docs/screenshots/manage-refusal-card.png', fullPage: true })
   await card.getByRole('button', { name: 'Send it anyway' }).click()
   const link = card.getByRole('link', { name: 'Refused on-chain — view it ↗' })
   await expect(link).toBeVisible()
@@ -81,7 +80,6 @@ test('admin: Club Advisor banner and authorise panel', async ({ page }) => {
   await expect(page.getByTestId('addr-status')).toContainText('Currently an authorised treasurer: Treasurer')
   await expect(page.getByRole('button', { name: 'Revoke' })).toBeVisible()
   await expect(page.getByText('Record money')).toHaveCount(0)
-  await page.screenshot({ path: '../docs/screenshots/manage-admin.png', fullPage: true })
 })
 
 test('treasurer: duplicate receipt refused, then EXP-0007 recorded and verifiable', async ({ page }) => {
@@ -100,7 +98,6 @@ test('treasurer: duplicate receipt refused, then EXP-0007 recorded and verifiabl
   await page.getByLabel('Paid to').fill('Circuit Souk (fictional)')
   await page.getByRole('button', { name: 'Record it' }).click()
   await expect(page.getByText('Recorded ✓ View public proof ↗')).toBeVisible()
-  await page.screenshot({ path: '../docs/screenshots/manage-treasurer.png', fullPage: true })
   await page.goto('/check/EXP-0007')
   await expect(page.getByTestId('verdict')).toContainText('✓ Genuine record')
   await expect(page.getByText(/250\.00/).first()).toBeVisible()

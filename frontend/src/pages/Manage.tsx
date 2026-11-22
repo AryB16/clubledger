@@ -490,6 +490,8 @@ export default function Manage() {
   }
 
   if (summary.isError && !summary.data) return <ErrorNotice onRetry={() => summary.refetch()} />
+  // An unanswered role lookup must never be presented as "not a treasurer".
+  if (role.isError && !role.data) return <ErrorNotice onRetry={() => role.refetch()} />
   if (!summary.data || role.isPending) {
     return (
       <div className="space-y-4">

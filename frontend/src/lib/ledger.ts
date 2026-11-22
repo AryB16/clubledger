@@ -1,5 +1,5 @@
 // Contract reads (view functions only — never event logs). Everything shown on the site comes from here.
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import type { Address } from 'viem'
 import { CLUBLEDGER_ABI } from '../abi/abi'
 import { CONTRACT_ADDRESS } from '../config'
@@ -76,6 +76,7 @@ export function useRecent(n: number) {
   const q = useQuery({
     queryKey: ['recent', n, count?.toString()],
     enabled: count !== undefined,
+    placeholderData: keepPreviousData, // keep the list on screen while a new entry loads
     queryFn: async () => {
       if (!count) return []
       const start = count > BigInt(n) ? count - BigInt(n) + 1n : 1n
@@ -94,6 +95,7 @@ export function useAllEntries() {
   const q = useInfiniteQuery({
     queryKey: ['entries', count?.toString()],
     enabled: count !== undefined,
+    placeholderData: keepPreviousData,
     initialPageParam: count ?? 0n,
     queryFn: async ({ pageParam }) => {
       const end = pageParam as bigint // newest id on this page

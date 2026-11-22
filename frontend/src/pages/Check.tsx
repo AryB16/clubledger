@@ -64,7 +64,7 @@ function Timeline({ versions, label }: { versions: Entry[]; label: (a: Entry['po
 export default function Check() {
   const params = useParams()
   const raw = params.code ?? ''
-  const code = normaliseCode(decodeURIComponent(raw))
+  const code = normaliseCode(raw) // the router has already URL-decoded the param
   const q = useVersions(code)
   const versions = q.data ?? []
   const label = useLabels(versions.map((v) => v.poster))
