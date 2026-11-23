@@ -13,7 +13,7 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636?logo=solidity&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-149eca?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-7-3178c6?logo=typescript&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-183_passing-14664a)
+![Tests](https://img.shields.io/badge/tests-185_passing-14664a)
 
 **Hash It Out 2026 · Track 4: Financial Transparency · BITS Pilani Dubai · solo entry**
 
@@ -146,7 +146,7 @@ Solidity 0.8.24 with Foundry · React 19, TypeScript, Vite and Tailwind CSS · w
 |---|---|---|
 | **Foundry** | 28 unit tests that trigger every revert message; 3 invariants over 16,384 random calls: the balance always equals income minus expenses, totals match an independent model, and no overspend or non-treasurer entry is ever accepted | ✅ 29 passed |
 | **Vitest** | Money parsing and formatting, the running balance, and the plain-English refusal messages | ✅ 98 passed |
-| **Playwright** | The live site at phone and desktop sizes: every receipt result, balances, proof links, layout stability, a public RPC going down, the guided tour, and a stand-in wallet that is never asked to send | ✅ 56 passed |
+| **Playwright** | The live site at phone and desktop sizes: every receipt result, balances, proof links, layout stability, a public RPC going down, the guided tour, and a stand-in wallet that is never asked to send | ✅ 58 passed |
 | **Live contract check** | Simulates each refusal and one valid entry against the deployed contract, sending nothing | ✅ All passed |
 
 ## Limits, honestly
