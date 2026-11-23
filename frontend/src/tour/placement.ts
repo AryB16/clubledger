@@ -3,6 +3,8 @@ export const BORDER = 3
 export const OFFSET = 6
 const OUT = BORDER + OFFSET
 const GAP = 12
+/** Corner for features with square edges, matching the site's cards. */
+const PLAIN_RADIUS = 18
 
 export interface Spot {
   el: HTMLElement
@@ -11,6 +13,14 @@ export interface Spot {
   floor: number
   /** The scroll position that shows the feature clear of the card. */
   scrollTo: number
+}
+
+export interface Box {
+  top: number
+  left: number
+  width: number
+  height: number
+  radius: number
 }
 
 /** The target on the tour's copy of the page, if it is showing. */
@@ -39,19 +49,15 @@ export function placeSpot(whole: HTMLElement, card: HTMLElement): Spot {
   return { el, rect, floor, scrollTo: Math.max(0, scrollTo) }
 }
 
-export function drawRing(ring: HTMLElement, { el, rect, floor }: Spot) {
+/** The ring's box in the viewport, following the feature's own corners: a pill stays a pill, a card keeps its curve. */
+export function ringBox({ el, rect, floor }: Spot): Box | null {
   const top = Math.max(2, rect.top - OUT)
   const bottom = Math.min(floor, rect.bottom + OUT)
   const left = Math.max(2, rect.left - OUT)
   const right = Math.min(document.documentElement.clientWidth - 2, rect.right + OUT)
-  if (bottom - top < 24) return false
-  const radius = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 8
-  Object.assign(ring.style, {
-    top: `${top}px`,
-    left: `${left}px`,
-    width: `${right - left}px`,
-    height: `${bottom - top}px`,
-    borderRadius: `${Math.min(radius, 32) + OUT}px`,
-  })
-  return true
+  if (bottom - top < 24) return null
+  const own = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0
+  const inner = own > 0 ? Math.min(own, rect.height / 2) : PLAIN_RADIUS
+  const radius = Math.min(inner + OUT, (bottom - top) / 2, (right - left) / 2)
+  return { top, left, width: right - left, height: bottom - top, radius }
 }

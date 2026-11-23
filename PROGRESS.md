@@ -269,3 +269,17 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 - First run on bpdc had 3 tests pass only on retry. One was a timing race in the Pause test (fixed, 24/24 under load). The other two did not recur in repeated runs under load.
 - Rollback: `cd frontend && vercel rollback dpl_9xi9FTHiTmg4Drfw3RGnto6fqwDp`.
 - Not pushed to GitHub. Untested: real phone, real Safari, real MetaMask on this build.
+
+---
+
+## Smoother tour, one-line address, built-to-scale section (branch `ui/tour-polish`) — 🟡 tested locally, not live
+
+Aryesh's feedback, 23 Nov: the tour felt forced, the ring should follow each feature's shape, step 3 changed with no visible cause, the address should fit one line with a copy icon, the site should be more judge-friendly, and the idea should look bigger.
+
+- **Bigger idea:** Aryesh chose to reframe without redeploying. The contract, its 12 entries, the proofs, the QR receipts and the BaseScan verification are unchanged. New home section "Built to scale" presents the Robotics Club as the pilot of a campus-wide setup (SPEC §3.3 item 6).
+- **Tour:** the ring glides between features and uses their own corners; eased scrolling; pages crossfade and arrive already scrolled; a pointer presses Check (step 2) and Expense (step 7). Step 2 now ends with the press (about 4.3 s instead of 8 s).
+- **Address:** one line, scaled to fit, with a copy icon (shortened in the middle below 640 px; the icon copies the whole address).
+- **Judge-friendly:** "Or try a real one" chips for the three verdicts (verdicts read live), a "Live" badge on the balance, entrance motion on the hero, a stamp on the verdict, and a link-preview image (`og.png`).
+- Tests on a local production build: TypeScript clean; Vitest 98; Playwright 56 passed with no retries, 5 local-only skipped, including a new pointer test. Tour frames checked in Chromium at 1280x800 and in WebKit at 375x812, with no console errors.
+- README screenshots refreshed from this build by the test run.
+- Not tested: real phone, real Safari, real MetaMask on this build.

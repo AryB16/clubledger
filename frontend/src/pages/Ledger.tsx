@@ -30,6 +30,7 @@ export default function Ledger() {
               key={f}
               role="tab"
               aria-selected={filter === f}
+              data-tour-click={f.toLowerCase()}
               onClick={() => setFilter(f)}
               className={`min-h-11 rounded-full px-5 text-sm font-semibold transition-colors ${
                 filter === f ? 'bg-navy-900 text-white' : 'text-ink hover:bg-paper'

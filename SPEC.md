@@ -260,11 +260,12 @@ Receipt-number inputs: trim + uppercase before lookup.
 
 **`/` Home — top to bottom:**
 1. Headline: **"See the Robotics Club's income and expenses."** Subhead: "The club's treasurers record each one on a public blockchain, where it can't be edited or deleted. Anyone can read the records for free, without an account."
-2. Big search: label "Receipt number", placeholder "e.g. EXP-0002", button **Check** (≥56 px tall, no autofocus, so the field is quiet until used) → navigates to `/check/:code`.
-3. One slip: **Recorded club balance** (large, tabular numerals) · Money in · Money out, from `summary()`, with one line saying it is not a bank balance.
+2. Big search: label "Receipt number", placeholder "e.g. EXP-0002", button **Check** (≥56 px tall, no autofocus, so the field is quiet until used) → navigates to `/check/:code`. Below it, "Or try a real one": INC-0001, EXP-0002 and EXP-0004, each showing its verdict read live from the contract.
+3. One slip: **Recorded club balance** (large, tabular numerals) · Money in · Money out, from `summary()`, with one line saying it is not a bank balance, and a "Live" badge once the record has been read.
 4. Panel **"The rules every entry must pass"**: what a smart contract is, then the 4 headline rules, each with "See one allowed" and "See one refused" links (SVG icons) from `proofs.ts`.
 5. "Latest entries": a ledger table of the 5 most recent, oldest first. Columns Date, Receipt, Paid to / from, Category, In, Out, Balance, Status. A correction shows only its difference. The balance is the one the contract held after that line, and the last equals the slip's. Link "See all entries" (`/ledger`).
-6. "How ClubLedger works": four plain questions covering what it is, who can change it, trusting the website, and what it can't prove (public record vs not); the full contract address, large and copyable, with "Read the contract on BaseScan"; repo link; entries saved and time of the latest.
+6. "Built to scale" (added 23 Nov, Aryesh's choice: reframe, no redeploy): the Robotics Club is the pilot; any group gets its own record by publishing a fresh copy of the same contract. Three facts (1 step to set up, free to read, 4 rules for everyone), a council-to-clubs diagram with only the Robotics Club marked live, and three uses beyond campus. No claim that other organisations exist.
+7. "How ClubLedger works": four plain questions covering what it is, who can change it, trusting the website, and what it can't prove (public record vs not); the contract address on one line with a copy icon (shortened in the middle below 640 px; the icon always copies the whole address), with "Read the contract on BaseScan"; repo link; entries saved and time of the latest.
 
 **`/check/:code` — the verdict page** (also reachable directly from printed QR codes):
 - Logic: `versionsOf(code)` → `[]` NOT FOUND · length 1 GENUINE · length > 1 and latest amount 0 → CANCELLED · else CORRECTED.
@@ -321,6 +322,7 @@ _Added 22 Nov 2026 at Aryesh's request._
 - It plays on its own copy of each page. The visitor's page stays mounted and hidden, so URL, scroll, fields and filters come back unchanged.
 - It only reads. It never submits, sends, connects or asks a wallet to switch network.
 - Look: dark glass card in the system font (SF Pro, then Inter), teal `#5fd3c6` ring and progress. Reduced motion respected.
+- Motion (23 Nov): the ring glides between features and takes each feature's own corners (a pill stays a pill); scrolling is eased; a change of page fades out and fades the new page in already at its feature. A pointer visibly presses Check before the receipt opens (step 2) and Expense before the list filters (step 7), and points at the copy icon in step 6 without pressing it.
 
 ---
 

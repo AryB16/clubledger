@@ -146,7 +146,7 @@ export default function Check() {
               <p className="code font-semibold break-all">Receipt {code}</p>
               <h1 className="mt-2 text-[2.75rem] leading-none font-extrabold tracking-tight sm:text-7xl">{v.headline}</h1>
             </div>
-            <span aria-hidden className="grid h-14 w-14 shrink-0 -rotate-6 place-items-center rounded-full border-[3px] border-current sm:h-24 sm:w-24 sm:border-4">
+            <span aria-hidden className="stamp grid h-14 w-14 shrink-0 -rotate-6 place-items-center rounded-full border-[3px] border-current sm:h-24 sm:w-24 sm:border-4">
               <Icon name={v.icon} className="h-7 w-7 sm:h-12 sm:w-12" />
             </span>
           </div>

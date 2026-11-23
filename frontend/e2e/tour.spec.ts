@@ -229,6 +229,31 @@ test('tour: a wallet on another network is not asked to switch', async ({ page }
   expect(await calls(page)).not.toContain('wallet_switchEthereumChain')
 })
 
+test('tour: a pointer presses Check before the receipt opens, and Expense before the list changes', async ({ page }) => {
+  await page.goto('/')
+  await expect(page.getByTestId('entry-card').first()).toBeVisible()
+  await replay(page)
+  await next(page)
+  const pointer = page.getByTestId('tour-pointer')
+  const on = (target: string) => async () => {
+    const p = await pointer.boundingBox()
+    const b = await page.locator(`[data-tour-page] [data-tour-click="${target}"]`).boundingBox()
+    return !!p && !!b && p.x >= b.x - 8 && p.x <= b.x + b.width && p.y >= b.y - 8 && p.y <= b.y + b.height
+  }
+  await expect(pointer).toBeVisible({ timeout: 8000 })
+  expect(new URL(page.url()).pathname).toBe('/')
+  await expect.poll(on('check'), { timeout: 8000 }).toBe(true)
+  await expect(page).toHaveURL(/\/check\/EXP-0002$/)
+  for (let i = 3; i < 7; i++) {
+    await expect(card(page)).toHaveAttribute('data-step', String(i))
+    await next(page)
+  }
+  const expense = page.locator('[data-tour-page] [data-tour-click="expense"]')
+  await expect(expense).toHaveAttribute('aria-selected', 'false')
+  await expect.poll(on('expense'), { timeout: 8000 }).toBe(true)
+  await expect(expense).toHaveAttribute('aria-selected', 'true')
+})
+
 test('tour: a missing target is skipped after three seconds', async ({ page }) => {
   await page.route(/base-sepolia-rpc\.publicnode\.com|sepolia\.base\.org/, () => new Promise(() => {})) // never answers
   await page.goto('/')

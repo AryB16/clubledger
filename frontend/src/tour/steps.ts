@@ -8,6 +8,16 @@ export interface Step {
   event?: TourAction
   /** Counted on the tour's clock, so pausing holds it back too. */
   eventDelay?: number
+  /** A pointer that glides to data-tour-click="…" and presses it, so a change on screen always has a visible cause. */
+  cursor?: Cursor
+}
+
+export interface Cursor {
+  target: string
+  /** When the pointer sets off, on the tour's clock. */
+  at: number
+  /** Press on arrival, then do this: go to the next step, or send a tour event. Without it the pointer only points. */
+  then?: 'advance' | TourAction
 }
 
 export type TourAction = 'type-example' | 'point-at-total' | 'mark-address' | 'show-expenses'
@@ -26,9 +36,11 @@ export const STEPS: Step[] = [
     route: '/',
     target: 'search',
     caption: 'This is the receipt checker. Type the number from any receipt to look it up, with no account needed.',
-    ms: 8000,
+    // The press on Check opens the next step, so the bar is timed to end with it.
+    ms: 4300,
     event: 'type-example',
     eventDelay: 700,
+    cursor: { target: 'check', at: 2900, then: 'advance' },
   },
   {
     route: `/check/${EXAMPLE_CODE}`,
@@ -57,14 +69,14 @@ export const STEPS: Step[] = [
     ms: 7000,
     event: 'mark-address',
     eventDelay: 1200,
+    cursor: { target: 'copy', at: 1900 },
   },
   {
     route: '/ledger',
     target: 'filters',
     caption: 'This is the list of every entry. Switch tabs to see only the income or only the expenses.',
     ms: 8000,
-    event: 'show-expenses',
-    eventDelay: 1800,
+    cursor: { target: 'expense', at: 1300, then: 'show-expenses' },
   },
   {
     route: '/manage',

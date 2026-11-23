@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CONTRACT_ADDRESS, REPO_URL, contractUrl, txUrl } from '../config'
 import { PROOFS } from '../proofs'
-import { useBook } from '../lib/ledger'
+import { useBook, useVersions, verdictOf, type Verdict } from '../lib/ledger'
 import { formatAed } from '../lib/money'
 import { formatDateTime, normaliseCode } from '../lib/format'
 import { Icon } from '../components/icons'
@@ -30,11 +30,12 @@ export function ReceiptSearch({ initial = '', onDark = false }: { initial?: stri
     if (c) navigate(`/check/${encodeURIComponent(c)}`)
   }
   return (
-    <form onSubmit={submit} role="search" data-tour="search" className="w-full max-w-lg">
+    <form onSubmit={submit} role="search" className="w-full max-w-lg">
       <label htmlFor="receipt" className={`mb-2 block text-sm font-semibold ${onDark ? 'text-navy-100' : 'text-ink'}`}>
         Receipt number
       </label>
       <div
+        data-tour="search"
         className={`flex items-center gap-2 rounded-full border bg-paper p-1.5 pl-5 has-[input:focus-visible]:outline-3 has-[input:focus-visible]:outline-offset-0 ${
           onDark ? 'border-transparent outline-signal' : 'border-field outline-navy-700'
         }`}
@@ -50,7 +51,7 @@ export function ReceiptSearch({ initial = '', onDark = false }: { initial?: stri
           spellCheck={false}
           className="min-h-14 w-full min-w-0 bg-transparent code text-lg text-ink uppercase placeholder:text-muted placeholder:normal-case focus:outline-none focus-visible:outline-none"
         />
-        <button type="submit" className="btn btn-signal min-h-14 shrink-0 text-lg focus-visible:outline-navy-700!">
+        <button type="submit" data-tour-click="check" className="btn btn-signal min-h-14 shrink-0 text-lg focus-visible:outline-navy-700!">
           Check
         </button>
       </div>
@@ -73,7 +74,15 @@ function BalanceSlip() {
     <div data-tour="balance" className="slip-shadow rounded-3xl">
       <div className="slip px-6 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10">
         <div data-tour-part="balance">
-        <p className="font-medium text-muted">Recorded club balance</p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-medium text-muted">Recorded club balance</p>
+          {d && (
+            <span title="Read from the public record when this page opened" className="inline-flex items-center gap-1.5 rounded-full bg-gain-tint px-2.5 py-0.5 text-xs font-semibold text-gain">
+              <span aria-hidden className="live-dot" />
+              Live
+            </span>
+          )}
+        </div>
         {d ? (
           <p data-testid="balance" className={`mt-1 ${totalSize(formatAed(d.balance))} leading-12! font-bold tracking-tight whitespace-nowrap tabular-nums sm:leading-14!`}>
             {formatAed(d.balance)}
@@ -104,6 +113,47 @@ function BalanceSlip() {
   )
 }
 
+/** Three real receipts, one for each kind of result, so a first visit can see every verdict in one click. */
+const EXAMPLES = ['INC-0001', 'EXP-0002', 'EXP-0004']
+const CHIP: Record<Verdict, { text: string; dot: string }> = {
+  GENUINE: { text: 'Genuine', dot: 'bg-[#3fbf8f]' },
+  CORRECTED: { text: 'Corrected', dot: 'bg-[#eec567]' },
+  CANCELLED: { text: 'Cancelled', dot: 'bg-navy-200' },
+  NOT_FOUND: { text: 'Not found', dot: 'bg-[#e0676a]' },
+}
+
+function Example({ code }: { code: string }) {
+  const q = useVersions(code)
+  const chip = q.data ? CHIP[verdictOf(q.data)] : null
+  return (
+    <Link
+      to={`/check/${code}`}
+      className="flex min-h-11 flex-col justify-center rounded-2xl border border-white/15 bg-white/[0.06] px-3 py-1.5 text-sm max-[359px]:px-2 text-white transition-colors hover:border-white/30 hover:bg-white/10 sm:flex-row sm:items-center sm:justify-start sm:gap-2 sm:rounded-full sm:py-0"
+    >
+      <span className="code font-semibold whitespace-nowrap max-[359px]:text-[0.75rem] max-[359px]:tracking-normal">{code}</span>
+      {chip && (
+        <span className="inline-flex items-center gap-1.5 text-xs text-navy-100 sm:text-sm">
+          <span aria-hidden className={`h-2 w-2 shrink-0 rounded-full ${chip.dot}`} />
+          {chip.text}
+        </span>
+      )}
+    </Link>
+  )
+}
+
+function Examples() {
+  return (
+    <div className="mt-4">
+      <p className="text-sm font-semibold text-navy-100">Or try a real one</p>
+      <div className="mt-2 grid grid-cols-3 gap-2 sm:flex sm:flex-wrap">
+        {EXAMPLES.map((c) => (
+          <Example key={c} code={c} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function Hero() {
   return (
     <section className="relative">
@@ -111,15 +161,20 @@ function Hero() {
       <div aria-hidden className="band band-navy absolute inset-x-0 top-0 bottom-28 lg:bottom-0" style={{ position: 'absolute' }} />
       <div className="wrap relative grid grid-cols-[minmax(0,1fr)] gap-9 pt-9 pb-2 lg:grid-cols-[1.35fr_0.85fr] lg:items-center lg:gap-16 lg:py-14">
         <div className="on-dark text-white">
-          <h1 className="max-w-2xl text-[2.6rem] leading-none font-extrabold tracking-tight sm:text-6xl">
+          <h1 className="rise max-w-2xl text-[2.6rem] leading-none font-extrabold tracking-tight sm:text-6xl">
             See the Robotics Club's <span className="text-signal">income and expenses.</span>
           </h1>
-          <p className="mt-4 mb-6 max-w-lg text-lg leading-snug text-navy-100">
+          <p className="rise mt-4 mb-6 max-w-lg text-lg leading-snug text-navy-100 [animation-delay:80ms]">
             The club's treasurers record each one on a public blockchain, where it can't be edited or deleted. Anyone can read the records for free, without an account.
           </p>
-          <ReceiptSearch onDark />
+          <div className="rise [animation-delay:160ms]">
+            <ReceiptSearch onDark />
+            <Examples />
+          </div>
         </div>
-        <BalanceSlip />
+        <div className="rise [animation-delay:240ms]">
+          <BalanceSlip />
+        </div>
       </div>
     </section>
   )
@@ -196,6 +251,102 @@ function LatestEntries() {
   )
 }
 
+const BRANCHES = ['Debate Society', 'Music Society', 'Sports teams']
+
+const BEYOND = [
+  { icon: 'heart', title: 'Charity drives', text: 'Donors look up their own receipt and follow every dirham to the cause.' },
+  { icon: 'people', title: 'Parent associations', text: 'School trips and fundraisers, with the spending open to every parent.' },
+  { icon: 'home', title: 'Residents’ committees', text: 'Building funds where each repair bill is on the record before anyone asks.' },
+] as const
+
+const STATS = [
+  ['1 step', 'to give a new organisation its own public record'],
+  ['Free', 'to read any record or check any receipt'],
+  ['4 rules', 'enforced the same way for every organisation'],
+]
+
+function Scale() {
+  return (
+    <section aria-labelledby="scale-h" className="wrap pb-14 lg:pb-24">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-14">
+        <div>
+          <p className="text-sm font-bold tracking-[0.12em] text-navy-700 uppercase">Built to scale</p>
+          <h2 id="scale-h" className="mt-3 text-4xl leading-none font-bold tracking-tight sm:text-5xl">
+            One club today. A whole campus next.
+          </h2>
+          <p className="mt-4 max-w-xl leading-relaxed text-muted">
+            The Robotics Club is the pilot. Nothing in the contract is specific to it: any group that handles shared money gets its own public record by publishing a fresh copy under its own name, with its own treasurers and the same four rules. A student council and each club it funds can keep separate books that anyone can check against each other.
+          </p>
+          <dl className="mt-7 grid grid-cols-3 gap-3 sm:gap-4">
+            {STATS.map(([big, small]) => (
+              <div key={big} className="sheet px-3 py-4 sm:px-5">
+                <dt className="sr-only">{small}</dt>
+                <dd>
+                  <span className="block text-2xl leading-none font-extrabold tracking-tight text-navy-900 sm:text-3xl">{big}</span>
+                  <span aria-hidden className="mt-2 block text-xs leading-snug text-muted sm:text-sm">
+                    {small}
+                  </span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        {/* One public record per organisation, drawn as the campus would use it. */}
+        <figure aria-label="How ClubLedger grows across a campus" className="sheet relative overflow-hidden p-5 sm:p-7">
+          <div className="rounded-2xl bg-navy-900 px-5 py-4 text-white">
+            <p className="text-xs font-semibold tracking-[0.1em] text-navy-200 uppercase">Central fund</p>
+            <p className="mt-1 text-lg font-bold">Student council budget</p>
+            <p className="text-sm text-navy-100">Its own public record of every grant it makes</p>
+          </div>
+          {/* The council's line branches down to each club. */}
+          <div aria-hidden className="mx-auto h-4 w-px bg-field/60" />
+          <div aria-hidden className="relative mx-[25%] h-4 border-x border-t border-field/60 sm:hidden" />
+          <div aria-hidden className="relative mx-[12.5%] hidden h-4 sm:grid sm:grid-cols-3">
+            <span className="border-t border-l border-field/60" />
+            <span className="relative border-t border-l border-field/60" />
+            <span className="border-x border-t border-field/60" />
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Link
+              to="/ledger"
+              className="flex flex-col justify-between rounded-2xl border-2 border-gain bg-gain-tint p-3 transition-colors hover:bg-[#cde4da]"
+            >
+              <span className="font-bold text-ink">Robotics Club</span>
+              <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-gain">
+                <span aria-hidden className="live-dot" />
+                Live on this site
+              </span>
+            </Link>
+            {BRANCHES.map((b) => (
+              <div key={b} className="flex flex-col justify-between rounded-2xl border border-dashed border-field/70 p-3">
+                <span className="font-semibold text-ink">{b}</span>
+                <span className="mt-2 text-xs text-muted">Same rules, own record</span>
+              </div>
+            ))}
+          </div>
+          <figcaption className="mt-6 border-t border-line pt-5">
+            <p className="text-sm font-semibold text-ink">Beyond campus</p>
+            <ul className="mt-3 grid gap-3 sm:grid-cols-3">
+              {BEYOND.map((b) => (
+                <li key={b.title} className="flex gap-3 sm:flex-col sm:gap-2">
+                  <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-navy-50 text-navy-700">
+                    <Icon name={b.icon} className="h-5 w-5" />
+                  </span>
+                  <span>
+                    <span className="block font-semibold text-ink">{b.title}</span>
+                    <span className="block text-sm leading-snug text-muted">{b.text}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  )
+}
+
 const FAQ = [
   [
     'What is ClubLedger?',
@@ -215,6 +366,9 @@ const FAQ = [
   ],
 ]
 
+/** Short enough for one line on a phone. The copy button always copies the whole address. */
+const SHORT_ADDRESS = `${CONTRACT_ADDRESS.slice(0, 10)}…${CONTRACT_ADDRESS.slice(-8)}`
+
 function ContractAddress() {
   const q = useBook()
   const [copied, setCopied] = useState<'yes' | 'no'>()
@@ -225,32 +379,52 @@ function ContractAddress() {
     try {
       await navigator.clipboard.writeText(CONTRACT_ADDRESS)
       setCopied('yes')
+      setTimeout(() => setCopied(undefined), 2400)
     } catch {
       setCopied('no')
     }
   }
   return (
-    <div data-tour="contract" className="mt-10 grid gap-x-12 border-t border-white/15 pt-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-      <div data-tour-part="contract">
-        <p className="text-navy-200">Contract address</p>
-        {/* Two fixed halves, so it only ever breaks in the middle and still copies as one value. */}
-        <p data-testid="contract-address" className="mt-2 text-[1.4rem] leading-tight font-extrabold tracking-[0.02em] text-signal select-all max-[359px]:text-[1.15rem] sm:text-4xl lg:text-[2.9rem]">
-          <span className={`inline-block ${marked ? 'bg-signal text-navy-950' : ''}`}>{CONTRACT_ADDRESS.slice(0, 21)}</span>
-          <span className={`inline-block ${marked ? 'bg-signal text-navy-950' : ''}`}>{CONTRACT_ADDRESS.slice(21)}</span>
-        </p>
-      </div>
-      <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-1 text-navy-100 lg:flex-col lg:items-start">
-        <button type="button" onClick={copy} className="btn btn-signal min-h-11">
-          Copy address
+    <div data-tour="contract" className="mt-10 border-t border-white/15 pt-8">
+      <p className="text-navy-200">Contract address</p>
+      <div
+        data-tour-part="contract"
+        className={`mt-3 flex items-center gap-2 rounded-2xl py-1.5 pr-1.5 pl-4 ring-1 transition-colors duration-500 sm:pl-5 ${
+          marked ? 'bg-signal/20 ring-signal' : 'bg-white/[0.06] ring-white/15'
+        }`}
+      >
+        {/* Scales with the box so the whole address stays on one line. */}
+        <div className="min-w-0 flex-1 [container-type:inline-size]">
+          <p
+            data-testid="contract-address"
+            className="text-[1.05rem] leading-tight font-extrabold tracking-[0.02em] whitespace-nowrap text-signal select-all sm:text-[min(2.6rem,calc(100cqi/27.4))]"
+          >
+            <span aria-hidden className="sm:hidden">
+              {SHORT_ADDRESS}
+            </span>
+            <span className="max-sm:sr-only">{CONTRACT_ADDRESS}</span>
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={copy}
+          data-tour-click="copy"
+          aria-label="Copy address"
+          title="Copy address"
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-signal transition-colors hover:bg-white/10 sm:h-12 sm:w-12"
+        >
+          <Icon name={copied === 'yes' ? 'check' : 'copy'} className="h-5 w-5 sm:h-6 sm:w-6" />
         </button>
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-1 text-navy-100">
         <ExtLink href={contractUrl}>Read the contract on BaseScan</ExtLink>
         <ExtLink href={REPO_URL}>Source code</ExtLink>
+        <p role="status" className={copied ? 'text-sm text-signal' : 'sr-only'}>
+          {copied === 'yes' && 'Address copied.'}
+          {copied === 'no' && "Couldn't copy. Open the contract on BaseScan instead."}
+        </p>
       </div>
-      <p role="status" className={copied ? 'mt-3 text-sm lg:col-span-2' : 'sr-only'}>
-        {copied === 'yes' && 'Address copied.'}
-        {copied === 'no' && "Couldn't copy. Select the address above instead."}
-      </p>
-      <p className="mt-3 min-h-10 text-sm leading-5 text-navy-200 sm:min-h-5 lg:col-span-2">
+      <p className="mt-2 min-h-10 text-sm leading-5 text-navy-200 sm:min-h-5">
         {q.data && latest && `${q.data.summary.entryCount} entries saved, including corrections. The latest was saved on ${formatDateTime(latest.timestamp)}.`}
       </p>
     </div>
@@ -284,6 +458,7 @@ export default function Home() {
       <Hero />
       <Rules />
       <LatestEntries />
+      <Scale />
       <HowItWorks />
     </>
   )

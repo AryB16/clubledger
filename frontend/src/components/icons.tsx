@@ -6,6 +6,10 @@ const PATHS = {
   minus: 'M5 12h14',
   play: 'M8 5.5v13l10-6.5z',
   search: 'M16 16l4.5 4.5M18 10.5a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z',
+  copy: 'M9 9h10.5v10.5H9zM15 9V4.5H4.5V15H9',
+  heart: 'M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0112 7.4 4.3 4.3 0 0119.5 10c0 5.4-7.5 10-7.5 10z',
+  people: 'M9 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM2.5 20a6.5 6.5 0 0113 0M16 4.3a3.5 3.5 0 010 6.4M18 14.2a6.5 6.5 0 013.5 5.8',
+  home: 'M4 10.5L12 4l8 6.5V20h-5.5v-5.5h-5V20H4z',
 }
 
 export function Icon({ name, className = 'h-4 w-4' }: { name: keyof typeof PATHS; className?: string }) {

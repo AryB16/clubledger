@@ -15,10 +15,66 @@
 }
 .tour-dim { inset: 0; background: rgb(4 10 16 / 0.38); }
 .tour-ring {
+  top: 0;
+  left: 0;
   box-sizing: border-box;
   border: 3px solid var(--tour-teal);
-  box-shadow: 0 0 22px 3px rgb(95 211 198 / 0.55), 0 0 0 200vmax rgb(4 10 16 / 0.38);
+  box-shadow: 0 0 24px 2px rgb(95 211 198 / 0.45), 0 0 0 200vmax rgb(4 10 16 / 0.38);
+  will-change: transform, width, height;
 }
+/* A soft breath on the ring, so a held step still feels alive. */
+.tour-ring::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgb(95 211 198 / 0.5);
+  animation: tour-breathe 2.4s ease-in-out infinite;
+}
+@keyframes tour-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(95 211 198 / 0.35); }
+  50% { box-shadow: 0 0 0 6px rgb(95 211 198 / 0); }
+}
+
+/* The tour's pointer. Its tip sits at the element's top-left corner. */
+.tour-pointer {
+  position: fixed;
+  z-index: 95;
+  top: 0;
+  left: 0;
+  width: 26px;
+  height: 26px;
+  margin: -3px 0 0 -4px;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.35));
+  will-change: transform, opacity;
+}
+.tour-pointer svg { display: block; transform-origin: 4px 3px; transition: transform 0.14s ease; }
+.tour-pointer.tour-press svg { animation: tour-tap 0.32s ease; }
+.tour-ripple {
+  position: absolute;
+  top: -15px;
+  left: -14px;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--tour-teal);
+  border-radius: 50%;
+  opacity: 0;
+}
+.tour-pointer.tour-press .tour-ripple { animation: tour-ripple 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes tour-tap {
+  40% { transform: scale(0.8); }
+}
+@keyframes tour-ripple {
+  from { transform: scale(0.3); opacity: 0.95; }
+  to { transform: scale(1.7); opacity: 0; }
+}
+/* The button the pointer presses, on the tour's copy of the page. */
+[data-tour-page] [data-tour-pressed] { transform: scale(0.95); filter: brightness(0.9); transition: transform 0.12s ease, filter 0.12s ease; }
+
+/* Changing page: the old one fades out, the new one fades up already scrolled to its feature. */
+[data-tour-page] { transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), translate 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+[data-tour-page].tour-away { opacity: 0; translate: 0 10px; transition-duration: 0.2s; transition-timing-function: ease-in; }
 
 .tour-card {
   position: fixed;
@@ -61,13 +117,14 @@
   background: rgb(255 255 255 / 0.22);
 }
 .tour-bar > span { display: block; height: 100%; transform: scaleX(0); transform-origin: left; }
+.tour-bar { transition: background-color 0.3s ease; }
 .tour-bar[data-state="done"] > span { background: #fff; transform: none !important; }
 .tour-bar[data-state="current"] > span { background: var(--tour-teal); }
 .tour-bar[data-state="todo"] > span { transform: scaleX(0) !important; }
 
 .tour-captions { display: grid; }
-.tour-captions > p { grid-area: 1 / 1; opacity: 0; transition: opacity 0.3s ease; }
-.tour-captions > p[data-active="true"] { opacity: 1; }
+.tour-captions > p { grid-area: 1 / 1; opacity: 0; translate: 0 4px; transition: opacity 0.35s ease, translate 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.tour-captions > p[data-active="true"] { opacity: 1; translate: 0 0; transition-delay: 0.08s; }
 
 .tour-controls { display: flex; align-items: center; gap: 0.25rem; margin-top: 0.75rem; }
 .tour-count {
@@ -123,6 +180,6 @@ html.tour-offered body { padding-bottom: 11rem; }
   to { opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tour-card, .tour-end-card { animation: none; }
-  .tour-captions > p { transition: none; }
+  .tour-card, .tour-end-card, .tour-ring::after, .tour-pointer svg, .tour-ripple { animation: none !important; }
+  .tour-captions > p, [data-tour-page] { transition: none; }
 }
