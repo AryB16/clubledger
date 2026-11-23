@@ -425,9 +425,48 @@ function ToastBar({ toast, onClose }: { toast: Toast | null; onClose: () => void
   )
 }
 
+/** Demo mode adds "Send it anyway" to a refusal, so the blockchain itself can be seen refusing it. Kept in the URL as ?demo=1. */
+function DemoSwitch({ on, onChange }: { on: boolean; onChange: (on: boolean) => void }) {
+  return (
+    <div data-testid="demo-switch" className={`mb-5 flex items-start gap-4 rounded-2xl border p-4 transition-colors sm:p-5 ${on ? 'border-amber-300 bg-amber-100 text-amber-950' : 'border-line bg-paper'}`}>
+      <div className="min-w-0 flex-1">
+        <p id="demo-h" className="font-bold">Demo mode</p>
+        <p id="demo-d" className={`mt-1 text-sm leading-snug ${on ? '' : 'text-muted'}`}>
+          {on
+            ? 'On. When the contract blocks an entry, a "Send it anyway" button appears. It sends the blocked attempt to the blockchain, so anyone can see the contract itself refuse it, not just this website. Nothing is recorded, and each attempt costs a tiny fee in free test currency.'
+            : 'Off. Blocked entries stop here and nothing is sent. Turn it on to show that the blockchain itself refuses them, not just this website.'}
+        </p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={on}
+        aria-labelledby="demo-h"
+        aria-describedby="demo-d"
+        onClick={() => onChange(!on)}
+        className="grid min-h-11 min-w-14 shrink-0 place-items-center"
+      >
+        <span aria-hidden className={`flex h-7 w-12 items-center rounded-full p-0.5 transition-colors ${on ? 'bg-navy-900' : 'bg-field/50'}`}>
+          <span className={`h-6 w-6 rounded-full bg-white shadow transition-transform ${on ? 'translate-x-5' : ''}`} />
+        </span>
+      </button>
+    </div>
+  )
+}
+
 export default function Manage() {
-  const [params] = useSearchParams()
+  const [params, setParams] = useSearchParams()
   const demo = params.get('demo') === '1'
+  const setDemo = (on: boolean) =>
+    setParams(
+      (p) => {
+        const next = new URLSearchParams(p)
+        if (on) next.set('demo', '1')
+        else next.delete('demo')
+        return next
+      },
+      { replace: true },
+    )
   const { address, isConnected, chainId, status } = useConnection()
   const { connect, connectors, isPending: connecting, error: connectError } = useConnect()
   const { disconnect } = useDisconnect()
@@ -560,7 +599,7 @@ export default function Manage() {
       </div>
       <div className="wrap py-6 sm:py-10">
         <div className={isPoster ? '' : 'mx-auto max-w-2xl'}>
-          {demo && <p className="mb-5 rounded-2xl bg-amber-100 p-4 text-sm text-amber-950">Demo mode is on. When an entry is blocked, you can still send it to prove that the contract itself refuses it, not just this website.</p>}
+          <DemoSwitch on={demo} onChange={setDemo} />
           {isAdmin ? (
             <AdminPanel demo={demo} onToast={setToast} allEntries={allEntries} />
           ) : (

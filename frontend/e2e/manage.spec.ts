@@ -64,6 +64,22 @@ test('without ?demo=1 there is no Send it anyway', async ({ page }) => {
   await nothingSent(page)
 })
 
+test('the Demo mode switch adds Send it anyway and keeps it in the address', async ({ page }) => {
+  await connectAs(page, WHO.random)
+  const toggle = page.getByRole('switch', { name: 'Demo mode' })
+  await expect(toggle).toHaveAttribute('aria-checked', 'false')
+  await toggle.click()
+  await expect(toggle).toHaveAttribute('aria-checked', 'true')
+  await expect(page).toHaveURL(/\/manage\?demo=1$/)
+  await page.getByLabel('Amount (AED)').fill('500')
+  await page.getByRole('button', { name: 'Record it' }).click()
+  await expect(page.getByRole('button', { name: 'Send it anyway' })).toBeVisible()
+  await toggle.click()
+  await expect(page).toHaveURL(/\/manage$/)
+  await expect(page.getByRole('button', { name: 'Send it anyway' })).toHaveCount(0)
+  await nothingSent(page)
+})
+
 test('treasurer: overspend and duplicate are blocked with their own proofs', async ({ page }) => {
   await connectAs(page, WHO.treasurer)
   await expect(page.getByTestId('role-banner')).toContainText("You're the Treasurer. You can add and correct entries.")
