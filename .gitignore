@@ -2,30 +2,10 @@ node_modules
 dist
 .env
 .vercel
+.DS_Store
 contracts/out
 contracts/cache
-contracts/broadcast/*/31337
+contracts/broadcast/
 frontend/test-results
 frontend/playwright-report
-.DS_Store
-contracts/proofs.json
-contracts/broadcast/**/*.recovery.lock
-contracts/broadcast/**/dry-run/
-
-# Local working notes
-CLAUDE.md
-
-# Local editor config
-.claude/
-
-# Build notes and deploy-time tooling, kept on the builder's machine
-SPEC.md
-PROGRESS.md
-scripts/
-contracts/broadcast/
-contracts/verify/
-contracts/script/collect-proofs.mjs
-contracts/script/proofs.sh
-
-# Full-page screenshots the browser tests write on every run (the README uses docs/images)
 docs/screenshots/
