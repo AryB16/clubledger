@@ -39,7 +39,6 @@ All other checks are silent input validation.
 
 ```
 clubledger/
-├── CLAUDE.md
 ├── SPEC.md                 (this file)
 ├── README.md               (written in Phase 6)
 ├── NOTE.md                 (one-page submission note, Phase 6)
@@ -332,7 +331,7 @@ _Added 22 Nov 2026 at Aryesh's request._
 3. Two+ transactions with explorer links (INC-0001 post, Treasurer authorisation) + the 4 refusal txs.
 4. `NOTE.md` one page: users (treasurer, Club Advisor, members, sponsors) · on-chain (entries, amounts, receipt numbers, treasurer wallets, timestamps, corrections, roles, balance) vs off-chain (receipt files, website look) · the 4 rules · limits (a treasurer can still type a lie — but never hide or rewrite it; reconciliation with the bank stays off-chain; single admin key; synthetic data only).
 5. Screen recording ≤ 3 min: phone QR scan → Corrected; home rules panel; refusal as Random member + on-chain proof; successful Treasurer post appearing live; 20 s on/off-chain.
-6. Who did what: solo — spec/design, contract, tests, frontend, deploy, pitch; AI disclosure ("Claude Code drafted code from my spec; I reviewed every contract line and every test"); mentor log with dates and what changed.
+6. Who did what: solo; one line noting AI-assisted development, as the event permits; what Aryesh did (project, setup, testing, demo); mentor log with dates and what changed.
 
 ## 5. Explicitly cut (do not build)
 

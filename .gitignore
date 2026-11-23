@@ -11,3 +11,6 @@ frontend/playwright-report
 contracts/proofs.json
 contracts/broadcast/**/*.recovery.lock
 contracts/broadcast/**/dry-run/
+
+# Local working notes
+CLAUDE.md

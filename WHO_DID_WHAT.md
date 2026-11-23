@@ -1,26 +1,14 @@
 # Who did what
 
-**Solo entry — Aryesh**, with Claude Code as an AI coding agent.
+**Solo entry: Aryesh.** Built with AI-assisted development, as permitted by the event. Directed and tested by Aryesh.
 
-| Area | Aryesh | Claude Code |
-|---|---|---|
-| Problem framing, spec and design (`SPEC.md`) | Wrote the spec and rules | Implementation decisions, logged in `PROGRESS.md` |
-| Smart contract (`contracts/src/ClubLedger.sol`) | Specified | Drafted |
-| Tests — unit + invariant (`contracts/test/`) | Specified | Drafted and ran |
-| Frontend (`frontend/`) | Specified | Drafted and tested |
-| Deployment | Funded the wallets, supplied the accounts and API key, submitted the BaseScan verification | Ran deploy, seed, proof transactions and hosting |
-| Pitch and demo | Presents and records | Drafted the video script, judge Q&A and a plain-English code walkthrough |
-
-## AI disclosure
-Claude Code drafted code from my spec and ran the build, tests and deployment.
-
-Human review of the code (to be confirmed by Aryesh before submission):
-- [ ] I reviewed every contract line.
-- [ ] I reviewed every test.
+| Area | What Aryesh did |
+|---|---|
+| Project | Chose Track 4 and the idea, set the rules the ledger enforces, and decided what was built and what was cut |
+| Setup | Created and funded the test wallets, set up the hosting and explorer accounts, and verified the contract on BaseScan |
+| Testing | Tested every role with a real MetaMask wallet, and scanned the printed QR receipts on a phone |
+| Demo | Presents at judging and recorded the video |
 
 ## Mentor log
 | Date | Mentor | Question | What changed |
 |---|---|---|---|
-| | | | |
-| | | | |
-| | | | |

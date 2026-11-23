@@ -21,7 +21,7 @@
 ## Human checklist (H4)
 
 - [x] Verify on BaseScan (done 22 Nov; evidence at the end of Phase 7).
-- [ ] Review the contract and tests, then tick the two boxes in WHO_DID_WHAT.md.
+- [x] Who did what: Aryesh chose a one-line note on AI-assisted development (23 Nov); the review boxes are gone.
 - [ ] Import Admin, Treasurer and Asst. Treasurer private keys from `contracts/.env` into MetaMask (named "Advisor (admin)", "Treasurer", "Asst. Treasurer"), Base Sepolia network.
 - [ ] Create a second Chrome profile; import Random member there only (this is the judge's "attacker" browser).
 - [x] (reported by Aryesh, 22 Nov) On your phone (mobile data): open the three receipt QR codes; confirm Corrected / Cancelled / Genuine.
@@ -169,7 +169,7 @@ Throwaway testnet wallets (keys only in git-ignored `contracts/.env`):
 ## Phase 6 — Polish, docs, printables — ✅ PASSED
 
 **Decisions**
-- SPEC §4.6 gives the sentence "I reviewed every contract line and every test". That is Aryesh's own attestation, so WHO_DID_WHAT.md carries it as two unticked boxes for Aryesh to confirm.
+- WHO_DID_WHAT.md (updated 23 Nov, Aryesh's choice): one line says AI-assisted development was used, as the event permits, then lists what Aryesh did. SPEC §4.6 now says the same. CLAUDE.md is kept locally but no longer tracked.
 - README said "Sourcify: exact match (BaseScan verification pending)" until verification succeeded on 22 Nov; it now links both.
 - NOTE.md adds a limit: the admin could authorise a second wallet of their own.
 
