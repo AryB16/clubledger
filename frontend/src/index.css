@@ -262,6 +262,28 @@
   }
 }
 
+/* A paper receipt: typewriter text on white, with torn top and bottom edges. */
+.paper {
+  background: #fff;
+  color: var(--color-ink);
+  font-family: "Courier New", ui-monospace, monospace;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  font-variation-settings: normal;
+  filter: drop-shadow(0 10px 18px rgb(6 18 28 / 0.14));
+  -webkit-mask:
+    radial-gradient(circle at 50% 0, transparent 5px, #000 5.5px) 50% 0 / 14px 51% repeat-x,
+    radial-gradient(circle at 50% 100%, transparent 5px, #000 5.5px) 50% 100% / 14px 51% repeat-x;
+  mask:
+    radial-gradient(circle at 50% 0, transparent 5px, #000 5.5px) 50% 0 / 14px 51% repeat-x,
+    radial-gradient(circle at 50% 100%, transparent 5px, #000 5.5px) 50% 100% / 14px 51% repeat-x;
+}
+@media print {
+  header, footer, .band, .tour { display: none !important; }
+  body, .page { background: #fff !important; }
+  .paper { filter: none; border: 1px solid #cbd5e1; }
+}
+
 /* Small motion that earns its place: the hero settles in, the verdict stamp lands, the live dot breathes. */
 .rise { animation: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 @keyframes rise {

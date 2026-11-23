@@ -163,14 +163,36 @@ test('/manage without a wallet asks to connect', async ({ page }) => {
   await shot(page, 'manage-no-wallet')
 })
 
+test('sample receipts: each paper sits beside its live record and opens it', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Compare them with their paper receipts' }).click()
+  await expect(page).toHaveURL(/\/receipts$/)
+  await expect(page).toHaveTitle('Sample receipts | ClubLedger')
+  const papers = page.getByTestId('paper-receipt')
+  await expect(papers).toHaveCount(3)
+  const corrected = page.getByRole('article', { name: 'Receipt EXP-0002' })
+  await expect(corrected).toContainText('TOTAL (AED)420.00')
+  await expect(corrected).toContainText('Corrected')
+  await expect(corrected).toContainText('AED 380.00')
+  await expect(page.getByRole('article', { name: 'Receipt EXP-0004' })).toContainText('Cancelled')
+  await expect(page.getByRole('article', { name: 'Receipt INC-0001' })).toContainText('Genuine record')
+  for (const img of await page.locator('[data-testid="paper-receipt"] img').all()) {
+    expect(await img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true)
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375)
+  await corrected.getByRole('link', { name: 'See the full record of EXP-0002' }).click()
+  await expect(page.getByTestId('verdict')).toContainText('Corrected')
+})
+
 test('public pages contain no crypto jargon', async ({ page }) => {
-  for (const path of ['/', '/check/EXP-0002', '/ledger', '/check/XYZ-1']) {
+  for (const path of ['/', '/check/EXP-0002', '/ledger', '/check/XYZ-1', '/receipts']) {
     await page.goto(path)
     await expect(page.locator('main')).not.toBeEmpty()
     await page.waitForLoadState('networkidle')
     const text = (await page.locator('body').innerText()).toLowerCase()
+    // Whole words only, so a receipt line like "event posters" isn't mistaken for the contract's "poster".
     for (const word of ['refcode', 'poster', 'voided', 'revert', 'simulate', 'tx hash', 'chain id', 'base sepolia', 'wallet', 'fils']) {
-      expect(text, `${path} contains "${word}"`).not.toContain(word)
+      expect(text, `${path} contains "${word}"`).not.toMatch(new RegExp(`\\b${word}\\b`))
     }
   }
 })

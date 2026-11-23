@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Check from './pages/Check'
 import Ledger from './pages/Ledger'
 import Manage from './pages/Manage'
+import Receipts from './pages/Receipts'
 import { PageHead } from './components/ui'
 import { Icon } from './components/icons'
 import { TourPage, useTour } from './tour/context'
@@ -66,6 +67,7 @@ function Pages({ location }: { location: Location }) {
       <Route path="/check/:code" element={<Check />} />
       <Route path="/ledger" element={<Ledger />} />
       <Route path="/manage" element={<Manage />} />
+      <Route path="/receipts" element={<Receipts />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   )
@@ -108,6 +110,9 @@ export default function App() {
       <footer className="on-dark bg-navy-950">
         <div className="wrap flex flex-col gap-2 py-7 sm:flex-row sm:items-center sm:justify-between">
           <Brand />
+          <Link to="/receipts" className="inline-flex min-h-11 items-center text-sm font-semibold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">
+            Sample paper receipts
+          </Link>
           <p className="text-sm text-navy-200">A student project for Hash It Out 2026. The names and amounts are made up, and no real money moves.</p>
         </div>
       </footer>

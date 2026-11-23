@@ -150,6 +150,10 @@ function Examples() {
           <Example key={c} code={c} />
         ))}
       </div>
+      <Link to="/receipts" className="mt-3 inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-signal underline decoration-signal/40 underline-offset-4 hover:decoration-signal">
+        Compare them with their paper receipts
+        <span aria-hidden>→</span>
+      </Link>
     </div>
   )
 }

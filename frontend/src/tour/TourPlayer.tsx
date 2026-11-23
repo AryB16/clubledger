@@ -78,7 +78,8 @@ export function TourPlayer({ onFinish, onExit }: { onFinish: () => void; onExit:
     let found = false
     let elapsed = 0
     let fired = false
-    let goal = -1
+    /** Where this step wants the page scrolled. Unset until the feature is found, so a target of 0 still counts. */
+    let goal = Number.NaN
     let scrolledAt = 0
     let arrived = false
     let tween: { from: number; to: number; start: number; ms: number } | null = null
@@ -236,7 +237,7 @@ export function TourPlayer({ onFinish, onExit }: { onFinish: () => void; onExit:
       if (el && card.current && ring.current && revealed) {
         const spot = placeSpot(el, card.current)
         // Follow the feature when data arrives and moves it, but leave the visitor's own scrolling alone.
-        if (Math.abs(spot.scrollTo - goal) > 2) {
+        if (Number.isNaN(goal) || Math.abs(spot.scrollTo - goal) > 2) {
           goal = spot.scrollTo
           scrolledAt = now
           arrived = false

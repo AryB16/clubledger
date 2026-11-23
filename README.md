@@ -83,6 +83,7 @@ The website stores nothing. It reads the contract and works these out by itself:
 - **The one-word result** for a receipt (Genuine, Corrected, Cancelled or No such record), from that receipt's chain of versions.
 - **The balance after every line** of the account book, replayed from the entries, so a member can follow the money to today's total.
 - **Plain-English refusals.** Before anything is sent, the page asks the contract whether it would accept it, and turns a refusal like `Not an authorised poster` into a sentence anyone can read.
+- **The paper receipts,** shown on [Sample receipts](https://clubledger-kappa.vercel.app/receipts) only to compare with the record. Paper never goes on the chain.
 - **Friendly formatting:** AED amounts from whole fils, dates, role labels instead of bare addresses, the next free receipt number, the guided tour and the "Demo data" markers.
 
 ### 4. What the contract refuses
@@ -108,7 +109,7 @@ Nothing to install. Open **https://clubledger-kappa.vercel.app** on a phone or l
 | **2 · Check a receipt** | [`EXP-0002`](https://clubledger-kappa.vercel.app/check/EXP-0002) Corrected · [`EXP-0004`](https://clubledger-kappa.vercel.app/check/EXP-0004) Cancelled · [`INC-0001`](https://clubledger-kappa.vercel.app/check/INC-0001) Genuine · [`XYZ-1`](https://clubledger-kappa.vercel.app/check/XYZ-1) No such record |
 | **3 · Follow the money** | The home page's account book shows the balance after every line. [All entries](https://clubledger-kappa.vercel.app/ledger) lists everything, corrections included. |
 | **4 · Try to break a rule** | With MetaMask on Base Sepolia, open [Treasurers](https://clubledger-kappa.vercel.app/manage) and record an entry from any wallet. The contract refuses it, and the site explains why. |
-| **5 · Scan a paper receipt** | [`docs/receipts.html`](docs/receipts.html) prints three demo receipts whose QR codes open their record on a phone. |
+| **5 · Compare paper with the record** | [Sample receipts](https://clubledger-kappa.vercel.app/receipts) shows three paper receipts beside what the contract recorded. The café's says AED 420; the record says Corrected, AED 380, with the reason. Scan a QR code with a phone, or print them. |
 
 ### 6. Path to real life
 
