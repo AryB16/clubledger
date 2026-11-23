@@ -41,19 +41,53 @@ A student club's money lives in a treasurer's spreadsheet. Members can't see it,
   <sub><b>A receipt's history</b> &nbsp;·&nbsp; <b>A refusal by the contract</b> &nbsp;·&nbsp; <b>Every entry, corrections included</b></sub>
 </div>
 
-## Try it in two minutes
+## Proof it's real
 
 | | |
 |---|---|
-| **1 · Take the tour** | Open the [live site](https://clubledger-kappa.vercel.app) and press **Tour** for a one-minute walkthrough. |
-| **2 · Check a receipt** | [`EXP-0002`](https://clubledger-kappa.vercel.app/check/EXP-0002) Corrected · [`EXP-0004`](https://clubledger-kappa.vercel.app/check/EXP-0004) Cancelled · [`INC-0001`](https://clubledger-kappa.vercel.app/check/INC-0001) Genuine · [`XYZ-1`](https://clubledger-kappa.vercel.app/check/XYZ-1) No such record |
-| **3 · Follow the money** | The home page's account book shows the balance after every line, down to today's total. [All entries](https://clubledger-kappa.vercel.app/ledger) lists everything, corrections included. |
-| **4 · Try to break a rule** | With MetaMask on Base Sepolia, open [Treasurers](https://clubledger-kappa.vercel.app/manage) and record an entry from any wallet. The contract refuses it, and the site explains why. |
-| **5 · Scan a paper receipt** | [`docs/receipts.html`](docs/receipts.html) prints three demo receipts whose QR codes open their record on a phone. |
+| **Contract** | [`0x210312F9C553a02A9864CC9685854A72d49D4F7e`](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e#code) on Base Sepolia, source verified |
+| **Transaction 1** | The Treasurer records receipt INC-0001, a AED 5,000 sponsorship: [`0xec9f42c3…`](https://sepolia.basescan.org/tx/0xec9f42c3aee54860222a41fbdc8ee11d7fe9b0eaf7d12e4306751dc0fff9773d) |
+| **Transaction 2** | The Treasurer corrects receipt EXP-0002 from AED 420 to 380, with the reason "Vendor refunded AED 40 for undelivered items": [`0xc46b6127…`](https://sepolia.basescan.org/tx/0xc46b612799926b6448845d8b3a033a44058c5cbae0d44f7c1f87c2df1375d7a9) |
 
-## The four rules, proven on-chain
+Open [EXP-0002 on the live site](https://clubledger-kappa.vercel.app/check/EXP-0002) to see the second one from a member's side. Every other transaction, including the refused ones, is in [DEPLOYMENT.md](DEPLOYMENT.md).
 
-Each rule has a real transaction that passed and a real one the contract refused.
+## One-page note
+
+### 1. The user and their one task
+
+**A club member who wants to know the club's money was handled honestly.** Their one task: type or scan the number on a receipt and see, in one word, whether the record is **genuine, corrected or cancelled**, with every version, who recorded it and when. No wallet, no account, no explanation needed.
+
+The record is kept by three roles:
+
+| | |
+|---|---|
+| 🎓 **Club Advisor (admin)** | Approves and removes treasurers. Deliberately *cannot* record money: separation of duties. |
+| 🧾 **Treasurer and Asst. Treasurer (operators)** | Record money in and out with their own wallet, and fix mistakes with corrections. |
+| 👥 **Members, sponsors and the Student Council (public readers)** | Check any receipt, follow the balance, and see that nobody quietly changed anything. |
+
+### 2. On the blockchain
+
+| Stored in the contract (public, permanent) | Kept off the chain |
+|---|---|
+| Every entry: money in or out, amount, category, who was paid, description | The paper receipts and invoices themselves |
+| Receipt numbers, each usable once | The club's bank account |
+| Which wallet recorded each entry, and when | Who the people behind the wallets are |
+| Every correction, linked to what it corrects, with its reason | |
+| Current and former treasurers, with their role label | |
+| The balance, total money in and total money out | |
+
+### 3. Only on the page
+
+The website stores nothing. It reads the contract and works these out by itself:
+
+- **The one-word result** for a receipt (Genuine, Corrected, Cancelled or No such record), from that receipt's chain of versions.
+- **The balance after every line** of the account book, replayed from the entries, so a member can follow the money to today's total.
+- **Plain-English refusals.** Before anything is sent, the page asks the contract whether it would accept it, and turns a refusal like `Not an authorised poster` into a sentence anyone can read.
+- **Friendly formatting:** AED amounts from whole fils, dates, role labels instead of bare addresses, the next free receipt number, the guided tour and the "Demo data" markers.
+
+### 4. What the contract refuses
+
+These hold for everyone, including the treasurers, the advisor and whoever runs the website. Each has a real transaction that passed and a real one the contract refused:
 
 | Rule | ✅ Allowed | ⛔ Refused by the contract |
 |---|---|---|
@@ -62,27 +96,23 @@ Each rule has a real transaction that passed and a real one the contract refused
 | **3. A receipt can only be recorded once.** | [INC-0001](https://sepolia.basescan.org/tx/0xec9f42c3aee54860222a41fbdc8ee11d7fe9b0eaf7d12e4306751dc0fff9773d) | [INC-0001 again](https://sepolia.basescan.org/tx/0xfc4b3fec2641bcde6acdbbebf34bc67dc20de5c8f1e21034e63397ba556bd8ba)<br/><sub>`Reference code already used`</sub> |
 | **4. No edits, only corrections.** A correction is a new linked entry with a reason; the original stays forever and can't be corrected twice. | [EXP-0002 corrected, AED 420 → 380](https://sepolia.basescan.org/tx/0xc46b612799926b6448845d8b3a033a44058c5cbae0d44f7c1f87c2df1375d7a9) | [The old EXP-0002 corrected again](https://sepolia.basescan.org/tx/0x292a91339f29dc1b3cdabc6b1ade0bfbfed476085e559f2016f555e4b305a96d)<br/><sub>`Entry already corrected - correct the latest version`</sub> |
 
-The contract has no edit or delete function, accepts no money, makes no external calls and imports nothing. Every deploy, seed and proof transaction is listed in [DEPLOYMENT.md](DEPLOYMENT.md).
+The advisor's role has its own rules too: only the advisor can approve or remove treasurers (`Only the admin can manage posters`), and the advisor can't make themselves a treasurer (`Admin cannot be a poster`). The contract has no edit or delete function, accepts no money and makes no external calls.
 
-## Who uses it
+### 5. How to run it
+
+Nothing to install. Open **https://clubledger-kappa.vercel.app** on a phone or laptop.
 
 | | |
 |---|---|
-| 🧾 **Treasurer and Asst. Treasurer** | Record money in and out from a browser wallet, and fix mistakes with corrections. |
-| 🎓 **Club Advisor (admin)** | Approves and removes treasurers. Deliberately *cannot* record money: separation of duties. |
-| 👥 **Members** | Check any receipt by its number, or scan the QR on a printed receipt. No wallet, no sign-up. |
-| 🤝 **Sponsors and Student Council** | See exactly where their money went, and that nobody quietly changed it. |
+| **1 · Take the tour** | Press **Tour** in the top corner for a one-minute walkthrough. |
+| **2 · Check a receipt** | [`EXP-0002`](https://clubledger-kappa.vercel.app/check/EXP-0002) Corrected · [`EXP-0004`](https://clubledger-kappa.vercel.app/check/EXP-0004) Cancelled · [`INC-0001`](https://clubledger-kappa.vercel.app/check/INC-0001) Genuine · [`XYZ-1`](https://clubledger-kappa.vercel.app/check/XYZ-1) No such record |
+| **3 · Follow the money** | The home page's account book shows the balance after every line. [All entries](https://clubledger-kappa.vercel.app/ledger) lists everything, corrections included. |
+| **4 · Try to break a rule** | With MetaMask on Base Sepolia, open [Treasurers](https://clubledger-kappa.vercel.app/manage) and record an entry from any wallet. The contract refuses it, and the site explains why. |
+| **5 · Scan a paper receipt** | [`docs/receipts.html`](docs/receipts.html) prints three demo receipts whose QR codes open their record on a phone. |
 
-## What's on the public record, and what isn't
+### 6. Path to real life
 
-| On the contract (public, permanent) | Off-chain |
-|---|---|
-| Every entry: type, amount, category, who was paid, description | The paper receipts and invoices themselves |
-| Receipt numbers, each usable once | The club's bank account and reconciliation |
-| Which wallet recorded it, and when | How the website looks (it only *reads* the record) |
-| Every correction, linked to what it corrects, with a reason | Who the people behind the wallets are |
-| Current and former treasurers | |
-| The balance, money in and money out | |
+**A shared spreadsheet can be edited, or rows deleted, by whoever controls it, and nobody else can tell; here nobody can rewrite the record, and the rules hold even against the treasurer and the advisor.** For real use, personal data stays off the chain: a student being repaid appears only as a code such as `S-014`, receipts and invoices stay in the club's files with just their number on the record, and wallets stand for roles, not named people. The university's Student Activities office would run it as the Club Advisor, with each club's elected treasurers as operators and members checking from their phones.
 
 ## How it works
 

@@ -2,6 +2,8 @@
 
 **Solo entry: Aryesh.**
 
+> **In one line:** Aryesh (solo) chose the idea and the rules, set up the wallets on Base Sepolia, verified the contract, tested every role live and presents the demo; AI coding tools helped write the code.
+
 AI coding tools helped write the code (the website, the smart contract and its tests), as the event permits. The blockchain setup, the live testing and every decision were Aryesh's own:
 
 | Area | What Aryesh did |
