@@ -1,4 +1,4 @@
-// On-chain proof transactions for the 4 headline rules (SPEC §2.9). The ONLY hard-coded chain data in the site.
+// On-chain proof transactions for the 4 headline rules. The ONLY hard-coded chain data in the site.
 export type Hash = `0x${string}`
 
 export interface RuleProof {

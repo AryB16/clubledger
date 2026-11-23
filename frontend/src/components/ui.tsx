@@ -64,7 +64,7 @@ export function ErrorNotice({ onRetry }: { onRetry?: () => void }) {
   )
 }
 
-/** Role label first, short address small and grey below (SPEC §3.2). */
+/** Role label first, short address small and grey below. */
 export function Person({ label, address }: { label: string; address: Address }) {
   return (
     <span className="inline-flex flex-col leading-snug">

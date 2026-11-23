@@ -6,7 +6,7 @@ const e = (id: number, kind: number, amount: bigint, corrects = 0) =>
   ({ id: BigInt(id), kind, amount, correctsId: BigInt(corrects) }) as Entry
 
 describe('buildBook', () => {
-  it('follows the SPEC §2.8 seed to the recorded balance and totals', () => {
+  it('follows the seed data to the recorded balance and totals', () => {
     const lines = buildBook([
       e(1, 0, 500000n), e(2, 0, 120000n), e(3, 0, 250000n), e(4, 1, 185000n), e(5, 1, 42000n), e(6, 1, 90000n),
       e(7, 1, 30000n), e(8, 0, 75000n), e(9, 1, 64000n), e(10, 1, 110000n), e(11, 1, 38000n, 5), e(12, 1, 0n, 7),

@@ -46,7 +46,7 @@ function PrimaryButton({ children, busy, ...p }: React.ButtonHTMLAttributes<HTML
   )
 }
 
-// ───────────── refusal card (SPEC §3.4) ─────────────
+// ───────────── refusal card ─────────────
 
 function RefusalCard({ state, demo, onSendAnyway, onClose }: { state: Extract<WriteState, { phase: 'refused' }>; demo: boolean; onSendAnyway: () => void; onClose: () => void }) {
   const proof = proofForReason(state.reason)

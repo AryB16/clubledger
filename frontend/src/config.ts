@@ -1,6 +1,6 @@
 import { baseSepolia } from 'viem/chains'
 
-// The ONLY place the contract address, chain, RPCs and explorer live (SPEC §3.1).
+// The ONLY place the contract address, chain, RPCs and explorer live.
 export const CHAIN = baseSepolia // id 84532
 export const CONTRACT_ADDRESS = '0x210312F9C553a02A9864CC9685854A72d49D4F7e' as const
 const primary = (import.meta.env?.VITE_RPC_URL as string | undefined)?.trim()

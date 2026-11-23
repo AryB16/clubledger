@@ -4,7 +4,7 @@ pragma solidity 0.8.24;
 import {Script, console2} from "forge-std/Script.sol";
 import {ClubLedger} from "../src/ClubLedger.sol";
 
-/// @notice Seeds the fictional data from SPEC §2.8 and asserts the end balance is AED 4,580.00.
+/// @notice Seeds the fictional data and asserts the end balance is AED 4,580.00.
 contract Seed is Script {
     ClubLedger.Kind constant IN = ClubLedger.Kind.Income;
     ClubLedger.Kind constant EX = ClubLedger.Kind.Expense;

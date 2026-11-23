@@ -414,7 +414,7 @@ contract ClubLedgerTest is Test {
         assertEq(address(l).balance, 0);
     }
 
-    // ── full seed table from SPEC §2.8 ──
+    // ── full seed table  ──
     function test_seedScenarioEndsAt458000() public {
         _post(tres, IN, 500000, "INC-0001");
         _post(asst, IN, 120000, "INC-0002");

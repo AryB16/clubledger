@@ -159,7 +159,7 @@ export const correctedSet = (entries: Entry[]) => new Set(entries.filter((e) => 
 
 export type Verdict = 'GENUINE' | 'CORRECTED' | 'CANCELLED' | 'NOT_FOUND'
 
-/** SPEC §3.3: [] NOT FOUND · 1 GENUINE · >1 and latest amount 0 CANCELLED · else CORRECTED. */
+/** [] NOT FOUND · 1 GENUINE · >1 and latest amount 0 CANCELLED · else CORRECTED. */
 export function verdictOf(versions: Entry[]): Verdict {
   if (versions.length === 0) return 'NOT_FOUND'
   if (versions.length === 1) return 'GENUINE'

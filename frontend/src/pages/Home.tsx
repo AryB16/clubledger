@@ -251,102 +251,6 @@ function LatestEntries() {
   )
 }
 
-const BRANCHES = ['Debate Society', 'Music Society', 'Sports teams']
-
-const BEYOND = [
-  { icon: 'heart', title: 'Charity drives', text: 'Donors look up their own receipt and follow every dirham to the cause.' },
-  { icon: 'people', title: 'Parent associations', text: 'School trips and fundraisers, with the spending open to every parent.' },
-  { icon: 'home', title: 'Residents’ committees', text: 'Building funds where each repair bill is on the record before anyone asks.' },
-] as const
-
-const STATS = [
-  ['1 step', 'to give a new organisation its own public record'],
-  ['Free', 'to read any record or check any receipt'],
-  ['4 rules', 'enforced the same way for every organisation'],
-]
-
-function Scale() {
-  return (
-    <section aria-labelledby="scale-h" className="wrap pb-14 lg:pb-24">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-14">
-        <div>
-          <p className="text-sm font-bold tracking-[0.12em] text-navy-700 uppercase">Built to scale</p>
-          <h2 id="scale-h" className="mt-3 text-4xl leading-none font-bold tracking-tight sm:text-5xl">
-            One club today. A whole campus next.
-          </h2>
-          <p className="mt-4 max-w-xl leading-relaxed text-muted">
-            The Robotics Club is the pilot. Nothing in the contract is specific to it: any group that handles shared money gets its own public record by publishing a fresh copy under its own name, with its own treasurers and the same four rules. A student council and each club it funds can keep separate books that anyone can check against each other.
-          </p>
-          <dl className="mt-7 grid grid-cols-3 gap-3 sm:gap-4">
-            {STATS.map(([big, small]) => (
-              <div key={big} className="sheet px-3 py-4 sm:px-5">
-                <dt className="sr-only">{small}</dt>
-                <dd>
-                  <span className="block text-2xl leading-none font-extrabold tracking-tight text-navy-900 sm:text-3xl">{big}</span>
-                  <span aria-hidden className="mt-2 block text-xs leading-snug text-muted sm:text-sm">
-                    {small}
-                  </span>
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-
-        {/* One public record per organisation, drawn as the campus would use it. */}
-        <figure aria-label="How ClubLedger grows across a campus" className="sheet relative overflow-hidden p-5 sm:p-7">
-          <div className="rounded-2xl bg-navy-900 px-5 py-4 text-white">
-            <p className="text-xs font-semibold tracking-[0.1em] text-navy-200 uppercase">Central fund</p>
-            <p className="mt-1 text-lg font-bold">Student council budget</p>
-            <p className="text-sm text-navy-100">Its own public record of every grant it makes</p>
-          </div>
-          {/* The council's line branches down to each club. */}
-          <div aria-hidden className="mx-auto h-4 w-px bg-field/60" />
-          <div aria-hidden className="relative mx-[25%] h-4 border-x border-t border-field/60 sm:hidden" />
-          <div aria-hidden className="relative mx-[12.5%] hidden h-4 sm:grid sm:grid-cols-3">
-            <span className="border-t border-l border-field/60" />
-            <span className="relative border-t border-l border-field/60" />
-            <span className="border-x border-t border-field/60" />
-          </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Link
-              to="/ledger"
-              className="flex flex-col justify-between rounded-2xl border-2 border-gain bg-gain-tint p-3 transition-colors hover:bg-[#cde4da]"
-            >
-              <span className="font-bold text-ink">Robotics Club</span>
-              <span className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-gain">
-                <span aria-hidden className="live-dot" />
-                Live on this site
-              </span>
-            </Link>
-            {BRANCHES.map((b) => (
-              <div key={b} className="flex flex-col justify-between rounded-2xl border border-dashed border-field/70 p-3">
-                <span className="font-semibold text-ink">{b}</span>
-                <span className="mt-2 text-xs text-muted">Same rules, own record</span>
-              </div>
-            ))}
-          </div>
-          <figcaption className="mt-6 border-t border-line pt-5">
-            <p className="text-sm font-semibold text-ink">Beyond campus</p>
-            <ul className="mt-3 grid gap-3 sm:grid-cols-3">
-              {BEYOND.map((b) => (
-                <li key={b.title} className="flex gap-3 sm:flex-col sm:gap-2">
-                  <span aria-hidden className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-navy-50 text-navy-700">
-                    <Icon name={b.icon} className="h-5 w-5" />
-                  </span>
-                  <span>
-                    <span className="block font-semibold text-ink">{b.title}</span>
-                    <span className="block text-sm leading-snug text-muted">{b.text}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </figcaption>
-        </figure>
-      </div>
-    </section>
-  )
-}
-
 const FAQ = [
   [
     'What is ClubLedger?',
@@ -458,7 +362,6 @@ export default function Home() {
       <Hero />
       <Rules />
       <LatestEntries />
-      <Scale />
       <HowItWorks />
     </>
   )

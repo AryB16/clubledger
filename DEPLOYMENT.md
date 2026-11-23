@@ -9,7 +9,7 @@
 | Source verification | [BaseScan: verified](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e#code) · [Sourcify: exact match](https://sourcify.dev/server/v2/contract/84532/0x210312F9C553a02A9864CC9685854A72d49D4F7e) |
 | Live site | https://clubledger-kappa.vercel.app |
 
-## Headline proofs (SPEC §2.9)
+## Headline proofs
 
 | Rule | ✓ Passed | ✗ Refused (reverted on-chain) |
 |---|---|---|

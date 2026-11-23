@@ -1,4 +1,4 @@
-// Pure module: pull the contract's revert reason out of a viem error and map it to plain-English copy (SPEC §2.5).
+// Pure module: pull the contract's revert reason out of a viem error and map it to plain-English copy.
 import { BaseError, ContractFunctionRevertedError, UserRejectedRequestError } from 'viem'
 import { PROOFS, type RuleProof } from '../proofs.ts'
 
@@ -7,7 +7,7 @@ export const RULEBOOK_LINE =
 
 const FIELD = 'Check the highlighted field.'
 
-/** Every revert string in ClubLedger.sol → the UI copy from SPEC §2.5. */
+/** Every revert string in ClubLedger.sol → the plain-English copy shown on the refusal card. */
 export const REFUSAL_COPY: Record<string, string> = {
   'Not an authorised poster': "This wallet isn't an authorised treasurer, so the club's rulebook refused it.",
   'Only the admin can manage posters': 'Only the Club Advisor can add or remove treasurers.',

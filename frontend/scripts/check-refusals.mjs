@@ -8,6 +8,7 @@ import { createPublicClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { baseSepolia } from 'viem/chains'
 import { extractRevertReason, refusalCopy } from '../src/lib/refusals.ts'
+import { CLUBLEDGER_ABI as abi } from '../src/abi/abi.ts'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const env = Object.fromEntries(
@@ -18,13 +19,12 @@ const env = Object.fromEntries(
 )
 const RPC = process.env.RPC || env.BASE_SEPOLIA_RPC
 const ADDRESS = process.env.CLUBLEDGER_ADDRESS || env.CLUBLEDGER_ADDRESS
-const { abi } = JSON.parse(readFileSync(resolve(here, '../src/abi/ClubLedger.json'), 'utf8'))
 const client = createPublicClient({ chain: baseSepolia, transport: http(RPC) })
 // Only the public addresses are derived from the keys; nothing is signed or sent.
 const who = (k) => privateKeyToAccount(env[k]).address
 const admin = who('PK_ADMIN'), treasurer = who('PK_TREASURER'), random = who('PK_RANDOM')
 
-const SPEC_COPY = {
+const EXPECTED_COPY = {
   'Not an authorised poster': "This wallet isn't an authorised treasurer, so the club's rulebook refused it.",
   'Expense exceeds club balance': "The club's books don't have enough money recorded for this expense. The books can never go negative.",
   'Reference code already used': 'This receipt number has already been recorded. A receipt can only be recorded once.',
@@ -55,7 +55,7 @@ for (const [name, call, expected] of cases) {
   } catch (err) {
     const reason = extractRevertReason(err)
     ok(reason === expected, `${name} → "${reason}"${reason === expected ? '' : ` (expected ${expected === null ? 'success' : `"${expected}"`})`}`)
-    if (expected) ok(refusalCopy(reason) === SPEC_COPY[expected], `   refusals.ts maps it to the SPEC copy`)
+    if (expected) ok(refusalCopy(reason) === EXPECTED_COPY[expected], `   refusals.ts maps it to the expected copy`)
   }
 }
 console.log(failed ? `\n${failed} assertion(s) FAILED` : '\nAll assertions passed')

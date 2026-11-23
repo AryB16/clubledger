@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Graphite & steel (SPEC §3.5). Colours live here; pages use the token names. One font everywhere. */
+/* Graphite & steel. Colours live here; pages use the token names. One font everywhere. */
 @theme {
   --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: var(--font-sans);

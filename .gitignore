@@ -17,3 +17,15 @@ CLAUDE.md
 
 # Local editor config
 .claude/
+
+# Build notes and deploy-time tooling, kept on the builder's machine
+SPEC.md
+PROGRESS.md
+scripts/
+contracts/broadcast/
+contracts/verify/
+contracts/script/collect-proofs.mjs
+contracts/script/proofs.sh
+
+# Full-page screenshots the browser tests write on every run (the README uses docs/images)
+docs/screenshots/

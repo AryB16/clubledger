@@ -1,4 +1,4 @@
-// The write flow (SPEC §3.4): simulate first → refusal card on revert → otherwise send, wait, invalidate.
+// The write flow: simulate first → refusal card on revert → otherwise send, wait, invalidate.
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useConnection, useWalletClient } from 'wagmi'

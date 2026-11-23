@@ -9,8 +9,8 @@ import {
 import { CLUBLEDGER_ABI } from '../abi/abi'
 import { classifyError, extractRevertReason, proofForReason, REFUSAL_COPY, refusalCopy } from './refusals'
 
-// Every revert string in ClubLedger.sol, byte-for-byte (SPEC §2.5).
-const SPEC_REASONS = [
+// Every revert string in ClubLedger.sol, byte-for-byte.
+const REVERT_REASONS = [
   'Not an authorised poster',
   'Only the admin can manage posters',
   'Expense exceeds club balance',
@@ -30,7 +30,7 @@ const SPEC_REASONS = [
   'Entry does not exist',
 ]
 
-const SPEC_COPY: Record<string, string> = {
+const EXPECTED_COPY: Record<string, string> = {
   'Not an authorised poster': "This wallet isn't an authorised treasurer, so the club's rulebook refused it.",
   'Only the admin can manage posters': 'Only the Club Advisor can add or remove treasurers.',
   'Expense exceeds club balance':
@@ -64,11 +64,11 @@ function simulatedRevert(reason: string) {
 }
 
 describe('extractRevertReason', () => {
-  it.each(SPEC_REASONS)('walks the viem error to %j', (reason) => {
+  it.each(REVERT_REASONS)('walks the viem error to %j', (reason) => {
     expect(extractRevertReason(simulatedRevert(reason))).toBe(reason)
   })
 
-  it.each(SPEC_REASONS)('finds %j in flattened RPC text', (reason) => {
+  it.each(REVERT_REASONS)('finds %j in flattened RPC text', (reason) => {
     expect(extractRevertReason(new Error(`execution reverted: ${reason}`))).toBe(reason)
   })
 
@@ -85,9 +85,9 @@ describe('extractRevertReason', () => {
 
 describe('refusal copy', () => {
   it('has copy for every revert string in the contract', () => {
-    for (const r of SPEC_REASONS) expect(REFUSAL_COPY[r], r).toBeTruthy()
+    for (const r of REVERT_REASONS) expect(REFUSAL_COPY[r], r).toBeTruthy()
   })
-  it.each(Object.entries(SPEC_COPY))('%j maps to the SPEC copy', (reason, copy) => {
+  it.each(Object.entries(EXPECTED_COPY))('%j maps to the expected copy', (reason, copy) => {
     expect(refusalCopy(reason)).toBe(copy)
   })
   it('never uses jargon in copy', () => {
