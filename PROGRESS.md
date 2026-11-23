@@ -272,7 +272,7 @@ Evidence: compiling that JSON with solc 0.8.24 gives the deployed runtime byteco
 
 ---
 
-## Smoother tour, one-line address, built-to-scale section (branch `ui/tour-polish`) — 🟡 tested locally, not live
+## Smoother tour, one-line address, built-to-scale section (branch `ui/tour-polish`) — ✅ LIVE
 
 Aryesh's feedback, 23 Nov: the tour felt forced, the ring should follow each feature's shape, step 3 changed with no visible cause, the address should fit one line with a copy icon, the site should be more judge-friendly, and the idea should look bigger.
 
@@ -283,3 +283,7 @@ Aryesh's feedback, 23 Nov: the tour felt forced, the ring should follow each fea
 - Tests on a local production build: TypeScript clean; Vitest 98; Playwright 56 passed with no retries, 5 local-only skipped, including a new pointer test. Tour frames checked in Chromium at 1280x800 and in WebKit at 375x812, with no console errors.
 - README screenshots refreshed from this build by the test run.
 - Not tested: real phone, real Safari, real MetaMask on this build.
+- **LIVE 23 Nov, approved by Aryesh.** Merged to main (`e43eb1c`) and deployed from a clean export as `dpl_HB5fzbiWBhf1dHiVTLwwexpgKw1e`. Both domains are byte-identical to a local build with the production RPC setting (index, JS, CSS); og.png, favicon and pattern also match; six routes return 200 on each.
+- On production: Playwright 56 passed on each domain with no retries (5 local-only skipped).
+- Rollback: `cd frontend && vercel rollback dpl_3JcAqeh4TrL3X4MdXFP5LLex7JpL`.
+- Not pushed to GitHub yet.
