@@ -257,6 +257,10 @@ const FAQ = [
     'A public record of a student club’s income and expenses. It shows every entry, amount, receipt number and date, who recorded it, any corrections with their reasons, and the resulting balance.',
   ],
   [
+    'Why not just a spreadsheet?',
+    'Whoever controls a spreadsheet can quietly edit or delete a row, and nobody else can tell. Here nobody can: every change is a new, visible correction with a reason, and the four rules are checked by the contract itself, not by a person.',
+  ],
+  [
     'Who can change the records?',
     'Only treasurers approved by the Club Advisor can add an entry or a correction. Nobody can edit or delete what’s already saved, including the treasurers, the advisor and the developer of this website.',
   ],
