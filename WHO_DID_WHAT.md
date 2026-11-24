@@ -14,4 +14,4 @@ AI coding tools helped write the code (the website, the smart contract and its t
 | **Accounts and hosting** | Set up the GitHub repository and the Vercel hosting the site runs on |
 | **Live testing** | Tested every role with real MetaMask transactions on Base Sepolia, including refusals recorded on-chain, and scanned the printed QR receipts on a phone |
 | **Design** | Reviewed every version of the site and directed the redesigns and the guided tour |
-| **Demo** | Records the video and presents at judging |
+| **Pitch and demo** | Planned the five-minute pitch and presents the live demo at judging |

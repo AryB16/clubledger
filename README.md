@@ -25,6 +25,21 @@
 
 <br />
 
+## Deliverables
+
+| | |
+|---|---|
+| **Live site** | https://clubledger-kappa.vercel.app (no wallet or account needed) |
+| **Smart contract** | [`0x210312F9C553a02A9864CC9685854A72d49D4F7e`](https://sepolia.basescan.org/address/0x210312F9C553a02A9864CC9685854A72d49D4F7e#code), Base Sepolia, source verified on BaseScan |
+| **Two transactions** | [Treasurer records INC-0001](https://sepolia.basescan.org/tx/0xec9f42c3aee54860222a41fbdc8ee11d7fe9b0eaf7d12e4306751dc0fff9773d) · [Treasurer corrects EXP-0002, AED 420 → 380](https://sepolia.basescan.org/tx/0xc46b612799926b6448845d8b3a033a44058c5cbae0d44f7c1f87c2df1375d7a9) ([details](#proof-its-real)) |
+| **One-page note** | [Below](#one-page-note): the user and their task, on the blockchain, only on the page, what the contract refuses, how to run it, path to real life |
+| **Who did what** | [WHO_DID_WHAT.md](WHO_DID_WHAT.md) |
+| **Pitch deck** | [ClubLedger-pitch.pdf](docs/ClubLedger-pitch.pdf) (12 slides, five minutes) |
+| **Judge handout** | [ClubLedger-judge-pack.pdf](docs/ClubLedger-judge-pack.pdf): a one-minute guide, the four rules with QR links to their refusals, and three printable receipts |
+| **Source code** | Contract: [`contracts/src/ClubLedger.sol`](contracts/src/ClubLedger.sol) · Tests: [`contracts/test/`](contracts/test) · Website: [`frontend/`](frontend) |
+| **Tests** | [185 passing](#tested): Foundry unit and invariant tests, Vitest, Playwright |
+| **Every transaction** | [DEPLOYMENT.md](DEPLOYMENT.md), including the refused ones |
+
 ## The problem
 
 A student club's money lives in a treasurer's spreadsheet. Members can't see it, sponsors have to take it on trust, and a quiet edit leaves no trace.
@@ -160,6 +175,6 @@ Solidity 0.8.24 with Foundry · React 19, TypeScript, Vite and Tailwind CSS · w
 
 <div align="center">
 
-**Solo project by Aryesh** · [Who did what](WHO_DID_WHAT.md) · [All transactions](DEPLOYMENT.md)
+**Solo project by Aryesh** · [Who did what](WHO_DID_WHAT.md) · [All transactions](DEPLOYMENT.md) · [Pitch deck](docs/ClubLedger-pitch.pdf)
 
 </div>
