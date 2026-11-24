@@ -35,7 +35,6 @@
 | **One-page note** | [Below](#one-page-note): the user and their task, on the blockchain, only on the page, what the contract refuses, how to run it, path to real life |
 | **Who did what** | [WHO_DID_WHAT.md](WHO_DID_WHAT.md) |
 | **Pitch deck** | [ClubLedger-pitch.pdf](docs/ClubLedger-pitch.pdf) (12 slides, five minutes) |
-| **Judge handout** | [ClubLedger-judge-pack.pdf](docs/ClubLedger-judge-pack.pdf): a one-minute guide, the four rules with QR links to their refusals, and three printable receipts |
 | **Source code** | Contract: [`contracts/src/ClubLedger.sol`](contracts/src/ClubLedger.sol) · Tests: [`contracts/test/`](contracts/test) · Website: [`frontend/`](frontend) |
 | **Tests** | [185 passing](#tested): Foundry unit and invariant tests, Vitest, Playwright |
 | **Every transaction** | [DEPLOYMENT.md](DEPLOYMENT.md), including the refused ones |
